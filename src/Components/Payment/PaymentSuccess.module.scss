@@ -1,0 +1,61 @@
+.bill {
+  padding: 20px;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  right: 0;
+  height: 100%;
+  color: white;
+  font-family: Arial, sans-serif;
+
+  .billTableWrapper {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .billTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+
+    th,
+    td {
+      border: 1px solid #000000;
+      padding: 10px;
+      text-align: center;
+      color: #000000;
+    }
+
+    th {
+      background-color: #cecece;
+    }
+  }
+
+  .summary {
+    text-align: left;
+    font-size: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 15px;
+
+    .summaryContain {
+      text-align: right;
+      padding: 10px;
+    }
+    .summaryTitle {
+      padding: 10px;
+    }
+    p {
+      margin: 5px 0;
+      color: black;
+    }
+
+    .totalCost {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: black;
+      font-weight: bold;
+    }
+  }
+}

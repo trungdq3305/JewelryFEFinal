@@ -15,6 +15,10 @@ import ManageUsers from '../Page/ManageUsers.jsx'
 import ManageCustomer from '../Page/ManageCustomer.jsx'
 import ManageDiscount from '../Page/ManageDiscount'
 import ManageCashier from '../Page/ManageCashier.jsx'
+import StaffCustomer from '../Page/StaffCustomer.jsx'
+import StaffDiscount from '../Page/StaffDiscount.jsx'
+import GoldPage from '../Page/GoldPage.jsx'
+import ManageGold from '../Page/ManageGold.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -59,7 +63,7 @@ export const router = createBrowserRouter([
               <ProtectedRoutes allowedRoles={[2]}>
                 <ManageProducts />
               </ProtectedRoutes>
-            )
+            ),
           },
           {
             path: 'ManageUsers',
@@ -67,7 +71,15 @@ export const router = createBrowserRouter([
               <ProtectedRoutes allowedRoles={[2, 3]}>
                 <ManageUsers />
               </ProtectedRoutes>
-            )
+            ),
+          },
+          {
+            path: 'ManageGold',
+            element: (
+              <ProtectedRoutes allowedRoles={[2, 3]}>
+                <ManageGold />
+              </ProtectedRoutes>
+            ),
           },
           {
             path: 'ManageCashier',
@@ -75,9 +87,17 @@ export const router = createBrowserRouter([
               <ProtectedRoutes allowedRoles={[2]}>
                 <ManageCashier />
               </ProtectedRoutes>
-            )
-          }
-        ]
+            ),
+          },
+          {
+            path: 'ManageCustomer',
+            element: (
+              <ProtectedRoutes allowedRoles={[1, 2]}>
+                <ManageCustomer />
+              </ProtectedRoutes>
+            ),
+          },
+        ],
       },
       {
         path: 'ViewDetailPage/:id',
@@ -111,14 +131,7 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
-      {
-        path: 'ManagerHomePage/ManageCustomer',
-        element: (
-          <ProtectedRoutes allowedRoles={[1, 2]}>
-            <ManageCustomer />
-          </ProtectedRoutes>
-        ),
-      },
+      
       {
         path: 'ManagerHomePage/ManageDiscount',
         element: (
@@ -135,6 +148,31 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
+      {
+        path: 'StaffPage/StaffDiscount',
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2]}>
+            <StaffDiscount />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'StaffPage/StaffCustomer',
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2]}>
+            <StaffCustomer />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'StaffPage/Goldrate',
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2]}>
+            <GoldPage />
+          </ProtectedRoutes>
+        ),
+      },
+      
     ],
   },
 ])

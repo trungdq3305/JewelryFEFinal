@@ -7,14 +7,11 @@ import {
   DialogTitle,
   TextField,
   Button,
-  Snackbar,
-  Alert,
 } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateDiscountDialog = ({ openDialog, handleCloseDialog, onUpdateDiscount, formData, setFormData }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
   useEffect(() => {
     if (formData) {
       setFormData(formData);
@@ -28,48 +25,31 @@ const UpdateDiscountDialog = ({ openDialog, handleCloseDialog, onUpdateDiscount,
       [name]: value,
     }));
   };
-  const initialFormData = {
-    discountId: '',
-    createdBy: '',
-    expiredDay: '',
-    publishDay: '',
-    amount: 0,
-    cost: 0,
-  };
 
   const handleUpdateDiscount = async () => {
     const requiredFields = ['discountId', 'expiredDay', 'publishDay', 'cost'];
     console.log('Form Data:', formData);
-    
+
     const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
-  
+
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
+      toast.error('Please fill in all required fields.');
       return;
     }
-  
+
     const updatedFormData = {
       ...formData,
       expiredDay: new Date(formData.expiredDay).toISOString().split('T')[0],
       publishDay: new Date(formData.publishDay).toISOString().split('T')[0],
     };
-  
+
     try {
       await onUpdateDiscount(updatedFormData);
-      setSnackbarMessage('Discount updated successfully!');
-      setSnackbarOpen(true);
       handleCloseDialog();
     } catch (error) {
       console.error('Error updating discount:', error);
-      setSnackbarMessage('Error updating discount.');
-      setSnackbarOpen(true);
+      toast.error('Error updating discount.');
     }
-  };
-  
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
   };
 
   return (
@@ -94,7 +74,7 @@ const UpdateDiscountDialog = ({ openDialog, handleCloseDialog, onUpdateDiscount,
             name="expiredDay"
             label="Expired Day"
             type="date"
-            value={formData.expiredDay ? formData.expiredDay.slice(0, 10) : ''} 
+            value={formData.expiredDay ? formData.expiredDay.slice(0, 10) : ''}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
@@ -106,8 +86,8 @@ const UpdateDiscountDialog = ({ openDialog, handleCloseDialog, onUpdateDiscount,
             fullWidth
             name="publishDay"
             label="Publish Day"
-            type="date" 
-            value={formData.publishDay ? formData.publishDay.slice(0, 10) : ''} 
+            type="date"
+            value={formData.publishDay ? formData.publishDay.slice(0, 10) : ''}
             onChange={handleChange}
             InputLabelProps={{
               shrink: true,
@@ -130,15 +110,6 @@ const UpdateDiscountDialog = ({ openDialog, handleCloseDialog, onUpdateDiscount,
           <Button onClick={handleUpdateDiscount} variant="contained" autoFocus>Update</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbarMessage.includes('Error') ? 'error' : 'success'} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

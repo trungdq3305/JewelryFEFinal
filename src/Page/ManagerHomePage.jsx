@@ -4,11 +4,12 @@ import { Outlet } from 'react-router-dom';
 const ManagerHomePage = () => {
   return (
     <>
+    
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
-        <ManagerSideBar />
-        <Box>
-          <Outlet />
-        </Box>
+      <ManagerSideBar />
+          <Box >
+            <Outlet />
+          </Box>
       </Box>
     </>
   )

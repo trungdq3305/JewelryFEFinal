@@ -6,18 +6,16 @@ import {
   DialogTitle,
   TextField,
   Button,
-  Snackbar,
-  Alert,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
+  InputLabel,
 } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddGemDialog = ({ openDialog, handleCloseDialog, onAddGem, initialFormData }) => {
   const [formData, setFormData] = useState(initialFormData);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -32,17 +30,12 @@ const AddGemDialog = ({ openDialog, handleCloseDialog, onAddGem, initialFormData
     const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
+      toast.warn('Please fill in all required fields.');
       return;
     }
 
     onAddGem(formData);
     setFormData(initialFormData); 
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
   };
 
   return (
@@ -108,15 +101,6 @@ const AddGemDialog = ({ openDialog, handleCloseDialog, onAddGem, initialFormData
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

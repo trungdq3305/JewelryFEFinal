@@ -6,18 +6,12 @@ import {
   DialogTitle,
   TextField,
   Button,
-  Snackbar,
-  Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddDiscountDialog = ({ openDialog, handleCloseDialog, onAddDiscount, initialFormData }) => {
   const [formData, setFormData] = useState(initialFormData);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,13 +22,11 @@ const AddDiscountDialog = ({ openDialog, handleCloseDialog, onAddDiscount, initi
   };
 
   const handleAddNewDiscount = () => {
-    const requiredFields = [ 'expiredDay', 'publishDay', 'cost'];
+    const requiredFields = ['expiredDay', 'publishDay', 'cost'];
     const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
-      handleCloseDialog();
+      toast.warn('Please fill in all required fields.');
       return;
     }
 
@@ -42,69 +34,54 @@ const AddDiscountDialog = ({ openDialog, handleCloseDialog, onAddDiscount, initi
     setFormData(initialFormData); 
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
   return (
-    <>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add Discount</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="publishDay"
-            label="Publish Day"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={formData.publishDay}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="expiredDay"
-            label="Expired Day"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={formData.expiredDay}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="cost"
-            label="cost"
-            type="number"
-            value={formData.cost}
-            onChange={handleChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleAddNewDiscount} variant="contained" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </>
+    <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <DialogTitle>Add Discount</DialogTitle>
+      <DialogContent>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="publishDay"
+          label="Publish Day"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={formData.publishDay}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="expiredDay"
+          label="Expired Day"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={formData.expiredDay}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="cost"
+          label="Cost"
+          type="number"
+          value={formData.cost}
+          onChange={handleChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <Button onClick={handleAddNewDiscount} variant="contained" autoFocus>
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

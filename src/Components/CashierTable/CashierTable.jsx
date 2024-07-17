@@ -149,19 +149,19 @@ const CashierTable = ({ cashiers }) => {
       />
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: 440, display: 'flex', flexDirection: 'column' }}
+        sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell align="right">Start Date</TableCell>
-              <TableCell align="right">End Date</TableCell>
-              <TableCell align="right">Income</TableCell>
-              <TableCell align="right">Cashier Number</TableCell>
-              <TableCell align="right">User Id</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Options</TableCell>
+              <TableCell style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Start Date</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>End Date</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Income</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cashier Number</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>User Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Status</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
@@ -201,7 +201,16 @@ const CashierTable = ({ cashiers }) => {
                       ...initialFormData,
                       ...cashier,
                     })
-                  }}>Update</Button>
+                  }}
+                  sx={{
+                    backgroundColor: 'white',
+                    color: '#FFA500',
+                    border: '1px solid #FFA500',
+                    '&:hover': {
+                      backgroundColor: 'white',
+                      borderColor: '#FFA500',
+                    },
+                  }}>Edit</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -214,6 +223,7 @@ const CashierTable = ({ cashiers }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
+               style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={cashierList.length}

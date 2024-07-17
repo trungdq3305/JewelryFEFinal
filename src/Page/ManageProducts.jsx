@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Box, Button, Paper, TextField } from '@mui/material';
 import ProductTable from '../Components/ProductTable/ProductTable';
@@ -128,20 +127,28 @@ const ManageProducts = () => {
             padding: '10px'
           }}
         >
-          <Button
-            sx={{ alignSelf: 'flex-start', marginBottom: '10px' }}
-            onClick={handleOpenDialog}
-          >
-            Add Product
-          </Button>
-          <TextField
-            id="filled-search"
-            label="Search"
-            type="search"
-            variant="filled"
-            style={{ width: '300px' }}
-            onChange={onSearchTextChange}
-          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <Button
+              onClick={handleOpenDialog} sx={{ height: '50px' , margin: '20px',backgroundColor: 'white',
+                color: '#3baf80', 
+                border: '1px solid #3baf80',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  borderColor: '#3baf80',
+                },
+                height:'50px'}}
+            >
+              Add Product
+            </Button>
+            <TextField
+              id="filled-search"
+              label="Search"
+              type="search"
+              variant="filled"
+              style={{ width: '300px' }}
+              onChange={onSearchTextChange}
+            />
+          </Box>
           <AddProductDialog
             openDialog={openDialog}
             handleCloseDialog={handleCloseDialog}

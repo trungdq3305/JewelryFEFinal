@@ -141,7 +141,14 @@ const UserTable = ({ users }) => {
     setPage(0)
   }
   const formatStatus = (status) => (status ? 'Active' : 'Inactive');
-
+  const buttonStyle = {
+    width: '100%', 
+    margin: '5px',
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+  };
   // Ensure products is an array
   const userList = Array.isArray(users) ? users : []
   useEffect(() => {
@@ -163,20 +170,20 @@ const UserTable = ({ users }) => {
 
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: 440, display: 'flex', flexDirection: 'column' }}
+        sx={{display: 'flex', flexDirection: 'column' }}
       >
         <Table stickyHeader aria-label="UserTable">
           <TableHead>
             <TableRow>
-              <TableCell align="right">User Id</TableCell>
-              <TableCell align="right">User Name</TableCell>
-              <TableCell align="right">Role</TableCell>
-              <TableCell align="right">Full Name</TableCell>
-              <TableCell align="right">Date of birth</TableCell>
-              <TableCell align="right">Phone number</TableCell>
-              <TableCell align="right">Address</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Options</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>User Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>User Name</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Role</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Full Name</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Date of birth</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Phone number</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Address</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Status</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
@@ -213,8 +220,28 @@ const UserTable = ({ users }) => {
                   {formatStatus(user.status)}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  <Button onClick={() => handleOpenRoleDialog(user)}>Update Role</Button>
-                  <Button onClick={() => handleOpenDialog(user.userId)}>Active/Deactive</Button>
+                  <Button onClick={() => handleOpenRoleDialog(user)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: '#FFA500',
+                      border: '1px solid #FFA500',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '#FFA500',
+                      },
+                    }}>Update Role</Button>
+                  <Button onClick={() => handleOpenDialog(user.userId)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: 'black', 
+                      border: '1px solid black',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: 'black',
+                      },
+                    }}>Active/Deactive</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -227,6 +254,7 @@ const UserTable = ({ users }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
+               style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={userList.length}

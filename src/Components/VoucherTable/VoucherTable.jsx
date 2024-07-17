@@ -182,7 +182,14 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
       setRowsPerPage(5) // Reset the rows per page to 5
     }
   }
-
+  const buttonStyle = {
+    width: '100%', // Adjust the width as needed
+    margin: '5px',
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+  };
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false)
   }
@@ -233,17 +240,17 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
           {deleteSuccess ? 'Voucher deleted successfully!' : 'Error deleting voucher.'}
         </Alert>
       </Snackbar>
-      <TableContainer component={Paper} sx={{ maxHeight: 5000, display: 'flex', flexDirection: 'column' }}>
+      <TableContainer component={Paper} sx={{  display: 'flex', flexDirection: 'column' }}>
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell align="right">Created By</TableCell>
-              <TableCell align="right">Expired Day</TableCell>
-              <TableCell align="right">Published Day</TableCell>
-              <TableCell align="right">Cost</TableCell>
-              <TableCell align="right">Customer Id</TableCell>
-              <TableCell align="right">Options</TableCell>
+              <TableCell style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Expired Day</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Published Day</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Customer Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
@@ -271,9 +278,39 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
                   {voucher.customerCustomerId}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  <Button onClick={() => handleEdit(voucher)}>Edit</Button>
-                  <Button onClick={() => handleShowCustomerInfo(voucher)}>Customer Info</Button>
-                  <Button onClick={() => handleDelete(voucher.voucherId)}>Delete</Button>
+                  <Button onClick={() => handleEdit(voucher)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: '#FFA500', 
+                      border: '1px solid #FFA500',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '#FFA500',
+                      },
+                    }}>Edit</Button>
+                  <Button onClick={() => handleShowCustomerInfo(voucher)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: '#2596be', 
+                      border: '1px solid #2596be',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '2596be',
+                      },
+                    }}>Customer</Button>
+                  <Button onClick={() => handleDelete(voucher.voucherId)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: 'red', 
+                      border: '1px solid red',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: 'red',
+                      },
+                    }}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -285,7 +322,7 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TablePagination
+              <TablePagination style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={voucherList.length}

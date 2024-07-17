@@ -14,13 +14,15 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   const handleLogin = (username, password) => {
-    alert('Login')
+    
     const result = loginUser(username, password)
   }
 
   return (
     <div className={cx('login-container')}>
+      <div className={cx('login-box')}>
       <div className={cx('login-title')}>JEWSHINE</div>
+      <div className={cx('login-title2')}>Management</div>
 
       <div className={cx('login-body')}>
         <Box
@@ -38,7 +40,7 @@ const Login = () => {
         >
           <TextField
             sx={{
-              '& > :not(style)': { borderRadius: '50px' },
+              '& > :not(style)': { borderRadius: '50px'},
             }}
             id="outlined-basic"
             fullWidth
@@ -62,6 +64,7 @@ const Login = () => {
       </div>
       <div className={cx('login-submit')}>
         <button onClick={() => handleLogin(username, password)}>Login</button>
+      </div>
       </div>
     </div>
   )

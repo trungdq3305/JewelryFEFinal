@@ -11,8 +11,6 @@ import {
   Button,
   Box,
   TablePagination,
-  Snackbar,
-  Alert
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
@@ -22,6 +20,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { updateDiscount, deleteDiscount } from '../../Configs/axios';
 import UpdateDiscountDialog from './UpdateDiscountDialog';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -104,12 +104,9 @@ const initialFormData = {
 const DiscountTable = ({ discounts, reload }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [editData, setEditData] = useState(initialFormData);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [discountList, setDiscountList] = useState(discounts);
-  const snackbarMessageRef = useRef(''); 
 
   useEffect(() => {
     setDiscountList(discounts);
@@ -119,11 +116,9 @@ const DiscountTable = ({ discounts, reload }) => {
     try {
       await deleteDiscount(discountId);
       setDiscountList(discountList.filter(discount => discount.discountId !== discountId));
-      setSnackbarMessage(`Discount ${discountId} deleted successfully`);
-      setOpenSnackbar(true);
+      toast.success(`Discount ${discountId} deleted successfully`);
     } catch (error) {
-      setSnackbarMessage('Error deleting discount.');
-      setOpenSnackbar(true);
+      toast.error('Error deleting discount.');
       console.error('Error deleting discount:', error);
     }
   };
@@ -143,21 +138,29 @@ const DiscountTable = ({ discounts, reload }) => {
     const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setOpenSnackbar(true);
+      toast.error('Please fill in all required fields.');
       return;
     }
 
     try {
       await updateDiscount(formData);
-      if(formData !== undefined){setDiscountList(discountList.map(discount => discount.discountId === formData.discountId ? formData : discount));}
- 
+      setDiscountList(discountList.map(discount => discount.discountId === formData.discountId ? formData : discount));
+      toast.success(`Discount ${formData.discountId} updated successfully`);
     } catch (error) {
-      setOpenSnackbar(true);
+      toast.error('Error updating discount.');
       console.error('Error updating discount:', error);
     } finally {
       handleCloseDialog();
     }
+  };
+
+  const buttonStyle = {
+    width: '100%', 
+    margin: '5px',
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
   };
 
   const handleChangePage = (event, newPage) => {
@@ -183,39 +186,17 @@ const DiscountTable = ({ discounts, reload }) => {
         formData={editData}
         setFormData={setEditData}
       />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={() => {
-          setOpenSnackbar(false);
-          setSnackbarMessage('');
-          snackbarMessageRef.current = ''; 
-        }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={() => {
-            setOpenSnackbar(false);
-            setSnackbarMessage('');
-            snackbarMessageRef.current = ''; 
-          }}
-          severity={snackbarMessage.includes('Error') ? 'error' : 'success'}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
       <TableContainer component={Paper} sx={{ maxHeight: 440, display: 'flex', flexDirection: 'column' }}>
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Discount ID</TableCell>
-              <TableCell align="right">Created By</TableCell>
-              <TableCell align="right">Expired Day</TableCell>
-              <TableCell align="right">Publish Day</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Cost</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Discount ID</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Expired Day</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Amount</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -228,8 +209,29 @@ const DiscountTable = ({ discounts, reload }) => {
                 <TableCell align="right">{discount.amount}</TableCell>
                 <TableCell align="right">{discount.cost}</TableCell>
                 <TableCell align="right">
-                  <Button onClick={() => handleUpdateDiscount(discount)}>Edit</Button>
-                  <Button onClick={() => handleDelete(discount.discountId)}>Delete</Button>
+                  <Button onClick={() => handleUpdateDiscount(discount)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: '#FFA500',
+                      border: '1px solid #FFA500',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '#FFA500',
+                      },
+                    }}>Edit</Button>
+                  <br></br>
+                  <Button onClick={() => handleDelete(discount.discountId)}
+                    sx={{
+                      ...buttonStyle,
+                      backgroundColor: 'white',
+                      color: 'red', 
+                      border: '1px solid red',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: 'red',
+                      },
+                    }}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -248,7 +250,7 @@ const DiscountTable = ({ discounts, reload }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      <TablePagination style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
         component="div"
         count={discountList.length}

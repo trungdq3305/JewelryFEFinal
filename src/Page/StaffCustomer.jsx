@@ -10,8 +10,8 @@ import {
 } from '../Configs/axios'
 import AddCustomerDialog from '../Components/CustomerTable/AddCustomerDialog'
 import ManagerSideBar from '../Components/Sidebar/ManagerSideBar'
-
-const ManageCustomer = () => {
+import Header from '../Components/Header/Header'
+const StaffCustomer = () => {
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(false)
   const [openDialog, setOpenDialog] = useState(false)
@@ -96,7 +96,8 @@ const ManageCustomer = () => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
+    <Header></Header>
+    <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
         <Box
           sx={{
             flexGrow: 1,
@@ -196,4 +197,4 @@ const ManageCustomer = () => {
   )
 }
 
-export default ManageCustomer
+export default StaffCustomer

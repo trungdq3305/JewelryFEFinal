@@ -206,25 +206,25 @@ const ProductTable = ({ products }) => {
         formData={editData}
         setFormData={setEditData}
       />
-
+      
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: 440, display: 'flex', flexDirection: 'column' }}
+        sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell align="right">Name</TableCell>
-              <TableCell align="right">Category</TableCell>
-              <TableCell align="right">Material</TableCell>
-              <TableCell align="right">Weight</TableCell>
-              <TableCell align="right">Machining Cost</TableCell>
-              <TableCell align="right">Size</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">Image</TableCell>
-              <TableCell align="right">Options</TableCell>
+              <TableCell style={{backgroundColor: 'lightgray', fontWeight: 'bold' }}>Id</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Name</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Category</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Material</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Weight</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Machining Cost</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Size</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Amount</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Description</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Image</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
@@ -267,7 +267,15 @@ const ProductTable = ({ products }) => {
                   {product.image}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  <Button onClick={() => handleEdit(product)}>Edit</Button>
+                  <Button onClick={() => handleEdit(product)} sx={{
+                      backgroundColor: 'white',
+                      color: '#FFA500',
+                      border: '1px solid #FFA500',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '#FFA500',
+                      },
+                    }}>Edit</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -280,6 +288,7 @@ const ProductTable = ({ products }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
+              
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={productList.length}

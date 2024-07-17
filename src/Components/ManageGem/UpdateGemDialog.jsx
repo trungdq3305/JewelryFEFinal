@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   Dialog,
   DialogActions,
@@ -12,45 +12,49 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from '@mui/material';
+} from '@mui/material'
 
-const UpdateGemDialog = ({ openDialog, handleCloseDialog, onUpdateGem, formData, setFormData }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+const UpdateGemDialog = ({
+  openDialog,
+  handleCloseDialog,
+  onUpdateGem,
+  formData,
+  setFormData,
+}) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleUpdateGem = async () => {
-    const requiredFields = ['name', 'type', 'price', 'rate'];
-    const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
+    const requiredFields = ['name', 'type', 'price', 'rate']
+    const isFormValid = requiredFields.every(
+      (field) => formData[field] !== '' && formData[field] !== undefined
+    )
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
-      return;
+      setSnackbarMessage('Please fill in all required fields.')
+      setSnackbarOpen(true)
+      return
     }
 
     try {
-      await onUpdateGem(formData);
-      setSnackbarMessage('Gem updated successfully!');
-      setSnackbarOpen(true);
-      handleCloseDialog();
+      await onUpdateGem(formData)
+      setSnackbarMessage('Gem updated successfully!')
+      setSnackbarOpen(true)
+      handleCloseDialog()
     } catch (error) {
-      console.error('Error updating gem:', error);
-      setSnackbarMessage('Error updating gem.');
-      setSnackbarOpen(true);
+      console.error('Error updating gem:', error)
+      setSnackbarMessage('Error updating gem.')
+      setSnackbarOpen(true)
     }
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+  }
 
   return (
     <>
@@ -116,25 +120,18 @@ const UpdateGemDialog = ({ openDialog, handleCloseDialog, onUpdateGem, formData,
             type="number"
             value={formData.rate}
             onChange={handleChange}
-            inputProps={{ step: "0.1" }} 
+            inputProps={{ step: '0.1' }}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleUpdateGem} variant="contained" autoFocus>Update</Button>
+          <Button onClick={handleUpdateGem} variant="contained" autoFocus>
+            Update
+          </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
-  );
-};
+  )
+}
 
-export default UpdateGemDialog;
+export default UpdateGemDialog

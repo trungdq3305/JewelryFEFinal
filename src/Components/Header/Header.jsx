@@ -4,9 +4,20 @@ import logo from '../../assets/logo.jpg'
 import CustomizedMenus from '../React-menu/ReactMenu'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../Context/UserContext'
 
 const Header = ({ handleCategory }) => {
   const navigate = useNavigate()
+  const { logOut } = useAuth()
+  const handleLogout = () => {
+    const result = logOut()
+  }
+  const handleNavigateToManageCustomer = () => {
+    navigate('/StaffPage/StaffCustomer')
+  }
+  const handleNavigateToManageDiscount = () => {
+    navigate('/StaffPage/StaffDiscount')
+  }
   return (
     <div className={styles.nav}>
       <div className={styles.logo}>
@@ -25,6 +36,9 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
+              onClick={() => {
+                navigate('/StaffPage/Goldrate')
+              }}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
@@ -40,6 +54,7 @@ const Header = ({ handleCategory }) => {
 
           <li>
             <Button
+              onClick={handleNavigateToManageDiscount}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
@@ -54,6 +69,7 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
+              onClick={handleNavigateToManageCustomer}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
@@ -96,6 +112,11 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
+              onClick={() => {
+                {
+                  handleLogout()
+                }
+              }}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
@@ -106,6 +127,25 @@ const Header = ({ handleCategory }) => {
               }}
             >
               PROFILE{' '}
+            </Button>
+          </li>
+          <li>
+            <Button
+              onClick={() => {
+                {
+                  handleLogout()
+                }
+              }}
+              sx={{
+                backgroundColor: '#333',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#ffdbf0',
+                  color: 'black',
+                },
+              }}
+            >
+              LOG OUT{' '}
             </Button>
           </li>
         </ul>

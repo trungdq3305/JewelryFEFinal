@@ -10,12 +10,14 @@ import Modal from '@mui/material/Modal'
 import CustomerList from '../Components/CustomerList/CustomerList'
 import {
   createBill,
+  getAllBill,
   getCustomer,
   getVouchers,
   getVouchersv2,
 } from '../Configs/axios'
 import PayByCashModal from '../Components/Payment/PayByCashModal'
 import PaymentSuccess from '../Components/Payment/PaymentSuccess'
+import axios from 'axios'
 
 const BillPage = () => {
   const style = {
@@ -31,10 +33,9 @@ const BillPage = () => {
     p: 4,
     overflowY: 'auto',
   }
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const [openCash, setOpenCash] = useState(false)
   const [openSuccess, setOpenSuccess] = useState(false)
-  const handleOpenSuccess = () => setOpenSuccess(true)
   const handleCloseSuccess = () => setOpenSuccess(false)
   const handleOpenCash = () => setOpenCash(true)
   const handleCloseCash = () => setOpenCash(false)
@@ -49,15 +50,16 @@ const BillPage = () => {
   const [costWithVoucher, setCostwithVoucher] = useState(0)
   const [change, setChange] = useState(0)
   const [cash, setCash] = useState(0)
-  const [request, setRequest] = useState()
   const [voucherId, setVoucherId] = useState('')
+  const [billId, setBillId] = useState('')
+  const [bill, setBill] = useState(null)
 
-  const handleRequest = () => {}
   const inputCash = (e) => {
     if (e.target.value !== undefined) {
       setCash(e.target.value)
     }
   }
+
   const handlecreateBill = async () => {
     let product = {}
     billProduct.forEach((p) => {
@@ -80,12 +82,31 @@ const BillPage = () => {
     const result = await createBill(initialdata)
     if (result.data.code === 200) {
       setOpenSuccess(true)
+      setOpenCash(false)
+      console.log(result)
+      setBillId(result.data.data.billId)
+      sessionStorage.removeItem('cardValues')
     }
   }
+
+  useEffect(() => {
+    const getBill = async () => {
+      if (billId) {
+        const getAll = await getAllBill('', '', billId)
+        if (getAll.data.data[0] !== null) {
+          console.log(getAll.data.data[0])
+          setBill(getAll.data.data[0])
+        }
+      }
+    }
+    getBill()
+  }, [billId])
+
   const calculateChange = () => {
     const res = cash - totalCost
     setChange(res)
   }
+
   const handleChange = async (event) => {
     if (event.target.value !== 'none') {
       const params = {
@@ -146,6 +167,7 @@ const BillPage = () => {
       console.error(error)
     }
   }
+
   const loadBillProduct = () => {
     const productList = sessionStorage.getItem('cardValues')
     if (productList != null) {
@@ -154,6 +176,7 @@ const BillPage = () => {
 
     console.log(JSON.parse(productList))
   }
+
   const calculateCost = () => {
     const cost = billProduct.reduce(
       (total, card) => total + card.PriceWithDiscount * card.Quantity,
@@ -163,10 +186,6 @@ const BillPage = () => {
   }
 
   const calculateCostwVoucher = () => {
-    // const cost = billProduct.reduce(
-    //   (total, card) => total + card.PriceWithDiscount * card.Quantity,
-    //   0
-    // )
     const result = totalCost - voucher
     setCostwithVoucher(result)
   }
@@ -175,22 +194,28 @@ const BillPage = () => {
     setCustomer(cus)
     handleClose()
   }
+
   useEffect(() => {
     loadBillProduct()
     loadCustomers()
   }, [])
+
   useEffect(() => {
     loadVouchers()
   }, [customer])
+
   useEffect(() => {
     calculateCostwVoucher()
   }, [voucher, calculateCostwVoucher])
+
   useEffect(() => {
     calculateCost()
   }, [billProduct])
+
   useEffect(() => {
     calculateChange()
   }, [cash])
+
   return (
     <>
       <div className={styles.container}>
@@ -244,7 +269,13 @@ const BillPage = () => {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                <PaymentSuccess />
+                <PaymentSuccess
+                  bill={bill}
+                  products={billProduct}
+                  totalCost={totalCost}
+                  voucherCost={voucher}
+                  costWithVoucher={costWithVoucher}
+                />
               </Box>
             </Modal>
             <BillProduct

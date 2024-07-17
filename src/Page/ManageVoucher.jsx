@@ -129,7 +129,7 @@ const ManageVoucher = () => {
     setVouchers(result.data);
     setLoading(false);
   };
-
+  
   const handleAddVoucher = async (formData) => {
     try {
       await addVoucher(formData);
@@ -182,7 +182,7 @@ const ManageVoucher = () => {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
-        <ManagerSideBar />
+      <ManagerSideBar />
         <Box
           sx={{
             flexGrow: 1,
@@ -196,7 +196,7 @@ const ManageVoucher = () => {
               flexGrow: 1,
               display: 'flex',
               flexDirection: 'column',
-              maxHeight: '80vh',
+
               overflow: 'hidden',
               padding: '10px',
             }}
@@ -208,8 +208,18 @@ const ManageVoucher = () => {
                 marginBottom: '10px',
               }}
             >
-              <Button onClick={handleOpenDialog}>Add Voucher</Button>
-              <form onSubmit={handleSearch}>
+              <Button onClick={handleOpenDialog} 
+              sx={{
+                backgroundColor: 'white',
+                color: '#3baf80', 
+                border: '1px solid #3baf80',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  borderColor: '#3baf80',
+                },
+                height:'50px'
+              }}>Add voucher</Button>
+              <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <select
                   value={searchCriteria}
                   onChange={(e) => setSearchCriteria(e.target.value)}
@@ -231,14 +241,14 @@ const ManageVoucher = () => {
                   <option value="customerPhone">Customer Phone</option>
                   <option value="customerEmail">Customer Email</option>
                 </select>
-                <br />
+                
 
                 {searchCriteria === 'expiredDay' ? (
                   <div>
                     <input
                       type="number"
                       placeholder="Year"
-                      style={{ width: '80px', padding: '5px', margin: '5px' }}
+                      style={{ width: '80px', padding: '5px', margin: '5px', height: '40px' }}
                       value={searchParams.expiredDay.Year}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -253,7 +263,7 @@ const ManageVoucher = () => {
                     <input
                       type="number"
                       placeholder="Month"
-                      style={{ width: '80px', padding: '5px', margin: '5px' }}
+                      style={{ width: '80px', padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.expiredDay.Month}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -268,7 +278,7 @@ const ManageVoucher = () => {
                     <input
                       type="number"
                       placeholder="Day"
-                      style={{ width: '80px', padding: '5px', margin: '5px' }}
+                      style={{ width: '80px', padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.expiredDay.Day}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -286,7 +296,7 @@ const ManageVoucher = () => {
                     <input
                       type="text"
                       placeholder="Customer ID"
-                      style={{ padding: '5px', margin: '5px' }}
+                      style={{ padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.customerId}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -301,7 +311,7 @@ const ManageVoucher = () => {
                     <input
                       type="text"
                       placeholder="Customer Name"
-                      style={{ padding: '5px', margin: '5px' }}
+                      style={{ padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.customerName}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -316,7 +326,7 @@ const ManageVoucher = () => {
                     <input
                       type="text"
                       placeholder="Customer Phone"
-                      style={{ padding: '5px', margin: '5px' }}
+                      style={{ padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.customerPhone}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -331,7 +341,7 @@ const ManageVoucher = () => {
                     <input
                       type="email"
                       placeholder="Customer Email"
-                      style={{ padding: '5px', margin: '5px' }}
+                      style={{ padding: '5px', margin: '5px' , height: '40px'}}
                       value={searchParams.customerEmail}
                       onChange={(e) =>
                         setSearchParams((prevParams) => ({
@@ -342,7 +352,7 @@ const ManageVoucher = () => {
                     />
                   </div>
                 ) : null}
-                <br />
+                
                 <button
                   type="submit"
                   style={{
@@ -357,7 +367,15 @@ const ManageVoucher = () => {
                     cursor: 'pointer',
                     borderRadius: '4px',
                     transition: 'background-color 0.3s ease',
+                    backgroundColor: 'white',
+                color: '#2596be', 
+                border: '1px solid #2596be',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  borderColor: '#2596be',
+                },
                   }}
+                  
                   onMouseEnter={(e) => {
                     e.target.style.backgroundColor = '#f7faff';
                   }}
