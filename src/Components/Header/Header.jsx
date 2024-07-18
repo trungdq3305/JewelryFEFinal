@@ -98,6 +98,9 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
+            onClick={() => {
+              navigate('/PolicyPage')
+            }}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
