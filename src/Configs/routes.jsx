@@ -19,6 +19,7 @@ import StaffCustomer from '../Page/StaffCustomer.jsx'
 import StaffDiscount from '../Page/StaffDiscount.jsx'
 import GoldPage from '../Page/GoldPage.jsx'
 import ManageGold from '../Page/ManageGold.jsx'
+import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -137,6 +138,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoutes allowedRoles={[1, 2]}>
             <ManageDiscount />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'ManagerHomePage/Dashboard',
+        element: (
+          <ProtectedRoutes allowedRoles={[2]}>
+            <DashBoardManagePage />
           </ProtectedRoutes>
         ),
       },

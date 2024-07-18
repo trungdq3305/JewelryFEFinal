@@ -112,7 +112,7 @@ export default function ManagerSideBar() {
             disablePadding
             sx={{ display: 'block' }}
             onClick={() => {
-              navigate('/Dashboard')
+              navigate('/ManagerHomePage/Dashboard')
             }}
           >
             <ListItemButton
