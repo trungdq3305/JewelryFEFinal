@@ -5,6 +5,7 @@ import UserTable from '../Components/UserTable/UserTable';
 import AddUserDialog from '../Components/UserTable/AddUserDialog';
 import LoginBackground from '../assets/Login.png';
 import { useAuth } from '../Context/UserContext';
+import AdminSideBar from '../Components/Sidebar/AdminSideBar';
 
 const AdminHomepage = () => {
   const [users, setUsers] = useState([]);
@@ -87,6 +88,7 @@ const AdminHomepage = () => {
   if (loading) return <div>Loading....</div>;
 
   return (
+    
     <Box
       sx={{
         position: 'relative',
@@ -94,24 +96,14 @@ const AdminHomepage = () => {
         flexDirection: 'column',
         gap: '20px',
         padding: '20px',
-        backgroundImage: `url(${LoginBackground})`,
         minHeight: '100vh',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <Paper
-        sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          padding: '20px',
-          textAlign: 'center',
-          marginBottom: '0', 
-        }}
-      >
-        <Typography variant="h3" align="center" gutterBottom style={{ fontWeight: 'bold', color: '#fff' }}>
-          Welcome admin
-        </Typography>
-      </Paper>
+      
+      <Box display="flex">
+      <AdminSideBar/>
       <Box
         sx={{
           display: 'flex',
@@ -120,21 +112,6 @@ const AdminHomepage = () => {
           
         }}
       >
-        <Button
-          onClick={handleLogout}
-          variant="contained"
-          color="primary"
-          sx={{backgroundColor: '#584c4c',
-            color: 'white', 
-            border: '1px solid white',
-            '&:hover': {
-              backgroundColor: '#584c4c',
-              borderColor: 'white',
-            },
-            height:'50px'}}
-        >
-          Logout
-        </Button>
       </Box>
       <Paper
         sx={{
@@ -187,6 +164,7 @@ const AdminHomepage = () => {
         />
         <UserTable users={users} />
       </Paper>
+    </Box>
     </Box>
   );
 };
