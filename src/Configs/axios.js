@@ -648,3 +648,65 @@ export const getAllBill = async (start, end, id) => {
     }
   }
 }
+export const getTotalIncome = async () => {
+  try {
+    const response = await axios.get(api +'/dashboard/totalincome');
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+};
+export const TotalBill = async () => {
+  try {
+    const response = await axios.get(api +'/bill/billcount');
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+};
+
+export const getIncomeByCashNumber = async () => {
+  try {
+    const response = await axios.get(api +'/dashboard/incomebycashnumber')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+};
+
+export const getIncomeByMonth = async () => {
+  try {
+    const response = await axios.get(api +'/dashboard/incomebymonth')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+};
