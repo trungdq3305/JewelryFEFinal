@@ -80,7 +80,7 @@ export default function ManagerSideBar() {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box >
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -96,7 +96,7 @@ export default function ManagerSideBar() {
           <ListItem
             disablePadding
             sx={{ display: 'block' }}
-            onClick={() => navigate('AdminPage')}
+            onClick={() => navigate('/AdminPage')}
           >
             <ListItemButton
               sx={{
@@ -123,7 +123,7 @@ export default function ManagerSideBar() {
           <ListItem
             disablePadding
             sx={{ display: 'block' }}
-            onClick={() => navigate('')}
+            onClick={() => navigate('/AdminPages')}
           >
             <ListItemButton
               sx={{
