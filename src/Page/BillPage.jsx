@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal'
 import CustomerList from '../Components/CustomerList/CustomerList'
 import {
   createBill,
+  createVnPay,
   getAllBill,
   getCustomer,
   getVouchers,
@@ -18,6 +19,7 @@ import {
 import PayByCashModal from '../Components/Payment/PayByCashModal'
 import PaymentSuccess from '../Components/Payment/PaymentSuccess'
 import axios from 'axios'
+import { redirect } from 'react-router-dom'
 
 const BillPage = () => {
   const style = {
@@ -54,10 +56,46 @@ const BillPage = () => {
   const [billId, setBillId] = useState('')
   const [bill, setBill] = useState(null)
 
+  function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8
+        return v.toString(16)
+      }
+    )
+  }
   const inputCash = (e) => {
     if (e.target.value !== undefined) {
       setCash(e.target.value)
     }
+  }
+  const handlePayByCard = async () => {
+    let formData = {
+      orderId: generateUUID(),
+      amount: parseFloat(totalCost),
+      createdDate: new Date().toISOString(),
+    }
+    sessionStorage.setItem('billProducts', JSON.stringify(billProduct))
+    sessionStorage.setItem('totalCost', totalCost.toString())
+    sessionStorage.setItem('voucherCost', voucher.toString())
+    sessionStorage.setItem('costWithVoucher', costWithVoucher.toString())
+    sessionStorage.setItem('customerId', customer?.customerId || '')
+    sessionStorage.setItem('voucherId', voucherId)
+    const url = await createVnPay(formData)
+    if (url.status === 200) {
+      const res = redirect(url.data)
+      console.log(res)
+    } else {
+      alert('Something went wrong')
+    }
+    console.log(url)
+  }
+  function redirect(url) {
+    // This is a placeholder function. Replace with your actual redirect logic.
+    window.location.href = url
+    return 'Redirecting to payment page...'
   }
 
   const handlecreateBill = async () => {
@@ -220,13 +258,13 @@ const BillPage = () => {
     <>
       <div className={styles.container}>
         <Header />
-
         <div className={styles.bodyContainer}>
           <div className={styles.title}>
             <h2>Bill Summary</h2>
           </div>
           <div className={styles.body}>
             <BillInfor
+              handlePayByCard={handlePayByCard}
               handleOpen={handleOpen}
               customer={customer}
               vouchers={voucherList}

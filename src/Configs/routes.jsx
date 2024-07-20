@@ -22,6 +22,7 @@ import ManageGold from '../Page/ManageGold.jsx'
 import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
 import DashBoardAdminPage from '../Page/DashBoardAdminPage.jsx'
 import PolicyPage from '../Page/PolicyPage.jsx'
+import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -142,7 +143,7 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
-      
+
       {
         path: 'ManagerHomePage/ManageDiscount',
         element: (
@@ -190,6 +191,10 @@ export const router = createBrowserRouter([
             <PolicyPage />
           </ProtectedRoutes>
         ),
+      },
+      {
+        path: 'PaymentResponse',
+        element: <PaymentResponsePage />,
       },
     ],
   },
