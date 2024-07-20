@@ -70,6 +70,7 @@ const ProductList = ({
                     id={product.productId}
                     name={product.productName}
                     price={product.price}
+                    amount={product.amount}
                   ></ProductItem>
                 </Grid>
               )

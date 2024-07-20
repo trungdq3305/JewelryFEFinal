@@ -6,7 +6,14 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
 
-const ProductItem = ({ id, name, price, priceWithDiscount, addProduct }) => {
+const ProductItem = ({
+  id,
+  name,
+  price,
+  priceWithDiscount,
+  addProduct,
+  amount,
+}) => {
   const navigate = useNavigate()
 
   const viewDetail = () => navigate(`/ViewDetailPage/${id}`)
@@ -61,12 +68,18 @@ const ProductItem = ({ id, name, price, priceWithDiscount, addProduct }) => {
             </p>
             <form onSubmit={addProduct}>
               <input readOnly={true} hidden={true} value={id}></input>
-              <button
-                type="submit"
-                style={{ fontFamily: 'Fira Sans', fontWeight: '400' }}
-              >
-                Add
-              </button>
+              {amount <= 0 ? (
+                <div style={{ color: 'red', fontWeight: 'bolder' }}>
+                  Out of stock
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  style={{ fontFamily: 'Fira Sans', fontWeight: '400' }}
+                >
+                  Add
+                </button>
+              )}
             </form>
           </div>
         </div>

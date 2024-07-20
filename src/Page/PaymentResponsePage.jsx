@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { createBill, getAllBill, reponseVnPay } from '../Configs/axios'
-import { useLocation } from 'react-router-dom'
+import { createBill, reponseVnPay } from '../Configs/axios'
+import { useLocation, useNavigate } from 'react-router-dom'
 import PaymentSuccess from '../Components/Payment/PaymentSuccess'
+import { Button } from '@mui/material'
+import ErrorIcon from '@mui/icons-material/Error'
 
 const PaymentResponsePage = () => {
   const [paymentResponse, setPaymentResponse] = useState(null)
@@ -14,6 +16,7 @@ const PaymentResponsePage = () => {
   const [customerId, setCustomerId] = useState('')
   const [voucherId, setVoucherId] = useState('')
   const [bill, setBill] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Retrieve values from session storage
@@ -54,6 +57,7 @@ const PaymentResponsePage = () => {
         setPaymentResponse(response.data)
       } catch (error) {
         console.error('Error fetching payment response:', error)
+        setLoading(false)
       } finally {
         setLoading(false)
       }
@@ -96,7 +100,12 @@ const PaymentResponsePage = () => {
   }, [paymentResponse, billProduct, voucherId, customerId])
 
   if (loading) {
-    return <p>Loading...</p>
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading, please wait...</p>
+      </div>
+    )
   }
 
   if (!paymentResponse) {
@@ -114,7 +123,41 @@ const PaymentResponsePage = () => {
           bill={bill}
         />
       ) : (
-        <div>Payment unsuccessful</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div>
+            <ErrorIcon color="error" sx={{ fontSize: 90, marginTop: '20px' }} />
+          </div>
+          <div>
+            <h1>Payment Failed</h1>
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                navigate('/StaffPage')
+              }}
+              variant="contained"
+              sx={{
+                background: 'black',
+                height: '70px',
+                width: '150px',
+                color: '#ffdbf0',
+                '&:hover': {
+                  backgroundColor: '#ffdbf0',
+                  color: 'black',
+                },
+              }}
+            >
+              Back to homepage
+            </Button>
+          </div>
+        </div>
       )}
     </>
   )

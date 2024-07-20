@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ProductDetail from '../Components/ProductDetail/ProductDetail'
 import Header from '../Components/Header/Header'
-import { getAllProducts } from '../Configs/axios'
+import { getAllProducts, getAllProductsv2 } from '../Configs/axios'
 import { useParams } from 'react-router-dom'
 
 const ProductDetailPage = () => {
@@ -10,11 +10,11 @@ const ProductDetailPage = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await getAllProducts(id, '', '', '')
+      const response = await getAllProductsv2(id, '', '', '')
       if (response !== null) {
         const newProduct = response.data.data[0]
         setProduct(newProduct)
-        console.log(newProduct)
+        console.log(response.data.data[0])
       }
     } catch (error) {
       console.error('Error fetching product details:', error)

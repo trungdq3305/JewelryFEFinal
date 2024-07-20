@@ -39,6 +39,7 @@ const StaffHomepage = () => {
     e.preventDefault()
     const card = await getAllProductsv2(e.target[0].value, '', '', '')
     const newProduct = card.data.data[0]
+    card.data.data[0].amount = card.data.data[0].amount - 1
     var getOldData = JSON.parse(sessionStorage.getItem('cardValues'))
     if (getOldData == null || getOldData.length == 0) {
       let newProductJSON = {
@@ -136,6 +137,8 @@ const StaffHomepage = () => {
   const increase = async (id) => {
     const card = await getAllProductsv2(id, '', '', '')
     const newProduct = card.data.data[0]
+    card.data.data[0].amount = card.data.data[0].amount - 1
+
     var getOldData = JSON.parse(sessionStorage.getItem('cardValues'))
     getOldData.forEach((element) => {
       if (newProduct.productId === element.Id) {
@@ -148,6 +151,8 @@ const StaffHomepage = () => {
   const decrease = async (id) => {
     const card = await getAllProductsv2(id, '', '', '')
     const newProduct = card.data.data[0]
+    card.data.data[0].amount = card.data.data[0].amount + 1
+
     var getOldData = JSON.parse(sessionStorage.getItem('cardValues'))
 
     getOldData = getOldData

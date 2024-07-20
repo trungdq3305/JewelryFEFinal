@@ -14,57 +14,57 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   const handleLogin = (username, password) => {
-    
     const result = loginUser(username, password)
   }
 
   return (
     <div className={cx('login-container')}>
       <div className={cx('login-box')}>
-      <div className={cx('login-title')}>JEWSHINE</div>
-      <div className={cx('login-title2')}>Management</div>
+        <div className={cx('login-title')}>JEWSHINE</div>
+        <div className={cx('login-title2')}>Management</div>
 
-      <div className={cx('login-body')}>
-        <Box
-          component="form"
-          sx={{
-            '& > :not(style)': {
-              m: 1,
-              width: '50ch',
-              display: 'flex',
-              marginBottom: '10px',
-            },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
+        <div className={cx('login-body')}>
+          <Box
+            component="form"
             sx={{
-              '& > :not(style)': { borderRadius: '50px'},
+              '& > :not(style)': {
+                m: 1,
+                width: '50ch',
+                display: 'flex',
+                marginBottom: '10px',
+              },
             }}
-            id="outlined-basic"
-            fullWidth
-            label="User Name"
-            variant="outlined"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-          <TextField
-            sx={{
-              '& > :not(style)': { borderRadius: '50px' },
-            }}
-            id="outlined-basic"
-            fullWidth
-            label="Password"
-            variant="outlined"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </Box>
-      </div>
-      <div className={cx('login-submit')}>
-        <button onClick={() => handleLogin(username, password)}>Login</button>
-      </div>
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              sx={{
+                '& > :not(style)': { borderRadius: '50px' },
+              }}
+              id="outlined-basic"
+              fullWidth
+              label="User Name"
+              variant="outlined"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <TextField
+              sx={{
+                '& > :not(style)': { borderRadius: '50px' },
+              }}
+              type="password"
+              id="outlined-basic"
+              fullWidth
+              label="Password"
+              variant="outlined"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </Box>
+        </div>
+        <div className={cx('login-submit')}>
+          <button onClick={() => handleLogin(username, password)}>Login</button>
+        </div>
       </div>
     </div>
   )
