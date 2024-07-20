@@ -15,6 +15,7 @@ const BillInfor = ({
   vouchers,
   handleChange,
   handleOpenCash,
+  handlePayByCard,
 }) => {
   return (
     <div className={styles.container}>
@@ -108,6 +109,7 @@ const BillInfor = ({
         Pay by cash
       </Button>
       <Button
+        onClick={handlePayByCard}
         variant="contained"
         sx={{
           background: 'black',

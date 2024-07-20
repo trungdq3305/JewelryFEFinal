@@ -12,6 +12,23 @@ const PaymentSuccess = ({
   bill,
 }) => {
   const navigate = useNavigate()
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString)
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+
+    return `${formattedDate} at ${formattedTime}`
+  }
 
   if (!bill) {
     return <div>Loading...</div>
@@ -27,7 +44,10 @@ const PaymentSuccess = ({
         }}
       >
         <div>
-          <CheckCircleIcon />
+          <CheckCircleIcon
+            color="success"
+            sx={{ fontSize: 90, marginTop: '20px' }}
+          />
         </div>
         <h1>Payment success </h1>
         <div
@@ -47,7 +67,7 @@ const PaymentSuccess = ({
             <p>Customer</p>
           </div>
           <div>
-            <p>{bill.publishDay}</p>
+            <p>{formatDateTime(bill.publishDay)}</p>
             <p>{bill.cashierId}</p>
             {bill.customerId !== null ? <p>{bill.customerId}</p> : <p>N/A</p>}
           </div>
