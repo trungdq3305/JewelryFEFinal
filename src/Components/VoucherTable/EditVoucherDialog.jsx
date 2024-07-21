@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper, Snackbar, Alert } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper, Snackbar, Alert, Typography } from '@mui/material';
 
 const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formData, setFormData }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -39,7 +39,20 @@ const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formD
       return;
     }
 
-    onEditVoucher(formData);
+    // Format date fields to ISO 8601 string
+    const formatToISOString = (dateObj) => {
+      if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) return null;
+      const date = new Date(dateObj.year, dateObj.month - 1, dateObj.day);
+      return date.toISOString();
+    };
+
+    const formattedFormData = {
+      ...formData,
+      expiredDay: formatToISOString(formData.expiredDay),
+      publishedDay: formatToISOString(formData.publishedDay),
+    };
+
+    onEditVoucher(formattedFormData);
   };
 
   const handleSnackbarClose = () => {
