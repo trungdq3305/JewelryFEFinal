@@ -1,4 +1,3 @@
-// Profile.js
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { searchUser, updateUser } from '../Configs/axios';
@@ -18,7 +17,6 @@ const Profile = () => {
   });
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
 
-  // Fetch user data from the API
   const getUser = async () => {
     try {
       const result = await searchUser(userId);
@@ -42,7 +40,6 @@ const Profile = () => {
     getUser();
   }, [userId]);
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
@@ -51,7 +48,6 @@ const Profile = () => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -70,7 +66,6 @@ const Profile = () => {
     }
   };
 
-  // Toggle between edit and view mode
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };

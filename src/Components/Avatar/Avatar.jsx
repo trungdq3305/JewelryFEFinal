@@ -1,47 +1,53 @@
-import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import { alpha } from '@mui/material/styles';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import { useAuth } from '../../Context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import Divider from '@mui/material/Divider'
+import Popover from '@mui/material/Popover'
+import { alpha } from '@mui/material/styles'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import { useAuth } from '../../Context/UserContext'
+import { useNavigate } from 'react-router-dom'
 
-const userStr = localStorage.getItem('user');
-const user = JSON.parse(userStr);
-const userId = user.userId;
+const AccountPopover = () => {
+  const [open, setOpen] = useState(null)
+  const navigate = useNavigate()
+  const { logOut } = useAuth()
 
-const MENU_OPTIONS = [
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-    path: `/Profile/${userId}`,
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-    path: '/Settings',
-  },
-];
+  // Retrieve user information from localStorage
+  const userStr = localStorage.getItem('user');
+  const user = JSON.parse(userStr);
+  const userId = user ? user.userId : null;
 
-export default function AccountPopover() {
-  const [open, setOpen] = useState(null);
-  const navigate = useNavigate();
-  const { logOut } = useAuth();
+  // Define menu options with paths
+  const MENU_OPTIONS = [
+    {
+      label: 'Profile',
+      icon: 'eva:person-fill',
+      path: `/Profile/${userId}`, // Use the userId to navigate to the profile page
+    },
+    {
+      label: 'Settings',
+      icon: 'eva:settings-2-fill',
+      path: '/Settings',
+    },
+  ];
 
+  // Handle opening the popover
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
+  // Handle closing the popover
   const handleClose = () => {
     setOpen(null);
   };
 
+  // Handle logout
   const handleLogout = () => {
     logOut();
+    handleClose();
   };
 
   return (
@@ -58,9 +64,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar>
-          {/* Optional: Add avatar image or initials here */}
-        </Avatar>
+        <Avatar />
       </IconButton>
 
       <Popover
@@ -90,7 +94,7 @@ export default function AccountPopover() {
           <MenuItem
             key={option.label}
             onClick={() => {
-              navigate(option.path);
+              navigate(option.path); // Navigate to the path
               handleClose();
             }}
           >
@@ -104,14 +108,13 @@ export default function AccountPopover() {
           disableRipple
           disableTouchRipple
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-          onClick={() => {
-            handleLogout();
-            handleClose();
-          }}
+          onClick={handleLogout}
         >
           Logout
         </MenuItem>
       </Popover>
     </>
   );
-}
+};
+
+export default AccountPopover

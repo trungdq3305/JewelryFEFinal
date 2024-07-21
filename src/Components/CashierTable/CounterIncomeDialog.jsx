@@ -35,15 +35,16 @@ const CounterIncomeDialog = ({ openDialog, handleCloseDialog }) => {
 
       console.log('API result:', result);
 
-      if (result.data.isSuccess && result.data.code === 200) {
-        setIncome(result.data.data); // Set income if data is present
+      if (result.isSuccess && result.code === 200) {
+        setIncome(result.data); 
+        console.log(income)
       } else {
         console.error('Error fetching data:', result.message);
-        setIncome(null); // Handle errors or unexpected responses
+        setIncome(null); 
       }
     } catch (error) {
       console.error('Error viewing income:', error);
-      setIncome(null); // Handle network or other errors
+      setIncome(null); 
     }
   };
 

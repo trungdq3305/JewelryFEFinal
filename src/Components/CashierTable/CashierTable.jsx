@@ -21,6 +21,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import UpdateCashierDialog from './UpdateCashierDialog';
 import { updateCashier } from '../../Configs/axios';
+import { format } from 'date-fns';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -96,7 +97,9 @@ const initialFormData = {
   endCash: '',
   cashNumber: '',
   userId: '',
-  status: ''
+  status: '',
+  income: '',
+  cashId: ''
 };
 
 const CashierTable = ({ cashiers }) => {
@@ -107,11 +110,11 @@ const CashierTable = ({ cashiers }) => {
 
   const handleUpdate = async () => {
     try {
-      const result = await updateCashier(updateData)
-      console.log(result.data)
-      handleCloseDialog()
+      const result = await updateCashier(updateData);
+      console.log(result.data);
+      handleCloseDialog();
     } catch (error) {
-      console.error('Error editing product:', error)
+      console.error('Error editing product:', error);
     }
   };
 
@@ -121,6 +124,10 @@ const CashierTable = ({ cashiers }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const formatDate = (date) => {
+    return format(new Date(date), 'MMM dd, yyyy HH:mm:ss'); // Format date as needed
   };
 
   const emptyRows =
@@ -136,9 +143,11 @@ const CashierTable = ({ cashiers }) => {
   };
 
   const cashierList = Array.isArray(cashiers) ? cashiers : [];
+
   useEffect(() => {
-    updateCashier()
-  }, [])
+    updateCashier();
+  }, []);
+
   return (
     <>
       <UpdateCashierDialog
@@ -177,10 +186,10 @@ const CashierTable = ({ cashiers }) => {
                   {cashier.cashId}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  {cashier.startCash}
+                  {formatDate(cashier.startCash)}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  {cashier.endCash}
+                  {formatDate(cashier.endCash)}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
                   {cashier.income}
@@ -200,17 +209,17 @@ const CashierTable = ({ cashiers }) => {
                     setUpdateData({
                       ...initialFormData,
                       ...cashier,
-                    })
+                    });
                   }}
-                  sx={{
-                    backgroundColor: 'white',
-                    color: '#FFA500',
-                    border: '1px solid #FFA500',
-                    '&:hover': {
+                    sx={{
                       backgroundColor: 'white',
-                      borderColor: '#FFA500',
-                    },
-                  }}>Edit</Button>
+                      color: '#FFA500',
+                      border: '1px solid #FFA500',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        borderColor: '#FFA500',
+                      },
+                    }}>Edit</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -223,7 +232,7 @@ const CashierTable = ({ cashiers }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
-               style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={cashierList.length}

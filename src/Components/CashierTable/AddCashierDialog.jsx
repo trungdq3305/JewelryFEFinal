@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper } from '@mui/material'
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper, FormControl, Select, MenuItem,InputLabel } from '@mui/material'
 
 
 const AddCashierDialog = ({ openDialog, handleCloseDialog, onAddCashier, initialFormData }) => {
@@ -41,9 +41,11 @@ const AddCashierDialog = ({ openDialog, handleCloseDialog, onAddCashier, initial
             fullWidth
             name="startCash"
             label="Start Date"
-            type="text"
+            type="datetime-local"
             value={formData.startCash}
             onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+
           />
           <TextField
             margin="normal"
@@ -51,21 +53,28 @@ const AddCashierDialog = ({ openDialog, handleCloseDialog, onAddCashier, initial
             fullWidth
             name="endCash"
             label="End Date"
-            type="text"
+            type="datetime-local"
             value={formData.endCash}
             onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+
           />
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="cashNumber"
-            label="Cashier Number"
-            type="number"
-            value={formData.cashNumber}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel>Cashier Number</InputLabel>
+            <Select
+              name="cashNumber"
+              value={formData.cashNumber}
+              onChange={handleChange}
+              label="Cashier Number"
+            >
+              {[1, 2, 3, 4].map((number) => (
+                <MenuItem key={number} value={number}>
+                  {number}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             margin="normal"
             required

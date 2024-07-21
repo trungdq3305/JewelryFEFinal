@@ -23,6 +23,7 @@ import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
 import DashBoardAdminPage from '../Page/DashBoardAdminPage.jsx'
 import PolicyPage from '../Page/PolicyPage.jsx'
 import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
+import Profile from '../Page/Profile.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -64,7 +65,7 @@ export const router = createBrowserRouter([
       {
         path: 'ManagerHomePage',
         element: (
-          <ProtectedRoutes allowedRoles={[2,3]}>
+          <ProtectedRoutes allowedRoles={[2, 3]}>
             <ManagerHomePage />
           </ProtectedRoutes>
         ),
@@ -196,6 +197,11 @@ export const router = createBrowserRouter([
         path: 'PaymentResponse',
         element: <PaymentResponsePage />,
       },
+      {
+        path: 'Profile/:userId',
+        element: <Profile />
+      }
+
     ],
   },
 ])

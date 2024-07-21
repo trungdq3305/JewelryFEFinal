@@ -71,16 +71,21 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
             value={formatDateTimeLocal(updatedFormData.endCash)}
             onChange={handleChange}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="cashNumber"
-            label="Cashier Number"
-            type="number"
-            value={updatedFormData.cashNumber}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel>Cashier Number</InputLabel>
+            <Select
+              name="cashNumber"
+              value={formData.cashNumber}
+              onChange={handleChange}
+              label="Cashier Number"
+            >
+              {[1, 2, 3, 4].map((number) => (
+                <MenuItem key={number} value={number}>
+                  {number}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             margin="normal"
             required
