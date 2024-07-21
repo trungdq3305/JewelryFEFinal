@@ -84,6 +84,9 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
+              onClick={() => {
+                navigate('/History')
+              }}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',
@@ -98,9 +101,9 @@ const Header = ({ handleCategory }) => {
           </li>
           <li>
             <Button
-            onClick={() => {
-              navigate('/PolicyPage')
-            }}
+              onClick={() => {
+                navigate('/PolicyPage')
+              }}
               sx={{
                 backgroundColor: '#333',
                 color: 'white',

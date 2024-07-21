@@ -23,6 +23,8 @@ import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
 import DashBoardAdminPage from '../Page/DashBoardAdminPage.jsx'
 import PolicyPage from '../Page/PolicyPage.jsx'
 import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
+import { History } from '@mui/icons-material'
+import HistoryPage from '../Page/HistoryPage.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -195,6 +197,14 @@ export const router = createBrowserRouter([
       {
         path: 'PaymentResponse',
         element: <PaymentResponsePage />,
+      },
+      {
+        path: 'History',
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2]}>
+            <HistoryPage />
+          </ProtectedRoutes>
+        ),
       },
     ],
   },
