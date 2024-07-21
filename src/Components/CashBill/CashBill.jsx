@@ -10,8 +10,8 @@ import {
   TablePagination,
   Box,
   IconButton,
+  Button,
 } from '@mui/material'
-import { Button } from 'bootstrap'
 import React, { useState } from 'react'
 import FirstPageIcon from '@mui/icons-material/FirstPage'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
@@ -19,7 +19,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useTheme } from '@emotion/react'
 
-const CashBill = ({ cashBill }) => {
+const CashBill = ({ cashBill, totalCost }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const formatDateTime = (dateString) => {
@@ -113,8 +113,20 @@ const CashBill = ({ cashBill }) => {
   }
   return (
     <>
-      <h2>Number of Bill: </h2>
-      <h2>Total:</h2>
+      <h2
+        style={{
+          marginTop: '20px',
+        }}
+      >
+        Number of Bill: {cashBill.length}{' '}
+      </h2>
+      <h2
+        style={{
+          marginBottom: '20px',
+        }}
+      >
+        Total: {Number(totalCost.toFixed(0)).toLocaleString('vn')}{' '}
+      </h2>
       <TableContainer
         component={Paper}
         sx={{ maxHeight: 600, display: 'flex', flexDirection: 'column' }}
@@ -167,40 +179,64 @@ const CashBill = ({ cashBill }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
-            {/* {(rowsPerPage > 0
+            {(rowsPerPage > 0
               ? cashBill.slice(
                   page * rowsPerPage,
                   page * rowsPerPage + rowsPerPage
                 )
               : cashBill
-            ).map((customer) => ( */}
-            <TableRow>
-              {/* key={customer.customerId} */}
-              <TableCell component="th" scope="row" style={{ width: 50 }}>
-                B001
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {/* {{Number(
-                        product.PriceWithDiscount.toFixed(0)
-                      ).toLocaleString('vn')}{' '}
-                      VND} */}
-                1000000
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                29/11/2024
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                N/A
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                N/A
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                1
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right"></TableCell>
-            </TableRow>
+            ).map((item) => (
+              <TableRow key={cashBill.billId}>
+                <TableCell component="th" scope="row" style={{ width: 50 }}>
+                  {item.billId}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                  {Number(item.totalCost.toFixed(0)).toLocaleString('vn')}{' '}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                  {formatDateTime(item.publishDay)}
+                </TableCell>
+                {item.voucherVoucherId === null ? (
+                  <TableCell style={{ width: 160 }} align="right">
+                    N/A
+                  </TableCell>
+                ) : (
+                  <TableCell style={{ width: 160 }} align="right">
+                    {item.voucherVoucherId}
+                  </TableCell>
+                )}
 
+                {item.customerId === null ? (
+                  <TableCell style={{ width: 160 }} align="right">
+                    N/A
+                  </TableCell>
+                ) : (
+                  <TableCell style={{ width: 160 }} align="right">
+                    {item.customerId}
+                  </TableCell>
+                )}
+                <TableCell style={{ width: 160 }} align="right">
+                  {item.type}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="right">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: '60px',
+                      height: '50px',
+                      background: 'black',
+                      color: '#ffdbf0',
+                      '&:hover': {
+                        backgroundColor: '#ffdbf0',
+                        color: 'black',
+                      },
+                    }}
+                  >
+                    Detail
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={11} />

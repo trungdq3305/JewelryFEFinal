@@ -209,10 +209,13 @@ export const router = createBrowserRouter([
       },
       {
         path: 'Profile/:userId',
-         <ProtectedRoutes allowedRoles={[1, 2,3]}>
-        element: <Profile />
-        </ProtectedRoutes>
-      }
+
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2, 3]}>
+            <Profile />
+          </ProtectedRoutes>
+        ),
+      },
     ],
   },
 ])

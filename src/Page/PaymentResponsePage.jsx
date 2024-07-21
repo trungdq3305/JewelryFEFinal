@@ -46,7 +46,20 @@ const PaymentResponsePage = () => {
       setVoucherId(storedVoucherId)
     }
   }, [])
-
+  const createBillAsync = async (initialdata) => {
+    try {
+      const result = await createBill(initialdata)
+      if (result.data?.code === 200) {
+        console.log(result)
+        setBill(result.data.data)
+        sessionStorage.removeItem('cardValues')
+      } else {
+        console.error('Error creating bill:', result)
+      }
+    } catch (error) {
+      console.error('Error creating bill:', error)
+    }
+  }
   useEffect(() => {
     const fetchPaymentResponse = async () => {
       try {
@@ -79,23 +92,13 @@ const PaymentResponsePage = () => {
         customerId: customerId || '',
       }
       initialdata.product = product
-
-      const createBillAsync = async () => {
-        try {
-          const result = await createBill(initialdata)
-          if (result.data?.code === 200) {
-            console.log(result)
-            setBill(result.data.data)
-            sessionStorage.removeItem('cardValues')
-          } else {
-            console.error('Error creating bill:', result)
-          }
-        } catch (error) {
-          console.error('Error creating bill:', error)
-        }
-      }
-
-      createBillAsync()
+      createBillAsync(initialdata)
+      sessionStorage.removeItem('billProducts')
+      sessionStorage.removeItem('totalCost')
+      sessionStorage.removeItem('voucherCost')
+      sessionStorage.removeItem('costWithVoucher')
+      sessionStorage.removeItem('customerId')
+      sessionStorage.removeItem('voucherId')
     }
   }, [paymentResponse, billProduct, voucherId, customerId])
 
