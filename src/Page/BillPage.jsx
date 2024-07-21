@@ -12,9 +12,11 @@ import {
   createBill,
   createVnPay,
   getAllBill,
+  getbillbyId,
   getCustomer,
   getVouchers,
   getVouchersv2,
+  sendmail,
 } from '../Configs/axios'
 import PayByCashModal from '../Components/Payment/PayByCashModal'
 import PaymentSuccess from '../Components/Payment/PaymentSuccess'
@@ -97,7 +99,128 @@ const BillPage = () => {
     window.location.href = url
     return 'Redirecting to payment page...'
   }
+  const sendBill = async () => {
+    if (customer) {
+      alert('Send bill success')
 
+      const sendingFormat = {
+        information: `
+          <div style="display: flex; flex-direction: row; align-items: center;">
+            <div>
+              <svg
+                width="90"
+                height="90"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style="margin-top: 20px; color: green;"
+              >
+                <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM12 20C7.582 20 4 16.418 4 12C4 7.582 7.582 4 12 4C16.418 4 20 7.582 20 12C20 16.418 16.418 20 12 20Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <h1>Payment success</h1>
+            <div style="display: flex; justify-content: space-around; align-items: flex-end;">
+              <div style="margin-right: 70px;">
+                <p>Bill No:</p>
+                <p>Publish Day:</p>
+                <p>Cashier:</p>
+                <p>Customer:</p>
+              </div>
+              <div>
+                <p>${bill.billId}</p>
+                <p>${bill.publishDay}</p>
+                <p>${bill.cashierId}</p>
+                <p>${bill.customerId !== null ? bill.customerId : 'N/A'}</p>
+              </div>
+            </div>
+            <div style="padding: 20px; width: 100%; position: sticky; top: 0; right: 0; height: 100%; color: white; font-family: Arial, sans-serif;">
+              <div style="max-height: 70vh; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; background-color: #ffffff;">
+                  <thead>
+                    <tr>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">No.</th>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">Product Name</th>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">Quantity</th>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">Price</th>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">Price After Discount</th>
+                      <th style="border: 1px solid #000000; padding: 10px; text-align: center; background-color: #cecece;">Total Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${billProduct
+                      .map(
+                        (product, index) => `
+                      <tr key="${index}">
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${
+                          index + 1
+                        }</td>
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${
+                          product.Name
+                        }</td>
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${
+                          product.Quantity
+                        }</td>
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${Number(
+                          product.Price.toFixed(0)
+                        ).toLocaleString('vn')} VND</td>
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${Number(
+                          product.PriceWithDiscount.toFixed(0)
+                        ).toLocaleString('vn')} VND</td>
+                        <td style="border: 1px solid #000000; padding: 10px; text-align: center; color: #000000;">${Number(
+                          (
+                            product.PriceWithDiscount * product.Quantity
+                          ).toFixed(0)
+                        ).toLocaleString('vn')} VND</td>
+                      </tr>
+                    `
+                      )
+                      .join('')}
+                  </tbody>
+                </table>
+              </div>
+              <div style="text-align: left; font-size: 1em; display: flex; justify-content: space-between; align-items: flex-start; margin: 15px;">
+                <div style="padding: 10px;">
+                  <p><strong>Number of Products: </strong></p>
+                  <p><strong>Cost: </strong></p>
+                  <p><strong>Voucher: </strong></p>
+                  <p style="font-size: 1.2em; margin-top: 10px; color: black; font-weight: bold;"><strong>Total Cost: </strong></p>
+                </div>
+                <div style="text-align: right; padding: 10px;">
+                  <p style="margin: 5px 0; color: black;"><strong>${
+                    billProduct.length
+                  }</strong></p>
+                  <p style="margin: 5px 0; color: black;"><strong>${Number(
+                    totalCost.toFixed(0)
+                  ).toLocaleString('vn')}</strong></p>
+                  <p style="margin: 5px 0; color: black;"><strong>${Number(
+                    voucher.toFixed(0)
+                  ).toLocaleString('vn')}</strong></p>
+                  <p style="margin: 5px 0; color: black;"><strong>${Number(
+                    costWithVoucher.toFixed(0)
+                  ).toLocaleString('vn')}</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `,
+        subject: 'Payment Success',
+        customer: bill.customer.email, // replace with actual customer email
+      }
+
+      // Example of using sendingFormat in an email
+
+      console.log(sendingFormat)
+
+      if (sendingFormat.customer !== null) {
+        var res = await sendmail(sendingFormat)
+      } else {
+        alert('Invalid customer! Can not send bill')
+      }
+    } else {
+      alert('Invalid customer')
+    }
+  }
   const handlecreateBill = async () => {
     let product = {}
     billProduct.forEach((p) => {
@@ -123,22 +246,23 @@ const BillPage = () => {
       setOpenCash(false)
       console.log(result)
       setBillId(result.data.data.billId)
+      setBill(result.data.data)
       sessionStorage.removeItem('cardValues')
     }
   }
 
-  useEffect(() => {
-    const getBill = async () => {
-      if (billId) {
-        const getAll = await getAllBill('', '', billId)
-        if (getAll.data.data[0] !== null) {
-          console.log(getAll.data.data[0])
-          setBill(getAll.data.data[0])
-        }
-      }
-    }
-    getBill()
-  }, [billId])
+  // useEffect(() => {
+  //   const getBill = () => {
+  //     if (billId) {
+  //       const getAll = getbillbyId(billId)
+  //       if (getAll.data.data[0] !== null) {
+  //         console.log(getAll.data.data[0])
+  //         setBill(getAll.data.data[0])
+  //       }
+  //     }
+  //   }
+  //   getBill()
+  // }, [billId])
 
   const calculateChange = () => {
     const res = cash - totalCost
@@ -309,6 +433,7 @@ const BillPage = () => {
             >
               <Box sx={style}>
                 <PaymentSuccess
+                  sendBill={sendBill}
                   bill={bill}
                   products={billProduct}
                   totalCost={totalCost}

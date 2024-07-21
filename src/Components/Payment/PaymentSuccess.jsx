@@ -5,6 +5,7 @@ import styles from '../Payment/PaymentSuccess.module.scss'
 import { useNavigate } from 'react-router-dom'
 
 const PaymentSuccess = ({
+  sendBill,
   products,
   totalCost,
   voucherCost,
@@ -160,6 +161,7 @@ const PaymentSuccess = ({
             Back to homepage
           </Button>
           <Button
+            onClick={sendBill}
             variant="contained"
             sx={{
               marginRight: '20px',
@@ -173,7 +175,7 @@ const PaymentSuccess = ({
               },
             }}
           >
-            Send warranty
+            Send bill
           </Button>
         </div>
       </div>

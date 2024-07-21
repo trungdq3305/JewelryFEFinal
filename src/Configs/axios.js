@@ -844,3 +844,33 @@ export const getProductByBill = async (billId) => {
     }
   }
 }
+
+export const sendmail = async (formData) => {
+  try {
+    const data = await axios.post('https://localhost:7093/send-mail', formData)
+    console.log(data)
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error massage: ', error.message)
+      return error.message
+    } else {
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occired'
+    }
+  }
+}
+export const getbillbyId = async (id) => {
+  try {
+    const query = `?Id=${id}`
+    const data = await axios.get(api + '/bill/ViewBillById' + query)
+    return data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error massage: ', error.message)
+      return error.message
+    } else {
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
