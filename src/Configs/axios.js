@@ -648,3 +648,100 @@ export const getAllBill = async (start, end, id) => {
     }
   }
 }
+export const getTotalIncome = async () => {
+  try {
+    const response = await axios.get(api + '/dashboard/totalincome')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
+export const TotalBill = async () => {
+  try {
+    const response = await axios.get(api + '/bill/billcount')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
+
+export const getIncomeByCashNumber = async () => {
+  try {
+    const response = await axios.get(api + '/dashboard/incomebycashnumber')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
+
+export const getIncomeByMonth = async () => {
+  try {
+    const response = await axios.get(api + '/dashboard/incomebymonth')
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unxpected error:', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
+export const createVnPay = async (formData) => {
+  try {
+    const response = await axios.post(
+      'https://localhost:7093/create-paymenturl',
+      formData
+    )
+    console.log(response)
+    return response
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
+export const reponseVnPay = async (data) => {
+  try {
+    const response = await axios.get('https://localhost:7093/make-payment', {
+      params: data,
+    })
+    console.log(response)
+    return response
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return error.message
+    } else {
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}

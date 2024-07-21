@@ -13,6 +13,7 @@ const OrderCardList = ({ cardValues, updateQuantity, increase, decrease }) => {
               name={cardValue.Name}
               price={cardValue.Price}
               quantity={cardValue.Quantity}
+              amount={cardValue.amount}
               priceWithDiscount={cardValue.PriceWithDiscount}
               updateQuantity={updateQuantity}
               increase={() => increase(cardValue.Id)}

@@ -19,6 +19,10 @@ import StaffCustomer from '../Page/StaffCustomer.jsx'
 import StaffDiscount from '../Page/StaffDiscount.jsx'
 import GoldPage from '../Page/GoldPage.jsx'
 import ManageGold from '../Page/ManageGold.jsx'
+import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
+import DashBoardAdminPage from '../Page/DashBoardAdminPage.jsx'
+import PolicyPage from '../Page/PolicyPage.jsx'
+import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -34,10 +38,18 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'AdminPage',
+        path: 'AdminPages',
         element: (
           <ProtectedRoutes allowedRoles={[3]}>
             <ManageUsers />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'AdminPage',
+        element: (
+          <ProtectedRoutes allowedRoles={[3]}>
+            <DashBoardAdminPage />
           </ProtectedRoutes>
         ),
       },
@@ -131,7 +143,7 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
-      
+
       {
         path: 'ManagerHomePage/ManageDiscount',
         element: (
@@ -141,10 +153,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'AdminHomePage',
+        path: 'ManagerHomePage/Dashboard',
         element: (
-          <ProtectedRoutes allowedRoles={[3]}>
-            <ManageUsers />
+          <ProtectedRoutes allowedRoles={[2]}>
+            <DashBoardManagePage />
           </ProtectedRoutes>
         ),
       },
@@ -172,7 +184,18 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
-      
+      {
+        path: 'PolicyPage',
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2, 3]}>
+            <PolicyPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'PaymentResponse',
+        element: <PaymentResponsePage />,
+      },
     ],
   },
 ])

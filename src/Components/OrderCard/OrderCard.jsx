@@ -15,6 +15,7 @@ const OrderCard = ({
   price,
   priceWithDiscount,
   quantity,
+  amount,
   increase,
   decrease,
 }) => {
@@ -64,11 +65,16 @@ const OrderCard = ({
             >
               <div>{quantity}</div>
             </div>
-            <div>
+            {quantity >= amount ? (
+              <button disabled="true" className={styles.icondisable}>
+                <AddIcon />
+              </button>
+            ) : (
               <button className={styles.icon} onClick={increase}>
                 <AddIcon />
               </button>
-            </div>
+            )}
+            <div></div>
           </div>
         </div>
       </Box>
