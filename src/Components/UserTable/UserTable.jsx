@@ -111,7 +111,6 @@ const UserTable = ({ users }) => {
     if (selectedUser) {
       try {
         const result = await activeDeactiveUser(selectedUser)
-        console.log(result)
       } catch (error) {
         console.error('Error active/deactive user', error)
       } finally {

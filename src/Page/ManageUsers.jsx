@@ -82,30 +82,31 @@ const ManageUsers = () => {
 
   return (
     <Box
-  flexDirection="row"
-  justifyContent="space-between"
-  alignItems="center"
-  margin="20px"
->
-  <Button onClick={handleOpenDialog} sx={{ height: '50px' , margin: '10px',backgroundColor: 'white',
-                color: '#3baf80', 
-                border: '1px solid #3baf80',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#3baf80',
-                },
-                height:'50px'}}>
-    Add User
-  </Button>
-  <TextField
-    id="filled-search"
-    label="Search"
-    type="search"
-    variant="filled"
-    style={{ width: '300px' , marginLeft: '600px', marginBottom: ' 10px'}}
-    onChange={onSearchTextChange}
-  />
-      
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
+      margin="20px"
+    >
+      <Button onClick={handleOpenDialog} sx={{
+        height: '50px', margin: '10px', backgroundColor: 'white',
+        color: '#3baf80',
+        border: '1px solid #3baf80',
+        '&:hover': {
+          backgroundColor: 'white',
+          borderColor: '#3baf80',
+        },
+      }}>
+        Add User
+      </Button>
+      <TextField
+        id="filled-search"
+        label="Search"
+        type="search"
+        variant="filled"
+        style={{ width: '300px', marginLeft: '600px', marginBottom: ' 10px' }}
+        onChange={onSearchTextChange}
+      />
+
       <AddUserDialog
         openDialog={openDialog}
         handleCloseDialog={handleCloseDialog}

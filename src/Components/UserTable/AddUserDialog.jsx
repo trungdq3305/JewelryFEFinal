@@ -83,8 +83,11 @@ const AddUserDialog = ({ openDialog, handleCloseDialog, onAddUser, initialFormDa
             fullWidth
             name="doB"
             label="Date of birth"
+            type='date'
             value={formData.doB}
             onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+
           />
           <TextField
             margin="normal"
