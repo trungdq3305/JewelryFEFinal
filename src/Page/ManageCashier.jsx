@@ -1,23 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { addCashier, getAllCashier, searchCashier } from '../Configs/axios';
 import CashierTable from '../Components/CashierTable/CashierTable';
 import AddCashierDialog from '../Components/CashierTable/AddCashierDialog';
+import CounterIncomeDialog from '../Components/CashierTable/CounterIncomeDialog';
 
 const ManageCashier = () => {
   const [loading, setLoading] = useState(true);
   const [cashiers, setCashiers] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openIncomeDialog, setOpenIncomeDialog] = useState(false);
+
+  const handleOpenAddDialog = () => {
+    setOpenAddDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  const handleCloseAddDialog = () => {
+    setOpenAddDialog(false);
   };
-  
+
+  const handleOpenIncomeDialog = () => {
+    setOpenIncomeDialog(true);
+  };
+
+  const handleCloseIncomeDialog = () => {
+    setOpenIncomeDialog(false);
+  };
+
   const onSearchTextChange = async (event) => {
     const searchValue = event.target.value;
     if (searchValue.length === 0) {
@@ -27,7 +37,7 @@ const ManageCashier = () => {
       setCashiers(result.data.data);
     }
   };
-  
+
   const loadCashier = async () => {
     setLoading(true);
     const result = await getAllCashier();
@@ -47,7 +57,7 @@ const ManageCashier = () => {
         window.alert(result.message);
       } else {
         console.log(result.data);
-        handleCloseDialog();
+        handleCloseAddDialog();
         loadCashier();
       }
     } catch (error) {
@@ -55,7 +65,7 @@ const ManageCashier = () => {
       console.error('Error adding user:', error);
     }
   };
-  
+
   const initialFormData = {
     startCash: '',
     endCash: '',
@@ -83,16 +93,40 @@ const ManageCashier = () => {
         width="100%"
         maxWidth="1200px"
       >
-        <Button onClick={handleOpenDialog} sx={{ height: '50px' , margin: '20px',backgroundColor: 'white',
-                color: '#3baf80', 
-                border: '1px solid #3baf80',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#3baf80',
-                },
-                height:'50px'}}>
-          Add cashier
-        </Button>
+        <Box display="flex">
+          <Button
+            onClick={handleOpenAddDialog}
+            sx={{
+              height: '50px',
+              margin: '20px',
+              backgroundColor: 'white',
+              color: '#3baf80',
+              border: '1px solid #3baf80',
+              '&:hover': {
+                backgroundColor: 'white',
+                borderColor: '#3baf80',
+              },
+            }}
+          >
+            Add Cashier
+          </Button>
+          <Button
+            onClick={handleOpenIncomeDialog}
+            sx={{
+              height: '50px',
+              margin: '20px',
+              backgroundColor: 'white',
+              color: '#3baf80',
+              border: '1px solid #3baf80',
+              '&:hover': {
+                backgroundColor: 'white',
+                borderColor: '#3baf80',
+              },
+            }}
+          >
+            View Income
+          </Button>
+        </Box>
         <TextField
           id="filled-search"
           label="Search"
@@ -103,10 +137,14 @@ const ManageCashier = () => {
         />
       </Box>
       <AddCashierDialog
-        openDialog={openDialog}
-        handleCloseDialog={handleCloseDialog}
+        openDialog={openAddDialog}
+        handleCloseDialog={handleCloseAddDialog}
         onAddCashier={handleAddCashier}
         initialFormData={initialFormData}
+      />
+      <CounterIncomeDialog
+        openDialog={openIncomeDialog}
+        handleCloseDialog={handleCloseIncomeDialog}
       />
       <CashierTable cashiers={cashiers} />
     </Box>

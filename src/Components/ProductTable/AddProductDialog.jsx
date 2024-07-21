@@ -52,21 +52,6 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
     }
   }
 
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target
-    setPropChecks((prevChecks) => ({
-      ...prevChecks,
-      [name]: checked
-    }))
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      gem: {
-        ...prevFormData.gem,
-        [name]: checked ? '' : 0
-      }
-    }))
-  }
   const handleAddProduct = () => {
     onAddProduct(formData)
     setFormData(initialFormData) // Reset the form
@@ -175,69 +160,6 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             value={formData.image}
             onChange={handleChange}
           />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="additionalProp1"
-                checked={propChecks.additionalProp1}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Additional Prop 1"
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            name="gem.additionalProp1"
-            label="Additional Prop 1"
-            type="number"
-            value={formData.gem.additionalProp1}
-            onChange={handleChange}
-            disabled={!propChecks.additionalProp1}
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="additionalProp2"
-                checked={propChecks.additionalProp2}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Additional Prop 2"
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            name="gem.additionalProp2"
-            label="Additional Prop 2"
-            type="number"
-            value={formData.gem.additionalProp2}
-            onChange={handleChange}
-            disabled={!propChecks.additionalProp2}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="additionalProp3"
-                checked={propChecks.additionalProp3}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Additional Prop 3"
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            name="gem.additionalProp3"
-            label="Additional Prop 3"
-            type="number"
-            value={formData.gem.additionalProp3}
-            onChange={handleChange}
-            disabled={!propChecks.additionalProp3}
-          />
-
           <TextField
             margin="normal"
             required

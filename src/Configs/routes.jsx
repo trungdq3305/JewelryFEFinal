@@ -23,6 +23,7 @@ import DashBoardManagePage from '../Page/DashBoardManagePage.jsx'
 import DashBoardAdminPage from '../Page/DashBoardAdminPage.jsx'
 import PolicyPage from '../Page/PolicyPage.jsx'
 import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
+import Profile from '../Page/Profile.jsx'
 import { History } from '@mui/icons-material'
 import HistoryPage from '../Page/HistoryPage.jsx'
 export const router = createBrowserRouter([
@@ -43,7 +44,7 @@ export const router = createBrowserRouter([
         path: 'AdminPages',
         element: (
           <ProtectedRoutes allowedRoles={[3]}>
-            <AdminHomepage />
+            <ManageUsers />
           </ProtectedRoutes>
         ),
       },
@@ -66,7 +67,7 @@ export const router = createBrowserRouter([
       {
         path: 'ManagerHomePage',
         element: (
-          <ProtectedRoutes allowedRoles={[2]}>
+          <ProtectedRoutes allowedRoles={[2, 3]}>
             <ManagerHomePage />
           </ProtectedRoutes>
         ),
@@ -206,6 +207,12 @@ export const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
+      {
+        path: 'Profile/:userId',
+         <ProtectedRoutes allowedRoles={[1, 2,3]}>
+        element: <Profile />
+        </ProtectedRoutes>
+      }
     ],
   },
 ])
