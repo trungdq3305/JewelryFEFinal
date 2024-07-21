@@ -1,40 +1,34 @@
-import { useState } from 'react'
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControlLabel, Checkbox, MenuItem, Select, FormControl, InputLabel, Button, Paper } from '@mui/material'
+import { useState, useEffect } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Button, Paper } from '@mui/material';
 
-const materialMapping = [
-  { value: '1', label: 'Vàng SJC 1L - 10L - 1KG' },
-  { value: '2', label: 'Vàng nh?n SJC 99,99 1 ch?, 2 ch?, 5 ch?' },
-  { value: '3', label: 'Vàng nh?n SJC 99,99 0,3 ch?, 0,5 ch?' },
-  { value: '4', label: 'Vàng n? trang 99,99%' },
-  { value: '5', label: 'Vàng n? trang 99%' },
-  { value: '6', label: 'Vàng n? trang 75%' },
-  { value: '7', label: 'Vàng n? trang 58,3%' },
-  { value: '8', label: 'Vàng n? trang 41,7%' }
-]
-
-const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initialFormData }) => {
-  const [formData, setFormData] = useState(initialFormData)
+const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initialFormData, goldData }) => {
+  const [formData, setFormData] = useState(initialFormData);
   const [propChecks, setPropChecks] = useState({
     additionalProp1: false,
     additionalProp2: false,
     additionalProp3: false
-  })
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    const [mainKey, subKey] = name.split('.')
+  });
 
-    const isNumericField = ['machiningCost', 'amount', 'gem.additionalProp2', 'gem.additionalProp3'].includes(name)
-    const isDecimalField = ['weight', 'size', 'markupRate'].includes(name)
+  useEffect(() => {
+    setFormData(initialFormData);
+  }, [initialFormData]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    const [mainKey, subKey] = name.split('.');
+
+    const isNumericField = ['machiningCost', 'amount', 'gem.additionalProp2', 'gem.additionalProp3'].includes(name);
+    const isDecimalField = ['weight', 'size', 'markupRate'].includes(name);
 
     if (isNumericField && value !== '' && isNaN(value)) {
-      return
+      return;
     }
 
     if (isDecimalField && value !== '' && isNaN(parseFloat(value))) {
-      return
+      return;
     }
 
-    const parsedValue = isNumericField ? parseInt(value, 10) : isDecimalField ? parseFloat(value) : value
+    const parsedValue = isNumericField ? parseInt(value, 10) : isDecimalField ? parseFloat(value) : value;
 
     if (subKey) {
       setFormData((prevFormData) => ({
@@ -43,24 +37,20 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
           ...prevFormData[mainKey],
           [subKey]: parsedValue
         }
-      }))
+      }));
     } else {
       setFormData((prevFormData) => ({
         ...prevFormData,
         [name]: parsedValue
-      }))
+      }));
     }
-  }
+  };
 
   const handleAddProduct = () => {
-    onAddProduct(formData)
-    setFormData(initialFormData) // Reset the form
-    setPropChecks({
-      additionalProp1: false,
-      additionalProp2: false,
-      additionalProp3: false
-    })
-  }
+    onAddProduct(formData);
+    setFormData(initialFormData); // Reset the form
+  };
+
   return (
     <Dialog open={openDialog} onClose={handleCloseDialog}>
       <DialogTitle>Add Product</DialogTitle>
@@ -95,11 +85,15 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
               value={formData.material}
               onChange={handleChange}
             >
-              {
-                materialMapping.map(item =>
-                  <MenuItem key={item.value} value={item.label}>{item.label}</MenuItem>
-                )
-              }
+              {goldData && goldData.length > 0 ? (
+                goldData.map((gold) => (
+                  <MenuItem key={gold.goldId} value={gold.goldName}>{gold.goldName}</MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+              )}
             </Select>
           </FormControl>
           <TextField
@@ -179,6 +173,7 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
-export default AddProductDialog
+  );
+};
+
+export default AddProductDialog;

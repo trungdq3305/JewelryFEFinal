@@ -12,6 +12,9 @@ const Header = ({ handleCategory }) => {
   const handleLogout = () => {
     const result = logOut()
   }
+  const userStr = localStorage.getItem('user');
+  const user = JSON.parse(userStr);
+  const userId = user ? user.userId : null;
   const handleNavigateToManageCustomer = () => {
     navigate('/StaffPage/StaffCustomer')
   }
@@ -120,7 +123,7 @@ const Header = ({ handleCategory }) => {
             <Button
               onClick={() => {
                 {
-                  handleLogout()
+                  navigate(`/Profile/${userId}`)
                 }
               }}
               sx={{

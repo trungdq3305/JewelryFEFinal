@@ -25,13 +25,9 @@ const AccountPopover = () => {
     {
       label: 'Profile',
       icon: 'eva:person-fill',
-      path: `/Profile/${userId}`, // Use the userId to navigate to the profile page
+      path: `/Profile/${userId}`, 
     },
-    {
-      label: 'Settings',
-      icon: 'eva:settings-2-fill',
-      path: '/Settings',
-    },
+    
   ];
 
   // Handle opening the popover

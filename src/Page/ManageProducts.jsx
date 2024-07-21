@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, Paper, TextField } from '@mui/material';
 import ProductTable from '../Components/ProductTable/ProductTable';
-import { getAllProducts, addProduct, searchProduct } from '../Configs/axios';
+import { getAllProducts, addProduct, searchProduct, getAllGold } from '../Configs/axios';
 import AddProductDialog from '../Components/ProductTable/AddProductDialog';
 
 const ManageProducts = () => {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [openDialog, setOpenDialog] = useState(false)
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [goldData, setGoldData] = useState([]);
 
   const handleOpenDialog = () => {
-    setOpenDialog(true)
+    setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
+    setOpenDialog(false);
   };
 
   const initialFormData = {
@@ -35,17 +36,6 @@ const ManageProducts = () => {
     markupRate: ''
   };
 
-  const materialMapping = [
-    { value: '1', label: 'Vàng SJC 1L - 10L - 1KG' },
-    { value: '2', label: 'Vàng nh?n SJC 99,99 1 ch?, 2 ch?, 5 ch?' },
-    { value: '3', label: 'Vàng nh?n SJC 99,99 0,3 ch?, 0,5 ch?' },
-    { value: '4', label: 'Vàng n? trang 99,99%' },
-    { value: '5', label: 'Vàng n? trang 99%' },
-    { value: '6', label: 'Vàng n? trang 75%' },
-    { value: '7', label: 'Vàng n? trang 58,3%' },
-    { value: '8', label: 'Vàng n? trang 41,7%' }
-  ]
-
   const onSearchTextChange = async (event) => {
     const searchValue = event.target.value;
     if (searchValue.length === 0) {
@@ -56,12 +46,26 @@ const ManageProducts = () => {
     }
   };
 
+  const loadGold = async () => {
+    try {
+      const result = await getAllGold();
+      console.log(result.data); // Check the structure of this log
+      setGoldData(result.data || []); // Ensure it is an array
+    } catch (error) {
+      console.error('Error fetching gold data:', error);
+    }
+  };
+
   const loadProducts = async () => {
-    setLoading(true)
-    const result = await getAllProducts('', '', '', '')
-    setProducts(result.data)
-    setLoading(false)
-  }
+    setLoading(true);
+    try {
+      const result = await getAllProducts('', '', '', '');
+      setProducts(result.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+    setLoading(false);
+  };
 
   const handleAddProduct = async (formData) => {
     const requiredFields = [
@@ -74,12 +78,12 @@ const ManageProducts = () => {
       'amount',
       'desc',
       'image'
-    ]
+    ];
     const isAnyFieldEmpty = requiredFields.some((field) => !formData[field]);
 
     if (isAnyFieldEmpty) {
       window.alert('Please fill out all required fields.');
-      return
+      return;
     }
 
     try {
@@ -87,22 +91,22 @@ const ManageProducts = () => {
       handleCloseDialog();
       loadProducts();
     } catch (error) {
-      console.error('Error adding product:', error)
-      // Handle error state or display error message to user
+      console.error('Error adding product:', error);
     }
   };
 
   const reformatData = (formData) => {
-    const item = materialMapping.find(item => item.label === formData.material);
-    const value = item ? item.value : null;
+    const item = goldData.find(item => item.goldName === formData.material);
+    const value = item ? item.goldId : null;
     return {
       ...formData,
       material: value
-    }
-  }
+    };
+  };
 
   useEffect(() => {
     loadProducts();
+    loadGold();
   }, []);
 
   if (loading) return <div>Loading....</div>;
@@ -129,14 +133,15 @@ const ManageProducts = () => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Button
-              onClick={handleOpenDialog} sx={{ height: '50px' , margin: '20px',backgroundColor: 'white',
-                color: '#3baf80', 
+              onClick={handleOpenDialog} sx={{
+                height: '50px', margin: '20px', backgroundColor: 'white',
+                color: '#3baf80',
                 border: '1px solid #3baf80',
                 '&:hover': {
                   backgroundColor: 'white',
                   borderColor: '#3baf80',
                 },
-                height:'50px'}}
+              }}
             >
               Add Product
             </Button>
@@ -154,14 +159,15 @@ const ManageProducts = () => {
             handleCloseDialog={handleCloseDialog}
             onAddProduct={handleAddProduct}
             initialFormData={initialFormData}
+            goldData={goldData}
           />
           <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-            <ProductTable products={products} />
+            <ProductTable products={products} goldData={goldData} />
           </Box>
         </Paper>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default ManageProducts
+export default ManageProducts;

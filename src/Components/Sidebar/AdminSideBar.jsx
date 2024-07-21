@@ -16,6 +16,7 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Context/UserContext';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 
 const drawerWidth = 240;
 
@@ -78,7 +79,9 @@ export default function ManagerSideBar() {
   const handleLogout = () => {
     logOut();
   };
-
+  const userStr = localStorage.getItem('user');
+  const user = JSON.parse(userStr);
+  const userId = user ? user.userId : null;
   return (
     <Box >
       <CssBaseline />
@@ -143,6 +146,33 @@ export default function ManagerSideBar() {
               </ListItemIcon>
               <ListItemText
                 primary="Manage Users"
+                sx={{ opacity: open ? 1 : 0, color: 'white' }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem
+            disablePadding
+            sx={{ display: 'block' }}
+            onClick={() => navigate(`/Profile/${userId}`)}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonOutlineOutlinedIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Profile"
                 sx={{ opacity: open ? 1 : 0, color: 'white' }}
               />
             </ListItemButton>

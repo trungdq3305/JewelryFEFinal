@@ -1,26 +1,26 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { searchUser, updateUser } from '../Configs/axios';
-import { TextField, Button, Box, Paper } from '@mui/material';
-import ChangePasswordDialog from '../Components/Profile/ChangePasswordDialog';
+import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { searchUser, updateUser } from '../Configs/axios'
+import { TextField, Button, Box, Paper } from '@mui/material'
+import ChangePasswordDialog from '../Components/Profile/ChangePasswordDialog'
+import background from '../assets/Login.png'
 
 const Profile = () => {
   const { userId } = useParams();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
   const [userData, setUserData] = useState({
     userId: '',
     username: '',
     fullName: '',
     dateOfBirth: '',
     phone: '',
-    address: '',
-  });
-  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+    address: ''
+  })
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false)
 
   const getUser = async () => {
     try {
       const result = await searchUser(userId);
-      console.log(result);
       const user = Array.isArray(result.data.data) ? result.data.data[0] : result.data.data;
 
       setUserData({
@@ -32,24 +32,24 @@ const Profile = () => {
         address: user.address || '',
       });
     } catch (error) {
-      console.error('Error searching user', error);
+      console.error('Error searching user', error)
     }
   };
 
   useEffect(() => {
     getUser();
-  }, [userId]);
+  }, [userId])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       await updateUser({
         username: userData.username,
@@ -57,9 +57,9 @@ const Profile = () => {
         dateOfBirth: userData.dateOfBirth,
         phone: userData.phone,
         address: userData.address,
-      });
+      })
       alert('User data updated successfully');
-      setIsEditing(false);
+      setIsEditing(false)
     } catch (error) {
       console.error('Error updating user:', error);
       alert('Failed to update user data');
@@ -68,21 +68,42 @@ const Profile = () => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-  };
+  }
 
   const openPasswordDialog = () => {
     setIsPasswordDialogOpen(true);
-  };
+  }
 
   const closePasswordDialog = () => {
     setIsPasswordDialogOpen(false);
-  };
+  }
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Paper elevation={3} sx={{ padding: 4, width: '80%', maxWidth: '600px' }}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      sx={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: '#fff',
+        textAlign: 'center',
+        padding: '20px'
+      }}
+    >
+      <Paper elevation={3} sx={{
+        padding: 4,
+        width: '80%',
+        maxWidth: '600px',
+        backgroundColor: 'rgba(128, 128, 128, 0.5)', 
+        borderRadius: '10px',
+      }}>
         <Box component="form" onSubmit={handleSubmit} sx={{ '& .MuiTextField-root': { m: 1, width: '100%' } }}>
-          <h1>Profile</h1>
+          <h1 style={{ fontFamily: 'Roboto, sans-serif', color: '#fff4fc', fontSize: '2rem' }}>
+            Profile
+          </h1>
           <TextField
             label="User ID"
             name="userId"
@@ -149,15 +170,51 @@ const Profile = () => {
             }}
           />
           <Box mt={2}>
-            <Button onClick={toggleEdit} variant="contained" color="primary">
+            <Button
+              onClick={toggleEdit}
+              variant="contained"
+              color="primary"
+              sx={{
+                borderRadius: '50px',
+                backgroundColor: '#e39994',
+                color: 'white',
+                border: '1px solid #e39994',
+                '&:hover': {
+                  backgroundColor: '#e39994',
+                  borderColor: 'white',
+                },
+              }}
+            >
               {isEditing ? 'Cancel' : 'Edit'}
             </Button>
             {isEditing && (
-              <Button type="submit" variant="contained" color="secondary" sx={{ ml: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                sx={{
+                  borderRadius: '50px',
+                  backgroundColor: '#e39994',
+                  color: 'white',
+                  border: '1px solid #e39994',
+                  ml: 2
+                }}
+              >
                 Save Changes
               </Button>
             )}
-            <Button onClick={openPasswordDialog} variant="contained" color="secondary" sx={{ ml: 2 }}>
+            <Button
+              onClick={openPasswordDialog}
+              variant="contained"
+              color="secondary"
+              sx={{
+                borderRadius: '50px',
+                backgroundColor: '#e39994',
+                color: 'white',
+                border: '1px solid #e39994',
+                ml: 2
+              }}
+            >
               Change Password
             </Button>
           </Box>
@@ -168,4 +225,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Profile
