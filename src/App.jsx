@@ -5,6 +5,7 @@ import { Outlet } from 'react-router'
 import { UserProvider } from './Context/UserContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import DiamondIcon from '@mui/icons-material/Diamond'
 
 
 function App() {

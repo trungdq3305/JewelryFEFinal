@@ -792,19 +792,16 @@ export const getIncomeDaily = async (date, num) => {
       return 'An unexpected error has occurred';
     }
   }
-};
-
-
-
+}
 export const getIncomeMonthly = async (date, num) => {
   try {
     const response = await axios.get(api+'/cashier/income-by-month', {
       params: {
         date,
-        num,
-      },
-    });
-    console.log(response);
+        num
+      }
+    })
+    console.log(response)
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
