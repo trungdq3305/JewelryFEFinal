@@ -26,6 +26,7 @@ import PaymentResponsePage from '../Page/PaymentResponsePage.jsx'
 import Profile from '../Page/Profile.jsx'
 import { History } from '@mui/icons-material'
 import HistoryPage from '../Page/HistoryPage.jsx'
+import BillDetailPage from '../Page/BillDetailPage.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -213,6 +214,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoutes allowedRoles={[1, 2, 3]}>
             <Profile />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'BillDetail/:billId',
+
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2, 3]}>
+            <BillDetailPage />
           </ProtectedRoutes>
         ),
       },

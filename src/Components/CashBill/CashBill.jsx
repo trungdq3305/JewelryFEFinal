@@ -18,10 +18,12 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useTheme } from '@emotion/react'
+import { useNavigate } from 'react-router-dom'
 
 const CashBill = ({ cashBill, totalCost }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const navigate = useNavigate()
   const formatDateTime = (dateString) => {
     const date = new Date(dateString)
 
@@ -220,6 +222,7 @@ const CashBill = ({ cashBill, totalCost }) => {
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
                   <Button
+                    onClick={() => navigate(`/BillDetail/${item.billId}`)}
                     variant="contained"
                     sx={{
                       width: '60px',

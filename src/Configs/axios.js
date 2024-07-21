@@ -762,73 +762,85 @@ export const getBillByCash = async () => {
 }
 export const changePassword = async (passwordData) => {
   try {
-    const data = await axios.put(api + '/user/change-password', passwordData);
-    return data;
+    const data = await axios.put(api + '/user/change-password', passwordData)
+    return data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('Error message: ', error.message);
-      return error.message;
+      console.log('Error message: ', error.message)
+      return error.message
     } else {
-      console.log('Unexpected error: ', error);
-      return 'An unexpected error has occurred';
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occurred'
     }
   }
 }
 export const updateUser = async (updateData) => {
   try {
-    const data = await axios.put(api + '/user/update-user', updateData);
-    return data;
+    const data = await axios.put(api + '/user/update-user', updateData)
+    return data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('Error message: ', error.message);
-      return error.message; 
+      console.log('Error message: ', error.message)
+      return error.message
     } else {
-      console.log('Unexpected error: ', error);
-      return 'An unexpected error has occurred';
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occurred'
     }
   }
 }
 export const getIncomeDaily = async (date, num) => {
   try {
-    const response = await axios.get(api+'/cashier/income-by-date', {
+    const response = await axios.get(api + '/cashier/income-by-date', {
       params: {
         date,
         num,
       },
-    });
-    console.log(response);
-    return response.data;
+    })
+    console.log(response)
+    return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Error message:', error.message);
-      return error.message;
+      console.error('Error message:', error.message)
+      return error.message
     } else {
-      console.error('Unexpected error:', error);
-      return 'An unexpected error has occurred';
+      console.error('Unexpected error:', error)
+      return 'An unexpected error has occurred'
     }
   }
-};
-
-
-
+}
 export const getIncomeMonthly = async (date, num) => {
   try {
-    const response = await axios.get(api+'/cashier/income-by-month', {
+    const response = await axios.get(api + '/cashier/income-by-month', {
       params: {
         date,
         num,
       },
-    });
-    console.log(response);
-    return response.data;
+    })
+    console.log(response)
+    return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Error message:', error.message);
-      return error.message;
+      console.error('Error message:', error.message)
+      return error.message
     } else {
-      console.error('Unexpected error:', error);
-      return 'An unexpected error has occurred';
+      console.error('Unexpected error:', error)
+      return 'An unexpected error has occurred'
     }
   }
-};
+}
+export const getProductByBill = async (billId) => {
+  try {
+    const query = `?billId=${billId}`
+    const data = await axios.get(api + '/productbill/view-productbill' + query)
 
+    return data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error massage: ', error.message)
+      return error.message
+    } else {
+      console.log('Unexpected error: ', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
