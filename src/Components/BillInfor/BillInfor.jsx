@@ -16,6 +16,7 @@ const BillInfor = ({
   handleChange,
   handleOpenCash,
   handlePayByCard,
+  totalCost,
 }) => {
   return (
     <div className={styles.container}>
@@ -92,38 +93,79 @@ const BillInfor = ({
           </div>
         </div>
       </div> */}
-      <Button
-        onClick={handleOpenCash}
-        variant="contained"
-        sx={{
-          background: 'black',
-          color: '#ffdbf0',
-          marginLeft: '90px ',
-          marginTop: '10px',
-          '&:hover': {
-            backgroundColor: '#ffdbf0',
-            color: 'black',
-          },
-        }}
-      >
-        Pay by cash
-      </Button>
-      <Button
-        onClick={handlePayByCard}
-        variant="contained"
-        sx={{
-          background: 'black',
-          color: '#ffdbf0',
-          marginLeft: '90px ',
-          marginTop: '10px',
-          '&:hover': {
-            backgroundColor: '#ffdbf0',
-            color: 'black',
-          },
-        }}
-      >
-        Pay by card
-      </Button>
+      {totalCost <= 0 ? (
+        <>
+          <Button
+            disabled
+            onClick={handleOpenCash}
+            variant="contained"
+            sx={{
+              background: 'black',
+              color: '#ffdbf0',
+              marginLeft: '90px ',
+              marginTop: '10px',
+              '&:hover': {
+                backgroundColor: '#ffdbf0',
+                color: 'black',
+              },
+            }}
+          >
+            Pay by cash
+          </Button>
+          <Button
+            disabled
+            onClick={handlePayByCard}
+            variant="contained"
+            sx={{
+              background: 'black',
+              color: '#ffdbf0',
+              marginLeft: '90px ',
+              marginTop: '10px',
+              '&:hover': {
+                backgroundColor: '#ffdbf0',
+                color: 'black',
+              },
+            }}
+          >
+            Pay by card
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            onClick={handleOpenCash}
+            variant="contained"
+            sx={{
+              background: 'black',
+              color: '#ffdbf0',
+              marginLeft: '90px ',
+              marginTop: '10px',
+              '&:hover': {
+                backgroundColor: '#ffdbf0',
+                color: 'black',
+              },
+            }}
+          >
+            Pay by cash
+          </Button>
+          <Button
+            onClick={handlePayByCard}
+            variant="contained"
+            sx={{
+              background: 'black',
+              color: '#ffdbf0',
+              marginLeft: '90px ',
+              marginTop: '10px',
+              '&:hover': {
+                backgroundColor: '#ffdbf0',
+                color: 'black',
+              },
+            }}
+          >
+            Pay by card
+          </Button>
+        </>
+      )}
     </div>
   )
 }

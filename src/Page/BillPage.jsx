@@ -264,6 +264,7 @@ const BillPage = () => {
           </div>
           <div className={styles.body}>
             <BillInfor
+              totalCost={totalCost}
               handlePayByCard={handlePayByCard}
               handleOpen={handleOpen}
               customer={customer}

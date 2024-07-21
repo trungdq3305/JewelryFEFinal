@@ -62,11 +62,13 @@ const PaymentSuccess = ({
               marginRight: '70px',
             }}
           >
+            <p>Bill No: </p>
             <p>Publish Day:</p>
             <p>Cashier:</p>
             <p>Customer</p>
           </div>
           <div>
+            <p>{bill.billId}</p>
             <p>{formatDateTime(bill.publishDay)}</p>
             <p>{bill.cashierId}</p>
             {bill.customerId !== null ? <p>{bill.customerId}</p> : <p>N/A</p>}
