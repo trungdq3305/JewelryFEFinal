@@ -171,6 +171,12 @@ const CashBill = ({ cashBill, totalCost }) => {
               >
                 Type
               </TableCell>
+              <TableCell
+                align="right"
+                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+              >
+                Payment
+              </TableCell>
 
               <TableCell
                 align="right"
@@ -217,9 +223,26 @@ const CashBill = ({ cashBill, totalCost }) => {
                     {item.customerId}
                   </TableCell>
                 )}
-                <TableCell style={{ width: 160 }} align="right">
-                  {item.type}
-                </TableCell>
+
+                {item.type === true ? (
+                  <TableCell style={{ width: 160 }} align="right">
+                    Sale bill
+                  </TableCell>
+                ) : (
+                  <TableCell style={{ width: 160 }} align="right">
+                    Import bill
+                  </TableCell>
+                )}
+                {item.payment === 1 ? (
+                  <TableCell style={{ width: 160 }} align="right">
+                    Cash
+                  </TableCell>
+                ) : (
+                  <TableCell style={{ width: 160 }} align="right">
+                    Card
+                  </TableCell>
+                )}
+
                 <TableCell style={{ width: 160 }} align="right">
                   <Button
                     onClick={() => navigate(`/BillDetail/${item.billId}`)}
