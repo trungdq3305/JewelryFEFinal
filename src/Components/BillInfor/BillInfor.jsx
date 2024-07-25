@@ -8,17 +8,20 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import { Box } from '@mui/material'
 
 const BillInfor = ({
   handleOpen,
   customer,
   vouchers,
   handleChange,
-  handleOpenCash,
-  handlePayByCard,
+  handlePaymentType,
   totalCost,
+  createBill,
 }) => {
-  return (
+  return totalCost <= 0 ? (
+    <></>
+  ) : (
     <div className={styles.container}>
       <div className={styles.Customer}>
         <div className={styles.Title}>
@@ -39,7 +42,6 @@ const BillInfor = ({
           )}
         </div>
       </div>
-      <hr></hr>
       <div className={styles.Voucher}>
         <div className={styles.Title}>
           <DiscountIcon sx={{ fontSize: 25 }} />
@@ -47,7 +49,7 @@ const BillInfor = ({
           <h2>Voucher</h2>
         </div>
         <div className={styles.content}>
-          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+          <FormControl variant="filled" sx={{ m: 1, width: 200 }}>
             <InputLabel id="demo-simple-select-filled-label">
               Voucher
             </InputLabel>
@@ -93,27 +95,60 @@ const BillInfor = ({
           </div>
         </div>
       </div> */}
-      {totalCost <= 0 ? (
-        <>
-          <Button
-            disabled
-            onClick={handleOpenCash}
-            variant="contained"
+
+      <>
+        <div
+          className={styles.Title}
+          style={{ marginLeft: 30, marginBottom: 20 }}
+        >
+          <PointOfSaleIcon sx={{ fontSize: 25 }} />
+
+          <h2>Payment</h2>
+        </div>
+        <div
+          style={{
+            marginLeft: 30,
+            marginBottom: 20,
+          }}
+        >
+          <Box
             sx={{
-              background: 'black',
-              color: '#ffdbf0',
-              marginLeft: '90px ',
-              marginTop: '10px',
-              '&:hover': {
-                backgroundColor: '#ffdbf0',
-                color: 'black',
-              },
+              width: 200,
             }}
           >
-            Pay by cash
-          </Button>
-          <Button
-            disabled
+            <FormControl fullWidth variant="filled">
+              <InputLabel id="demo-simple-select-label">Payment</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Payment"
+                onChange={handlePaymentType}
+                defaultValue={1}
+              >
+                <MenuItem value={1}>Pay By Cash</MenuItem>
+                <MenuItem value={2}>Pay By Card</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </div>
+
+        <Button
+          onClick={createBill}
+          variant="contained"
+          sx={{
+            background: 'black',
+            color: '#ffdbf0',
+            marginLeft: '90px ',
+            marginTop: '10px',
+            '&:hover': {
+              backgroundColor: '#ffdbf0',
+              color: 'black',
+            },
+          }}
+        >
+          Continue
+        </Button>
+        {/* <Button
             onClick={handlePayByCard}
             variant="contained"
             sx={{
@@ -128,44 +163,8 @@ const BillInfor = ({
             }}
           >
             Pay by card
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            onClick={handleOpenCash}
-            variant="contained"
-            sx={{
-              background: 'black',
-              color: '#ffdbf0',
-              marginLeft: '90px ',
-              marginTop: '10px',
-              '&:hover': {
-                backgroundColor: '#ffdbf0',
-                color: 'black',
-              },
-            }}
-          >
-            Pay by cash
-          </Button>
-          <Button
-            onClick={handlePayByCard}
-            variant="contained"
-            sx={{
-              background: 'black',
-              color: '#ffdbf0',
-              marginLeft: '90px ',
-              marginTop: '10px',
-              '&:hover': {
-                backgroundColor: '#ffdbf0',
-                color: 'black',
-              },
-            }}
-          >
-            Pay by card
-          </Button>
-        </>
-      )}
+          </Button> */}
+      </>
     </div>
   )
 }

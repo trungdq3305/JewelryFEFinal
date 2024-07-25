@@ -34,6 +34,7 @@ const ManageGold = () => {
         console.log(update)
         loadGolds()
       })
+      alert('Fetch Gold successfully')
       console.log(res.data.DataList.Data)
     } catch (error) {
       console.error('Error fetching the gold price:', error)

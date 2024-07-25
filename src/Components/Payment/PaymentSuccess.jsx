@@ -84,7 +84,6 @@ const PaymentSuccess = ({
                   <th>Product Name</th>
                   <th>Quantity</th>
                   <th>Price</th>
-                  <th>Price After Discount</th>
                   <th>Total Cost</th>
                 </tr>
               </thead>
@@ -94,10 +93,7 @@ const PaymentSuccess = ({
                     <td>{index + 1}</td>
                     <td>{product.Name}</td>
                     <td>{product.Quantity}</td>
-                    <td>
-                      {Number(product.Price.toFixed(0)).toLocaleString('vn')}{' '}
-                      VND
-                    </td>
+
                     <td>
                       {Number(
                         product.PriceWithDiscount.toFixed(0)
@@ -140,44 +136,74 @@ const PaymentSuccess = ({
             </div>
           </div>
         </div>
-        <div>
-          <Button
-            onClick={() => {
-              navigate('/StaffPage')
-            }}
-            variant="contained"
-            sx={{
-              background: 'black',
-              height: '50px',
-              width: '120px',
-              color: '#ffdbf0',
-              marginRight: '20px',
-              '&:hover': {
-                backgroundColor: '#ffdbf0',
-                color: 'black',
-              },
-            }}
-          >
-            Back to homepage
-          </Button>
-          <Button
-            onClick={sendBill}
-            variant="contained"
-            sx={{
-              marginRight: '20px',
-              width: '120px',
-              height: '50px',
-              background: 'black',
-              color: '#ffdbf0',
-              '&:hover': {
-                backgroundColor: '#ffdbf0',
-                color: 'black',
-              },
-            }}
-          >
-            Send bill
-          </Button>
-        </div>
+        {bill.customerId !== null ? (
+          <>
+            {' '}
+            <div>
+              <Button
+                onClick={() => {
+                  navigate('/StaffPage')
+                }}
+                variant="contained"
+                sx={{
+                  background: 'black',
+                  height: '50px',
+                  width: '120px',
+                  color: '#ffdbf0',
+                  marginRight: '20px',
+                  '&:hover': {
+                    backgroundColor: '#ffdbf0',
+                    color: 'black',
+                  },
+                }}
+              >
+                Back to homepage
+              </Button>
+
+              <Button
+                onClick={sendBill}
+                variant="contained"
+                sx={{
+                  marginRight: '20px',
+                  width: '120px',
+                  height: '50px',
+                  background: 'black',
+                  color: '#ffdbf0',
+                  '&:hover': {
+                    backgroundColor: '#ffdbf0',
+                    color: 'black',
+                  },
+                }}
+              >
+                Send bill
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <Button
+                onClick={() => {
+                  navigate('/StaffPage')
+                }}
+                variant="contained"
+                sx={{
+                  background: 'black',
+                  height: '50px',
+                  width: '120px',
+                  color: '#ffdbf0',
+                  marginRight: '20px',
+                  '&:hover': {
+                    backgroundColor: '#ffdbf0',
+                    color: 'black',
+                  },
+                }}
+              >
+                Back to homepage
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </>
   )
