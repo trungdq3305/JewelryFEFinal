@@ -874,3 +874,69 @@ export const getbillbyId = async (id) => {
     }
   }
 }
+
+export const getAllBills2 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      startDate,
+      endDate,
+      cashNumber,
+      sortByTotalCost,
+      sortByTotalCostDesc,
+    };
+
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
+
+export const getAllBills = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      startDate,
+      endDate,
+      cashNumber,
+    };
+    console.log(startDate);
+    console.log(endDate);
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
+export const getAllBills1 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      startDate,
+      endDate,
+      cashNumber,
+      sortByTotalCost,
+    };
+
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
