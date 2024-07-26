@@ -122,6 +122,7 @@ const DiscountTable = ({ discounts, reload }) => {
       console.error('Error deleting discount:', error);
     }
   };
+  
 
   const handleUpdateDiscount = (discount) => {
     setEditData(discount);

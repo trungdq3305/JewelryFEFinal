@@ -522,10 +522,15 @@ export const deleteDiscount = async (discountid) => {
   try {
     const response = await axios.delete(
       api + `/discount/delete-discount?discountid=${discountid}`
-    )
-    return response.data
+    );
+    if (response.status === 200) {
+      return response.data; 
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting discount:', error);
+    throw error; 
 
   }
 }
@@ -549,7 +554,8 @@ export const addDiscountProduct = async (productId, discountId) => {
       return { isSuccess: false, message: 'An unexpected error has occurred' }
     }
   }
-}
+};
+
 
 export const fetchGold = async () => {
   try {
