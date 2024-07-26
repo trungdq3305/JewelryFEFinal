@@ -44,12 +44,21 @@ const ProductDetail = ({
             </div>
             <div className={classes.props}>
               <p className={classes.title}>Gem</p>
-              {gem.length > 0 ? (
-                gem.map((element, index) => <p key={index}>{element}</p>)
+              {gem !== null ? (
+                typeof gem === 'object' ? (
+                  Object.entries(gem).map(([key, value]) => (
+                    <p key={key}>
+                      {key}: {value}
+                    </p>
+                  ))
+                ) : (
+                  <p>{gem}</p>
+                )
               ) : (
                 <p>None</p>
               )}
             </div>
+
             <div className={classes.props}>
               <p className={classes.title}>Desc</p>
               <p>{desc} </p>
