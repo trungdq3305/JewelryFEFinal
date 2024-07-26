@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, CircularProgress, TextField, Button, MenuItem } from '@mui/material';
+import { Box, Paper, CircularProgress, TextField, Button, MenuItem, Typography } from '@mui/material';
+import SortAscIcon from '@mui/icons-material/ArrowUpward';
+import SortDescIcon from '@mui/icons-material/ArrowDownward';
 import BillTable from '../Components/ManageBill/BillTable';
 import { getAllBills, getAllBills1, getAllBills2 } from '../Configs/axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -13,15 +15,12 @@ const ManageBill = () => {
   const [endDate, setEndDate] = useState('');
   const [cashNumber, setCashNumber] = useState('');
 
-  const formatDate = (date) => {
-    return date ? new Date(date).toISOString() : '';
-  };
+  const formatDate = (date) => date || ''; 
 
   const loadBills = async (axiosFunc, startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
     setLoading(true);
     try {
       const result = await axiosFunc(formatDate(startDate), formatDate(endDate), cashNumber, sortByTotalCost, sortByTotalCostDesc);
-      console.log('Load bills data:', result);
       setBills(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
       console.error('Error loading bills:', error);
@@ -32,8 +31,8 @@ const ManageBill = () => {
   };
 
   useEffect(() => {
-    loadBills(getAllBills, '', '', '', '', '');
-  }, []);
+    loadBills(getAllBills, startDate, endDate, cashNumber, '', '');
+  }, [startDate, endDate, cashNumber]);
 
   const handleSearch = (axiosFunc, sortByTotalCost, sortByTotalCostDesc) => {
     loadBills(axiosFunc, startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc);
@@ -42,17 +41,21 @@ const ManageBill = () => {
   return (
     <>
       <ToastContainer />
-      <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh', justifyContent: 'full' }}>
+      <Box sx={{ display: 'flex', height: '100vh' }}>
         <ManagerSideBar />
-        <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-          <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '10px' }}>
-            <Box sx={{ display: 'flex', gap: 2, marginBottom: 2 }}>
+        <Box sx={{ flexGrow: 1, overflow: 'auto', padding: 3 }}>
+          <Paper sx={{ padding: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="h5" component="h1" gutterBottom>
+              Manage Bills
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               <TextField
                 label="Start Date"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 InputLabelProps={{ shrink: true }}
+                sx={{ width: { xs: '100%', sm: '200px' } }}
               />
               <TextField
                 label="End Date"
@@ -60,13 +63,14 @@ const ManageBill = () => {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 InputLabelProps={{ shrink: true }}
+                sx={{ width: { xs: '100%', sm: '200px' } }}
               />
               <TextField
                 select
                 label="Cashier"
                 value={cashNumber}
                 onChange={(e) => setCashNumber(e.target.value)}
-                style={{ width: '100px' }}
+                sx={{ width: { xs: '100%', sm: '150px' } }}
               >
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="1">1</MenuItem>
@@ -74,32 +78,46 @@ const ManageBill = () => {
                 <MenuItem value="3">3</MenuItem>
                 <MenuItem value="4">4</MenuItem>
               </TextField>
-              <Button variant="contained" onClick={() => handleSearch(getAllBills, '', '')} sx={{ ml: 2 ,
-                    backgroundColor: 'white',
-                color: '#2596be', 
-                border: '1px solid #2596be',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#2596be',
-                },}}>Search</Button>
-              <Button variant="contained" onClick={() => handleSearch(getAllBills1, true, '')} sx={{ ml: 2 ,
-                    backgroundColor: 'white',
-                color: '#2596be', 
-                border: '1px solid #2596be',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#2596be',
-                },}}>Sort By Total Cost</Button>
-              <Button variant="contained" onClick={() => handleSearch(getAllBills2, true, true)} sx={{ ml: 2 ,
-                    backgroundColor: 'white',
-                color: '#2596be', 
-                border: '1px solid #2596be',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#2596be',
-                },}}>Sort By Total Cost Desc</Button>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleSearch(getAllBills, '', '')}
+                  sx={{ 
+                    borderColor: '#2596be', 
+                    color: '#2596be', 
+                    borderRadius: 2, 
+                    '&:hover': { 
+                      borderColor: '#1e88e5', 
+                      color: '#1e88e5', 
+                      backgroundColor: 'rgba(30, 136, 229, 0.1)' 
+                    },
+                    textTransform: 'none'
+                  }}
+                  startIcon={<SortAscIcon />}
+                >
+                  Total Cost
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleSearch(getAllBills2, true, true)}
+                  sx={{ 
+                    borderColor: '#f44336', 
+                    color: '#f44336', 
+                    borderRadius: 2, 
+                    '&:hover': { 
+                      borderColor: '#c62828', 
+                      color: '#c62828', 
+                      backgroundColor: 'rgba(198, 40, 40, 0.1)' 
+                    },
+                    textTransform: 'none'
+                  }}
+                  startIcon={<SortDescIcon />}
+                >
+                  Total Cost
+                </Button>
+              </Box>
             </Box>
-            {loading ? <CircularProgress /> : <BillTable bills={bills} reload={() => loadBills(getAllBills, startDate , endDate , cashNumber, '', '')} />}
+            {loading ? <CircularProgress /> : <BillTable bills={bills} reload={() => loadBills(getAllBills, startDate, endDate, cashNumber, '', '')} />}
           </Paper>
         </Box>
       </Box>

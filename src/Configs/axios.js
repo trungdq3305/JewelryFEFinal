@@ -878,7 +878,7 @@ export const getbillbyId = async (id) => {
 export const getAllBills2 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
   try {
     const params = {
-      startDate,
+      stardate: startDate,
       endDate,
       cashNumber,
       sortByTotalCost,
@@ -898,15 +898,13 @@ export const getAllBills2 = async (startDate, endDate, cashNumber, sortByTotalCo
   }
 };
 
-export const getAllBills = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+export const getAllBills = async (startdate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
   try {
     const params = {
-      startDate,
+      stardate: startdate,
       endDate,
       cashNumber,
     };
-    console.log(startDate);
-    console.log(endDate);
     const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
     return response.data;
   } catch (error) {
@@ -922,7 +920,7 @@ export const getAllBills = async (startDate, endDate, cashNumber, sortByTotalCos
 export const getAllBills1 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
   try {
     const params = {
-      startDate,
+      stardate: startDate,
       endDate,
       cashNumber,
       sortByTotalCost,
