@@ -10,6 +10,9 @@ import {
   Paper,
   Box,
   TablePagination,
+  Modal,
+  Typography,
+  Button,
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
@@ -17,6 +20,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { format } from 'date-fns';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -91,6 +95,7 @@ const BillTable = ({ bills, reload }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [billList, setBillList] = useState(bills);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() => {
     setBillList(bills);
@@ -107,12 +112,21 @@ const BillTable = ({ bills, reload }) => {
     setPage(0);
   };
 
+  const handleCustomerClick = (customerId) => {
+    const customer = billList.find(bill => bill.customerId === customerId)?.customer;
+    setSelectedCustomer(customer);
+  };
+
+  const handleCloseCustomerModal = () => {
+    setSelectedCustomer(null);
+  };
+
   const emptyRows = rowsPerPage > 0 ? Math.max(0, (1 + page) * rowsPerPage - billList.length) : 0;
 
   const displayRows = rowsPerPage > 0 ? billList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : billList;
 
   return (
-    <TableContainer component={Paper} sx={{  display: 'flex', flexDirection: 'column' }}>
+    <TableContainer component={Paper} sx={{ display: 'flex', flexDirection: 'column' }}>
       <Table stickyHeader aria-label="custom pagination table">
         <TableHead>
           <TableRow>
@@ -121,33 +135,42 @@ const BillTable = ({ bills, reload }) => {
             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Total Cost</TableCell>
             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cash Number</TableCell>
+            <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Payment</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {displayRows.map((bill) => (
             <TableRow key={bill.billId}>
               <TableCell>{bill.billId}</TableCell>
-              <TableCell align="right">{bill.customerId}</TableCell>
-              <TableCell align="right">{bill.publishDay}</TableCell>
+              <TableCell align="right">
+                <Button onClick={() => handleCustomerClick(bill.customerId)}>
+                  {bill.customerId}
+                </Button>
+              </TableCell>
+              <TableCell align="right">{format(new Date(bill.publishDay), 'dd-MM-yyyy HH:mm:ss')}</TableCell>
               <TableCell align="right">{bill.totalCost}</TableCell>
               <TableCell align="right">{bill.cashier.cashNumber}</TableCell>
+              <TableCell align="right">
+                {bill.payment === 1 ? 'Pay by Cash' : 'Pay by Card'}
+              </TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={5} />
+              <TableCell colSpan={6} />
             </TableRow>
           )}
           {billList.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5} align="center">
+              <TableCell colSpan={6} align="center">
                 No bills found.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <TablePagination style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+      <TablePagination
+        style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
         component="div"
         count={billList.length}
@@ -157,14 +180,47 @@ const BillTable = ({ bills, reload }) => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         ActionsComponent={TablePaginationActions}
       />
+      <Modal
+        open={!!selectedCustomer}
+        onClose={handleCloseCustomerModal}
+        aria-labelledby="customer-details-title"
+        aria-describedby="customer-details-description"
+      >
+        <Box sx={{ p: 2, backgroundColor: 'white', borderRadius: 1, maxWidth: 400, margin: 'auto', mt: 5 }}>
+          {selectedCustomer && (
+            <>
+              <Typography id="customer-details-title" variant="h6" component="h2">
+                Customer Details
+              </Typography>
+              <Typography id="customer-details-description" sx={{ mt: 2 }}>
+                <strong>Full Name:</strong> {selectedCustomer.fullName}
+              </Typography>
+              <Typography sx={{ mt: 2 }}>
+                <strong>Date of Birth:</strong> {format(new Date(selectedCustomer.doB), 'dd-MM-yyyy')}
+              </Typography>
+              <Typography sx={{ mt: 2 }}>
+                <strong>Address:</strong> {selectedCustomer.address}
+              </Typography>
+              <Typography sx={{ mt: 2 }}>
+                <strong>Email:</strong> {selectedCustomer.email}
+              </Typography>
+              <Typography sx={{ mt: 2 }}>
+                <strong>Phone:</strong> {selectedCustomer.phone}
+              </Typography>
+              <Button onClick={handleCloseCustomerModal} variant="contained" color="primary" sx={{ mt: 2 }}>
+                Close
+              </Button>
+            </>
+          )}
+        </Box>
+      </Modal>
     </TableContainer>
   );
 };
 
 BillTable.propTypes = {
-    bills: PropTypes.array.isRequired,
-    reload: PropTypes.func.isRequired,
-  };
-  
-  export default BillTable;
-  
+  bills: PropTypes.array.isRequired,
+  reload: PropTypes.func.isRequired,
+};
+
+export default BillTable;
