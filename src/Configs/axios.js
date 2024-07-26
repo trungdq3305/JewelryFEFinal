@@ -526,6 +526,28 @@ export const deleteDiscount = async (discountid) => {
     return response.data
   } catch (error) {
     console.error(error)
+
+  }
+}
+
+export const addDiscountProduct = async (productId, discountId) => {
+  try {
+    const data = await axios.post(api + '/discount/create-discount-product', productId, discountId)
+    console.log(data.data)
+    return data.data
+  }
+  catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      }
+    }
+    else {
+      console.log('Unexpected error: ', error)
+      return { isSuccess: false, message: 'An unexpected error has occurred' }
+    }
   }
 }
 
@@ -940,3 +962,17 @@ export const getAllBills1 = async (startDate, endDate, cashNumber, sortByTotalCo
     }
   }
 };
+const createProductGem = async (pId, formData) => {
+  try {
+    const data = await axios.post(api + '/productgem/create-productgem', pId, formData)
+    return data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.mesage)
+      return error.message
+    } else {
+      console.log('Unexpected error', error)
+      return 'An unexpected error has occured'
+    }
+  }
+}
