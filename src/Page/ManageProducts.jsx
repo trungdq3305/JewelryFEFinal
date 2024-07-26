@@ -380,6 +380,7 @@ const ManageProducts = () => {
             goldData={goldData}
             discountData={discountData}
             onEditProduct={handleEditProduct}
+            refreshProducts={loadProducts}
           />
         </Paper>
       </Box>

@@ -574,7 +574,7 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
     if (product && goldData.length) {
       const materialGold = goldData.find(gold => gold.goldName === product.material);
       const materialId = materialGold ? materialGold.goldId : '';
-
+    
       setFormData({
         productId: product.productId, // Set productId
         productName: product.productName,
@@ -588,15 +588,19 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
         image: product.image,
         markupRate: product.markupRate
       });
-
+    
       const initialGemAmounts = {};
       const initialPropChecks = {};
-
-      product.productGems.forEach((gem, index) => {
-        initialGemAmounts[`gemProp${index + 1}`] = { gemId: gem.gemId || '', amount: gem.amount?.toString() || '' };
-        initialPropChecks[`gemProp${index + 1}`] = true;
-      });
-
+    
+      if (Array.isArray(product.productGems)) {
+        product.productGems.forEach((gem, index) => {
+          initialGemAmounts[`gemProp${index + 1}`] = { gemId: gem.gemId || '', amount: gem.amount?.toString() || '' };
+          initialPropChecks[`gemProp${index + 1}`] = true;
+        });
+      } else {
+        console.error('product.productGems is not an array:', product.productGems);
+      }
+    
       setGemAmounts(initialGemAmounts);
       setPropChecks(initialPropChecks);
     }

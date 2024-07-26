@@ -10,8 +10,9 @@ export const getAllProducts = async (
   try {
     // const query = `?ProductId=${productId}&ProductName=${productName}&Category=${Category}&Material=${Material}`
     // const data = await axios.get(api + '/products/view-product' + query)
-    const data = await axios.get(api + '/products/get-products')
-    return data
+    const data = await axios.get(api + '/products/view-product')
+    console.log(data.data)
+    return data.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error massage: ', error.message)
@@ -530,27 +531,42 @@ export const deleteDiscount = async (discountid) => {
   }
 }
 
+// export const addDiscountProduct = async (productId, discountId) => {
+//   try {
+//     const data = await axios.post(api + '/discount/create-discount-product', productId, discountId)
+//     console.log(data.data)
+//     return data.data
+//   }
+//   catch (error) {
+//     if (axios.isAxiosError(error)) {
+//       console.log('error message: ', error.message)
+//       return {
+//         isSuccess: false,
+//         message: error.response?.data?.message || error.message,
+//       }
+//     }
+//     else {
+//       console.log('Unexpected error: ', error)
+//       return { isSuccess: false, message: 'An unexpected error has occurred' }
+//     }
+//   }
+// }
+
 export const addDiscountProduct = async (productId, discountId) => {
   try {
-    const data = await axios.post(api + '/discount/create-discount-product', productId, discountId)
-    console.log(data.data)
-    return data.data
-  }
-  catch (error) {
+    const response = await axios.post(api + '/discountproduct/create-discountproduct', { productId, discountId });
+    return response.data;
+  } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message)
       return {
         isSuccess: false,
         message: error.response?.data?.message || error.message,
-      }
-    }
-    else {
-      console.log('Unexpected error: ', error)
-      return { isSuccess: false, message: 'An unexpected error has occurred' }
+      };
+    } else {
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
-}
-
+};
 export const fetchGold = async () => {
   try {
     const response = await axios.get(
