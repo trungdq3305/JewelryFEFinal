@@ -14,7 +14,7 @@ const AdminHomepage = () => {
   const { logOut } = useAuth();
 
   const handleLogout = () => {
-    logOut(); // Call logout function from context or wherever it's defined
+    logOut();
   };
 
   const onSearchTextChange = async (event) => {
@@ -88,7 +88,7 @@ const AdminHomepage = () => {
   if (loading) return <div>Loading....</div>;
 
   return (
-    
+
     <Box
       sx={{
         position: 'relative',
@@ -101,70 +101,70 @@ const AdminHomepage = () => {
         backgroundPosition: 'center',
       }}
     >
-      
+
       <Box display="flex">
-      <AdminSideBar/>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '0', 
-          
-        }}
-      >
-      </Box>
-      <Paper
-        sx={{
-          padding: '20px',
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-          borderRadius: '30px',
-        }}
-      >
+        <AdminSideBar />
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontWeight: 'bold'
+            justifyContent: 'flex-end',
+            marginBottom: '0',
+
           }}
         >
-          <Button
-            onClick={handleOpenDialog}
+        </Box>
+        <Paper
+          sx={{
+            padding: '20px',
+            backgroundColor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            borderRadius: '30px',
+          }}
+        >
+          <Box
             sx={{
-              backgroundColor: 'white',
-              color: '#3baf80',
-              border: '1px solid #3baf80',
-              '&:hover': {
-                backgroundColor: 'white',
-                borderColor: '#3baf80'
-              },
-              height: '50px'
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontWeight: 'bold'
             }}
           >
-            Add User
-          </Button>
-          <TextField
-            id="filled-search"
-            label="Search"
-            type="search"
-            variant="filled"
-            style={{ width: '300px' }}
-            onChange={onSearchTextChange}
+            <Button
+              onClick={handleOpenDialog}
+              sx={{
+                backgroundColor: 'white',
+                color: '#3baf80',
+                border: '1px solid #3baf80',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  borderColor: '#3baf80'
+                },
+                height: '50px'
+              }}
+            >
+              Add User
+            </Button>
+            <TextField
+              id="filled-search"
+              label="Search"
+              type="search"
+              variant="filled"
+              style={{ width: '300px' }}
+              onChange={onSearchTextChange}
+            />
+          </Box>
+          <AddUserDialog
+            openDialog={openDialog}
+            handleCloseDialog={handleCloseDialog}
+            onAddUser={handleAddUser}
+            initialFormData={initialFormData}
+            roleMapping={roleMapping}
           />
-        </Box>
-        <AddUserDialog
-          openDialog={openDialog}
-          handleCloseDialog={handleCloseDialog}
-          onAddUser={handleAddUser}
-          initialFormData={initialFormData}
-          roleMapping={roleMapping}
-        />
-        <UserTable users={users} />
-      </Paper>
-    </Box>
+          <UserTable users={users} />
+        </Paper>
+      </Box>
     </Box>
   );
 };

@@ -64,7 +64,6 @@ const ManageUsers = () => {
       if (result.code === 400) {
         window.alert(result.message);
       } else {
-        console.log(result.data);
         handleCloseDialog();
         loadAllUsers();
       }

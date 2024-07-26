@@ -1,54 +1,127 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Button, Paper } from '@mui/material';
+import {
+  Dialog, DialogActions, DialogContent, DialogTitle,
+  TextField, FormControl, InputLabel, Select, MenuItem,
+  Button, Paper, FormControlLabel, Checkbox
+} from '@mui/material';
+import { getAllGem } from '../../Configs/axios';
 
 const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initialFormData, goldData }) => {
   const [formData, setFormData] = useState(initialFormData);
-  const [propChecks, setPropChecks] = useState({
-    additionalProp1: false,
-    additionalProp2: false,
-    additionalProp3: false
-  });
+  const [propChecks, setPropChecks] = useState({});
+  const [gemData, setGemData] = useState([]);
+  const [gemAmounts, setGemAmounts] = useState({});
 
   useEffect(() => {
     setFormData(initialFormData);
+    getGemList();
   }, [initialFormData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const [mainKey, subKey] = name.split('.');
 
-    const isNumericField = ['machiningCost', 'amount', 'gem.additionalProp2', 'gem.additionalProp3'].includes(name);
-    const isDecimalField = ['weight', 'size', 'markupRate'].includes(name);
-
-    if (isNumericField && value !== '' && isNaN(value)) {
-      return;
-    }
-
-    if (isDecimalField && value !== '' && isNaN(parseFloat(value))) {
-      return;
-    }
-
-    const parsedValue = isNumericField ? parseInt(value, 10) : isDecimalField ? parseFloat(value) : value;
-
-    if (subKey) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [mainKey]: {
-          ...prevFormData[mainKey],
-          [subKey]: parsedValue
-        }
-      }));
-    } else {
+    // Ensure numerical fields are validated
+    if (['weight', 'machiningCost', 'size', 'amount', 'markupRate'].includes(name)) {
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue) || parsedValue < 0) return;
       setFormData((prevFormData) => ({
         ...prevFormData,
         [name]: parsedValue
       }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value
+      }));
     }
   };
 
+  const handleCheckChange = (event) => {
+    const { name, checked } = event.target;
+    const gemKey = name; // Use name directly as gemKey
+
+    if (checked) {
+      setPropChecks((prevChecks) => ({
+        ...prevChecks,
+        [name]: checked
+      }));
+      setGemAmounts((prevAmounts) => ({
+        ...prevAmounts,
+        [gemKey]: { gemId: '', amount: '' }
+      }));
+    } else {
+      const newChecks = { ...propChecks };
+      delete newChecks[name];
+      setPropChecks(newChecks);
+
+      const newAmounts = { ...gemAmounts };
+      delete newAmounts[gemKey];
+      setGemAmounts(newAmounts);
+    }
+  };
+
+  const handleGemChange = (event) => {
+    const { name, value } = event.target;
+    const gemKey = name.split('.')[0]; // Extract gem key
+
+    setGemAmounts((prevAmounts) => ({
+      ...prevAmounts,
+      [gemKey]: {
+        ...prevAmounts[gemKey],
+        gemId: value
+      }
+    }));
+  };
+
+  const handleAmountChange = (event) => {
+    const { name, value } = event.target;
+    const gemKey = name.split('.')[0]; // Extract gem key
+
+    const parsedValue = parseFloat(value);
+    if (isNaN(parsedValue) || parsedValue < 0) return;
+
+    setGemAmounts((prevAmounts) => ({
+      ...prevAmounts,
+      [gemKey]: {
+        ...prevAmounts[gemKey],
+        amount: parsedValue
+      }
+    }));
+  };
+
   const handleAddProduct = () => {
-    onAddProduct(formData);
+    const updatedGemData = {};
+    Object.keys(gemAmounts).forEach((key) => {
+      const { gemId, amount } = gemAmounts[key];
+      if (gemId && amount) {
+        updatedGemData[gemId] = parseInt(amount, 10);
+      }
+    });
+
+    const updatedFormData = {
+      ...formData,
+      gem: updatedGemData
+    };
+    onAddProduct(updatedFormData);
     setFormData(initialFormData); // Reset the form
+    setGemAmounts({});
+    setPropChecks({});
+  };
+
+  const getGemList = async () => {
+    try {
+      const result = await getAllGem();
+      if (result.isSuccess) {
+        setGemData(result.data);
+        const initialPropChecks = result.data.reduce((acc, gem, index) => {
+          acc[`gemProp${index + 1}`] = false;
+          return acc;
+        }, {});
+        setPropChecks(initialPropChecks);
+      }
+    } catch (error) {
+      console.error('Error fetching gem data:', error);
+    }
   };
 
   return (
@@ -56,6 +129,7 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
       <DialogTitle>Add Product</DialogTitle>
       <DialogContent>
         <Paper variant="outlined" component="form" sx={{ margin: 2, padding: 2 }}>
+          {/* Other form fields */}
           <TextField
             margin="normal"
             required
@@ -102,8 +176,8 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             fullWidth
             name="weight"
             label="Weight"
-            type="text"
-            value={formData.weight}
+            type="number"
+            value={formData.weight || ''}
             onChange={handleChange}
           />
           <TextField
@@ -113,7 +187,7 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             name="machiningCost"
             label="Machining Cost"
             type="number"
-            value={formData.machiningCost}
+            value={formData.machiningCost || ''}
             onChange={handleChange}
           />
           <TextField
@@ -122,8 +196,8 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             fullWidth
             name="size"
             label="Size"
-            type="text"
-            value={formData.size}
+            type="number"
+            value={formData.size || ''}
             onChange={handleChange}
           />
           <TextField
@@ -133,7 +207,7 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             name="amount"
             label="Amount"
             type="number"
-            value={formData.amount}
+            value={formData.amount || ''}
             onChange={handleChange}
           />
           <TextField
@@ -160,17 +234,55 @@ const AddProductDialog = ({ openDialog, handleCloseDialog, onAddProduct, initial
             fullWidth
             name="markupRate"
             label="Markup Rate"
-            type="text"
-            value={formData.markupRate}
+            type="number"
+            value={formData.markupRate || ''}
             onChange={handleChange}
           />
+
+          {gemData.map((gem, index) => (
+            <div key={gem.gemId}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={propChecks[`gemProp${index + 1}`] || false}
+                    onChange={handleCheckChange}
+                    name={`gemProp${index + 1}`}
+                  />
+                }
+                label={`Add Gem ${index + 1}`}
+              />
+              {propChecks[`gemProp${index + 1}`] && (
+                <div>
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Gem Type</InputLabel>
+                    <Select
+                      name={`gemProp${index + 1}.gemId`}
+                      value={gemAmounts[`gemProp${index + 1}`]?.gemId || ''}
+                      onChange={handleGemChange}
+                    >
+                      {gemData.map((g) => (
+                        <MenuItem key={g.gemId} value={g.gemId}>{g.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    name={`gemProp${index + 1}.amount`}
+                    label="Amount"
+                    type="number"
+                    value={gemAmounts[`gemProp${index + 1}`]?.amount || ''}
+                    onChange={handleAmountChange}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
         </Paper>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDialog}>Cancel</Button>
-        <Button onClick={handleAddProduct} variant="contained" autoFocus>
-          Confirm
-        </Button>
+        <Button onClick={handleAddProduct} variant="contained" color="primary">Add Product</Button>
       </DialogActions>
     </Dialog>
   );

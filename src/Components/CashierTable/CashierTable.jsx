@@ -127,7 +127,7 @@ const CashierTable = ({ cashiers }) => {
   };
 
   const formatDate = (date) => {
-    return format(new Date(date), 'MMM dd, yyyy HH:mm:ss'); // Format date as needed
+    return format(new Date(date), 'MMM dd, yyyy HH:mm:ss');
   };
 
   const emptyRows =
@@ -211,15 +211,15 @@ const CashierTable = ({ cashiers }) => {
                       ...cashier,
                     });
                   }}
-                    sx={{
+                  sx={{
+                    backgroundColor: 'white',
+                    color: '#FFA500',
+                    border: '1px solid #FFA500',
+                    '&:hover': {
                       backgroundColor: 'white',
-                      color: '#FFA500',
-                      border: '1px solid #FFA500',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#FFA500',
-                      },
-                    }}>Edit</Button>
+                      borderColor: '#FFA500',
+                    },
+                  }}>Edit</Button>
                 </TableCell>
               </TableRow>
             ))}
