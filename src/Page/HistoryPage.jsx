@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header/Header'
 import CashBill from '../Components/CashBill/CashBill'
-import { List } from '@mui/material'
 import { getBillByCash } from '../Configs/axios'
 
 const HistoryPage = () => {
@@ -16,15 +15,17 @@ const HistoryPage = () => {
       console.error('Failed to fetch cash bill:', error)
     }
   }
+
   const calculateTotalCost = (bills) => {
+    if (!Array.isArray(bills)) return 0
     return bills.reduce((total, bill) => total + bill.totalCost, 0)
   }
-
-  const totalCost = calculateTotalCost(cashBill)
 
   useEffect(() => {
     fetchCashBill()
   }, [])
+
+  const totalCost = calculateTotalCost(cashBill)
 
   return (
     <>

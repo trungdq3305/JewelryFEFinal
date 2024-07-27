@@ -115,177 +115,188 @@ const CashBill = ({ cashBill, totalCost }) => {
   }
   return (
     <>
-      <h2
-        style={{
-          marginTop: '20px',
-        }}
-      >
-        Number of Bill: {cashBill.length}{' '}
-      </h2>
-      <h2
-        style={{
-          marginBottom: '20px',
-        }}
-      >
-        Total: {Number(totalCost.toFixed(0)).toLocaleString('vn')}{' '}
-      </h2>
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 600, display: 'flex', flexDirection: 'column' }}
-      >
-        <Table stickyHeader aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                ID
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Total Cost
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Publish Day
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Voucher
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Customer
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Type
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Payment
-              </TableCell>
-
-              <TableCell
-                align="right"
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              >
-                Options
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
-            {(rowsPerPage > 0
-              ? cashBill.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : cashBill
-            ).map((item) => (
-              <TableRow key={cashBill.billId}>
-                <TableCell component="th" scope="row" style={{ width: 50 }}>
-                  {item.billId}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {Number(item.totalCost.toFixed(0)).toLocaleString('vn')}{' '}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {formatDateTime(item.publishDay)}
-                </TableCell>
-                {item.voucherVoucherId === null ? (
-                  <TableCell style={{ width: 160 }} align="right">
-                    N/A
-                  </TableCell>
-                ) : (
-                  <TableCell style={{ width: 160 }} align="right">
-                    {item.voucherVoucherId}
-                  </TableCell>
-                )}
-
-                {item.customerId === null ? (
-                  <TableCell style={{ width: 160 }} align="right">
-                    N/A
-                  </TableCell>
-                ) : (
-                  <TableCell style={{ width: 160 }} align="right">
-                    {item.customerId}
-                  </TableCell>
-                )}
-
-                {item.type === true ? (
-                  <TableCell style={{ width: 160 }} align="right">
-                    Sale bill
-                  </TableCell>
-                ) : (
-                  <TableCell style={{ width: 160 }} align="right">
-                    Import bill
-                  </TableCell>
-                )}
-                {item.payment === 1 ? (
-                  <TableCell style={{ width: 160 }} align="right">
-                    Cash
-                  </TableCell>
-                ) : (
-                  <TableCell style={{ width: 160 }} align="right">
-                    Card
-                  </TableCell>
-                )}
-
-                <TableCell style={{ width: 160 }} align="right">
-                  <Button
-                    onClick={() => navigate(`/BillDetail/${item.billId}`)}
-                    variant="contained"
-                    sx={{
-                      width: '60px',
-                      height: '50px',
-                      background: 'black',
-                      color: '#ffdbf0',
-                      '&:hover': {
-                        backgroundColor: '#ffdbf0',
-                        color: 'black',
-                      },
-                    }}
+      {cashBill !== undefined ? (
+        <>
+          <h2
+            style={{
+              marginTop: '20px',
+            }}
+          >
+            Number of Bill: {cashBill.length}{' '}
+          </h2>
+          <h2
+            style={{
+              marginBottom: '20px',
+            }}
+          >
+            Total: {Number(totalCost.toFixed(0)).toLocaleString('vn')}{' '}
+          </h2>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: 600, display: 'flex', flexDirection: 'column' }}
+          >
+            <Table stickyHeader aria-label="custom pagination table">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                   >
-                    Detail
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={11} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={11}
-                count={cashBill.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+                    ID
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Total Cost
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Publish Day
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Voucher
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Customer
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Type
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Payment
+                  </TableCell>
+
+                  <TableCell
+                    align="right"
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  >
+                    Options
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
+                {(rowsPerPage > 0
+                  ? cashBill.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : cashBill
+                ).map((item) => (
+                  <TableRow key={cashBill.billId}>
+                    <TableCell component="th" scope="row" style={{ width: 50 }}>
+                      {item.billId}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="right">
+                      {Number(item.totalCost.toFixed(0)).toLocaleString('vn')}{' '}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="right">
+                      {formatDateTime(item.publishDay)}
+                    </TableCell>
+                    {item.voucherVoucherId === null ? (
+                      <TableCell style={{ width: 160 }} align="right">
+                        N/A
+                      </TableCell>
+                    ) : (
+                      <TableCell style={{ width: 160 }} align="right">
+                        {item.voucherVoucherId}
+                      </TableCell>
+                    )}
+
+                    {item.customerId === null ? (
+                      <TableCell style={{ width: 160 }} align="right">
+                        N/A
+                      </TableCell>
+                    ) : (
+                      <TableCell style={{ width: 160 }} align="right">
+                        {item.customerId}
+                      </TableCell>
+                    )}
+
+                    {item.type === true ? (
+                      <TableCell style={{ width: 160 }} align="right">
+                        Sale bill
+                      </TableCell>
+                    ) : (
+                      <TableCell style={{ width: 160 }} align="right">
+                        Import bill
+                      </TableCell>
+                    )}
+                    {item.payment === 1 ? (
+                      <TableCell style={{ width: 160 }} align="right">
+                        Cash
+                      </TableCell>
+                    ) : (
+                      <TableCell style={{ width: 160 }} align="right">
+                        Card
+                      </TableCell>
+                    )}
+
+                    <TableCell style={{ width: 160 }} align="right">
+                      <Button
+                        onClick={() => navigate(`/BillDetail/${item.billId}`)}
+                        variant="contained"
+                        sx={{
+                          width: '60px',
+                          height: '50px',
+                          background: 'black',
+                          color: '#ffdbf0',
+                          '&:hover': {
+                            backgroundColor: '#ffdbf0',
+                            color: 'black',
+                          },
+                        }}
+                      >
+                        Detail
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={11} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: 'All', value: -1 },
+                    ]}
+                    colSpan={11}
+                    count={cashBill.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                    style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </>
+      ) : (
+        <div>Cash has no bill</div>
+      )}
     </>
   )
 }
