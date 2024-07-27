@@ -10,8 +10,8 @@ export const getAllProducts = async (
   try {
     // const query = `?ProductId=${productId}&ProductName=${productName}&Category=${Category}&Material=${Material}`
     // const data = await axios.get(api + '/products/view-product' + query)
-    const data = await axios.get(api + '/products/get-products')
-    return data
+    const data = await axios.get(api + '/products/view-product')
+    return data.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error massage: ', error.message)
@@ -94,8 +94,7 @@ export const searchProduct = async (searchValue) => {
 export const editProduct = async (formData) => {
   try {
     const data = await axios.put(api + '/products/product-update', formData)
-    console.log(data)
-    return data
+    return data.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message)
@@ -529,6 +528,27 @@ export const deleteDiscount = async (discountid) => {
 
   }
 }
+export const updateProductGem = async (formData) => {
+  try {
+    const response = await axios.put(api + '/productgem/update-productgem', formData)
+    console.log(response)
+    return response.data
+  }
+  catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message)
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      }
+    }
+    else {
+      console.log('Unexpected error: ', error)
+      return { isSuccess: false, message: 'An unexpected error has occurred' }
+    }
+  }
+}
+
 
 export const addDiscountProduct = async (productId, discountId) => {
   try {
