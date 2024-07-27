@@ -1,22 +1,19 @@
 import React from 'react'
 import styles from '../Payment/PaymentSuccess.module.scss'
 
-const BillDetail = ({ bill, billId, products }) => {
+const BillDetail = ({ bill, billId }) => {
   const formatDateTime = (dateString) => {
     const date = new Date(dateString)
-
     const formattedDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     })
-
     const formattedTime = date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
     })
-
     return `${formattedDate} at ${formattedTime}`
   }
 
@@ -61,41 +58,35 @@ const BillDetail = ({ bill, billId, products }) => {
                 <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th>Price After Discount</th>
                 <th>Total Cost</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{product.productName || 'N/A'}</td>
-                  <td>{product.quantity || 'N/A'}</td>
-                  <td>
-                    {product.price
-                      ? Number(product.price.toFixed(0)).toLocaleString('vn')
-                      : 'N/A'}{' '}
-                  </td>
-                  <td>
-                    {product.priceWithDiscount
-                      ? Number(
-                          product.priceWithDiscount.toFixed(0)
-                        ).toLocaleString('vn')
-                      : 'N/A'}{' '}
-                    VND
-                  </td>
-                  <td>
-                    {product.priceWithDiscount && product.quantity
-                      ? Number(
-                          (
-                            product.priceWithDiscount * product.quantity
-                          ).toFixed(0)
-                        ).toLocaleString('vn')
-                      : 'N/A'}{' '}
-                    VND
-                  </td>
-                </tr>
-              ))}
+              {bill.map((billItem, index) => {
+                const product = billItem.productProduct
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{product.productName || 'N/A'}</td>
+                    <td>{billItem.amount || 'N/A'}</td>
+                    <td>
+                      {billItem.unitPrice
+                        ? Number(billItem.unitPrice.toFixed(0)).toLocaleString(
+                            'vn'
+                          )
+                        : 'N/A'}
+                    </td>
+
+                    <td>
+                      {billItem.unitPrice && billItem.amount
+                        ? Number(
+                            (billItem.unitPrice * billItem.amount).toFixed(0)
+                          ).toLocaleString('vn')
+                        : 'N/A'}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -142,7 +133,6 @@ const BillDetail = ({ bill, billId, products }) => {
             )}
             <p>
               <strong>
-                {' '}
                 {Number(bill[0].billBill.totalCost.toFixed(0)).toLocaleString(
                   'vn'
                 )}

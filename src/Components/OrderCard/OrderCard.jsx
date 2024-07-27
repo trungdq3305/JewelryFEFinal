@@ -45,7 +45,7 @@ const OrderCard = ({
                   textDecoration: 'line-through',
                 }}
               >
-                {Number(priceWithDiscount).toLocaleString('en')}VND
+                {Number(price).toLocaleString('en')}VND
               </p>
               <p style={{ fontWeight: 300, padding: 4 }}>
                 {Number(priceWithDiscount).toLocaleString('en')}VND

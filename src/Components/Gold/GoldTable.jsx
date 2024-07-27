@@ -13,6 +13,23 @@ import {
   Snackbar,
 } from '@mui/material'
 const GoldTable = ({ goldList, handleFetchGold }) => {
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString)
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+
+    return `${formattedDate} at ${formattedTime}`
+  }
   return (
     <>
       <TableContainer
@@ -99,7 +116,7 @@ const GoldTable = ({ goldList, handleFetchGold }) => {
                 </TableCell>
                 <TableCell align="right">{gold.modifiedBy}</TableCell>
                 <TableCell align="right">
-                  {new Date(gold.modifiedDate).toLocaleDateString()}
+                  {formatDateTime(gold.modifiedDate)}{' '}
                 </TableCell>
                 <TableCell align="right">{gold.kara || 'N/A'}</TableCell>
                 <TableCell align="right">{gold.goldPercent || 'N/A'}</TableCell>

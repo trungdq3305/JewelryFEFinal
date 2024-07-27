@@ -521,10 +521,15 @@ export const deleteDiscount = async (discountid) => {
   try {
     const response = await axios.delete(
       api + `/discount/delete-discount?discountid=${discountid}`
-    )
-    return response.data
+    );
+    if (response.status === 200) {
+      return response.data; 
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting discount:', error);
+    throw error; 
 
   }
 }
@@ -550,26 +555,43 @@ export const updateProductGem = async (formData) => {
 }
 
 
+// export const addDiscountProduct = async (productId, discountId) => {
+//   try {
+//     const data = await axios.post(api + '/discount/create-discount-product', productId, discountId)
+//     console.log(data.data)
+//     return data.data
+//   }
+//   catch (error) {
+//     if (axios.isAxiosError(error)) {
+//       console.log('error message: ', error.message)
+//       return {
+//         isSuccess: false,
+//         message: error.response?.data?.message || error.message,
+//       }
+//     }
+//     else {
+//       console.log('Unexpected error: ', error)
+//       return { isSuccess: false, message: 'An unexpected error has occurred' }
+//     }
+//   }
+// }
+
 export const addDiscountProduct = async (productId, discountId) => {
   try {
-    const data = await axios.post(api + '/discount/create-discount-product', productId, discountId)
-    console.log(data.data)
-    return data.data
-  }
-  catch (error) {
+    const response = await axios.post(api + '/discountproduct/create-discountproduct', { productId, discountId });
+    return response.data;
+  } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message)
       return {
         isSuccess: false,
         message: error.response?.data?.message || error.message,
-      }
-    }
-    else {
-      console.log('Unexpected error: ', error)
-      return { isSuccess: false, message: 'An unexpected error has occurred' }
+      };
+    } else {
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
-}
+};
+
 
 export const fetchGold = async () => {
   try {
@@ -916,6 +938,70 @@ export const getbillbyId = async (id) => {
     }
   }
 }
+
+export const getAllBills2 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      stardate: startDate,
+      endDate,
+      cashNumber,
+      sortByTotalCost,
+      sortByTotalCostDesc,
+    };
+
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
+
+export const getAllBills = async (startdate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      stardate: startdate,
+      endDate,
+      cashNumber,
+    };
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
+export const getAllBills1 = async (startDate, endDate, cashNumber, sortByTotalCost, sortByTotalCostDesc) => {
+  try {
+    const params = {
+      stardate: startDate,
+      endDate,
+      cashNumber,
+      sortByTotalCost,
+    };
+
+    const response = await axios.get(`${api}/bill/viewlistbill?`, { params });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('Error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('Unexpected error: ', error);
+      return 'An unexpected error has occurred';
+    }
+  }
+};
 const createProductGem = async (pId, formData) => {
   try {
     const data = await axios.post(api + '/productgem/create-productgem', pId, formData)

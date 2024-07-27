@@ -57,6 +57,12 @@ const BillPage = () => {
   const [voucherId, setVoucherId] = useState('')
   const [billId, setBillId] = useState('')
   const [bill, setBill] = useState(null)
+  const [paymentType, setPaymentType] = useState(1)
+
+  const handleSetPayment = (e) => {
+    setPaymentType(e.target.value)
+    console.log(e.target.value)
+  }
 
   function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -231,11 +237,16 @@ const BillPage = () => {
       product: {},
       voucherId: '',
       customerId: '',
+      paymenttype: paymentType,
     }
-    if (voucherId !== undefined) {
+    console.log(voucherId), console.log(customer)
+    if (voucherId !== undefined || voucherId !== null) {
       initialdata.voucherId = voucherId
     }
-    if (customer !== undefined) {
+    if (customer == undefined || customer == null) {
+      initialdata.customerId = ''
+    } else {
+      console.log(customer)
       initialdata.customerId = customer.customerId
     }
     initialdata.product = product
@@ -243,7 +254,6 @@ const BillPage = () => {
     const result = await createBill(initialdata)
     if (result.data.code === 200) {
       setOpenSuccess(true)
-      setOpenCash(false)
       console.log(result)
       setBillId(result.data.data.billId)
       setBill(result.data.data)
@@ -395,6 +405,8 @@ const BillPage = () => {
               vouchers={voucherList}
               handleChange={handleChange}
               handleOpenCash={handleOpenCash}
+              handlePaymentType={handleSetPayment}
+              createBill={handlecreateBill}
             />
             <Modal
               open={open}
@@ -409,22 +421,7 @@ const BillPage = () => {
                 />
               </Box>
             </Modal>
-            <Modal
-              open={openCash}
-              onClose={handleCloseCash}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <PayByCashModal
-                  createBill={handlecreateBill}
-                  handleCloseCash={handleCloseCash}
-                  total={totalCost}
-                  cash={inputCash}
-                  change={change}
-                />
-              </Box>
-            </Modal>
+
             <Modal
               open={openSuccess}
               onClose={handleCloseSuccess}

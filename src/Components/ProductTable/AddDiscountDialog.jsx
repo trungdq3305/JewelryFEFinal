@@ -1,27 +1,53 @@
-// import { useState, useEffect } from 'react';
-// import {
-//   Dialog, DialogActions, DialogContent, DialogTitle,
-//   TextField, FormControl, InputLabel, Select, MenuItem,
-//   Button, Paper, FormControlLabel, Checkbox
-// } from '@mui/material';
-// const AddDiscountDialog = ({ openDialog, handleCloseDialog, onAddProduct, discountData}) => {
-//    const [addDiscountForm,setAddDiscountForm]= useState({
+import { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, Select, Typography } from '@mui/material';
+import { getDiscount } from '../../Configs/axios';
+const AddDiscountDialog = ({ open, onClose, product, onAddDiscount }) => {
+  const [discounts, setDiscounts] = useState([]);
+  const [selectedDiscount, setSelectedDiscount] = useState('');
 
-//    })
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      try {
+        const result = await getDiscount();
+        if (result.isSuccess) {
+          setDiscounts(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching discounts:', error);
+      }
+    };
 
-//    }
-  
-//   return (
-    
+    fetchDiscounts();
+  }, []);
 
-    
-//   )
-// } 
-// AddDiscountDialog.propTypes = {
-//   openEditDialog: PropTypes.bool.isRequired,
-//   handleCloseEditDialog: PropTypes.func.isRequired,
-//   productData: PropTypes.object.isRequired,
-//   goldData: PropTypes.array.isRequired,
-//   onSaveProduct: PropTypes.func.isRequired,
-// };
-// export default AddDiscountDialog
+  const handleAdd = () => {
+    onAddDiscount(product.productId, selectedDiscount);
+    setSelectedDiscount('');
+    onClose();
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Add Discount</DialogTitle>
+      <DialogContent>
+        <Typography>Select a discount:</Typography>
+        <Select
+          value={selectedDiscount}
+          onChange={(e) => setSelectedDiscount(e.target.value)}
+          fullWidth
+        >
+          {discounts.map((discount) => (
+            <MenuItem key={discount.discountId} value={discount.discountId}>
+              {discount.discountId}
+            </MenuItem>
+          ))}
+        </Select>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleAdd} disabled={!selectedDiscount}>Add</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+export default AddDiscountDialog;

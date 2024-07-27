@@ -27,6 +27,7 @@ import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
 import CardGiftcardOutlinedIcon from '@mui/icons-material/CardGiftcardOutlined'
+import ManageBill from '../../Page/ManageBill'
 import { useAuth } from '../../Context/UserContext'
 const drawerWidth = 240
 
@@ -255,6 +256,35 @@ export default function ManagerSideBar() {
                   </ListItemIcon>
                   <ListItemText
                     primary="Product"
+                    sx={{ opacity: open ? 1 : 0 ,color: 'white'}}
+                  />
+                </ListItemButton>
+              </ListItem>
+              <ListItem
+                disablePadding
+                sx={{ display: 'block' }}
+                onClick={() => {
+                  navigate('/ManagerHomePage/ManageBill')
+                }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CategoryOutlinedIcon sx={{color: 'white'}}/>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Bill"
                     sx={{ opacity: open ? 1 : 0 ,color: 'white'}}
                   />
                 </ListItemButton>

@@ -12,7 +12,7 @@ const BillProduct = ({ products, totalCost, voucherCost, costWithVoucher }) => {
               <th>Product Name</th>
               <th>Quantity</th>
               <th>Price</th>
-              <th>Price After Discount</th>
+
               <th>Total Cost</th>
             </tr>
           </thead>
@@ -23,9 +23,6 @@ const BillProduct = ({ products, totalCost, voucherCost, costWithVoucher }) => {
                   <td>{index + 1}</td>
                   <td>{product.Name}</td>
                   <td>{product.Quantity}</td>
-                  <td>
-                    {Number(product.Price.toFixed(0)).toLocaleString('vn')} VND
-                  </td>
 
                   <td>
                     {Number(
