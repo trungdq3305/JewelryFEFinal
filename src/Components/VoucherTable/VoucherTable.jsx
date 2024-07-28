@@ -87,7 +87,6 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
   const [openCustomerInfoDialog, setOpenCustomerInfoDialog] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({});
   const [deleteSuccess, setDeleteSuccess] = useState(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     setEditData(initialFormData);
@@ -254,12 +253,7 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
         open={openCustomerInfoDialog}
         onClose={handleCloseCustomerInfoDialog}
         customerInfo={customerInfo}
-      />
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-        <Alert onClose={() => setOpenSnackbar(false)} severity={deleteSuccess ? 'success' : 'error'} sx={{ width: '100%' }}>
-          {deleteSuccess ? 'Voucher deleted successfully' : 'Error deleting voucher'}
-        </Alert>
-      </Snackbar>
+      /> 
     </>
   );
 };
