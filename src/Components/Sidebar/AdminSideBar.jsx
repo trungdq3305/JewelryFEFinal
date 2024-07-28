@@ -126,7 +126,7 @@ export default function ManagerSideBar() {
           <ListItem
             disablePadding
             sx={{ display: 'block' }}
-            onClick={() => navigate('/AdminPages')}
+            onClick={() => navigate('/AdminUsers')}
           >
             <ListItemButton
               sx={{
@@ -153,7 +153,7 @@ export default function ManagerSideBar() {
           <ListItem
             disablePadding
             sx={{ display: 'block' }}
-            onClick={() => navigate(`/Profile/${userId}`)}
+            onClick={() => navigate(`/AdminProfile/${userId}`)}
           >
             <ListItemButton
               sx={{

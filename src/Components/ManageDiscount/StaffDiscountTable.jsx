@@ -143,7 +143,7 @@ const StaffDiscountTable = ({ discounts, reload }) => {
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Expired Day</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
-              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Amount</TableCell>
+              
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
             </TableRow>
           </TableHead>
@@ -154,7 +154,7 @@ const StaffDiscountTable = ({ discounts, reload }) => {
                 <TableCell align="right">{discount.createdBy}</TableCell>
                 <TableCell align="right">{discount.expiredDay}</TableCell>
                 <TableCell align="right">{discount.publishDay}</TableCell>
-                <TableCell align="right">{discount.amount}</TableCell>
+                
                 <TableCell align="right">{discount.cost}</TableCell>
               </TableRow>
             ))}

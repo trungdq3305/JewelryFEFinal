@@ -5,7 +5,8 @@ import { TextField, Button, Box, Paper } from '@mui/material'
 import ChangePasswordDialog from '../Components/Profile/ChangePasswordDialog'
 import background from '../assets/Login.png'
 import Header from '../Components/Header/Header'
-const Profile = () => {
+import AdminSideBar from '../Components/Sidebar/AdminSideBar';
+const AdminProfile = () => {
   const { userId } = useParams();
   const [isEditing, setIsEditing] = useState(false)
   const [userData, setUserData] = useState({
@@ -80,7 +81,6 @@ const Profile = () => {
 
   return (
     <>
-    <Header></Header>
     <Box
       display="flex"
       justifyContent="center"
@@ -95,7 +95,7 @@ const Profile = () => {
         padding: '20px'
       }}
     >
-      
+      <AdminSideBar />
       <Paper elevation={3} sx={{
         padding: 4,
         width: '80%',
@@ -229,4 +229,4 @@ const Profile = () => {
   );
 };
 
-export default Profile
+export default AdminProfile

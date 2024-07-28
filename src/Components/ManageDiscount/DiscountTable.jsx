@@ -187,7 +187,7 @@ const DiscountTable = ({ discounts, reload }) => {
         formData={editData}
         setFormData={setEditData}
       />
-      <TableContainer component={Paper} sx={{ maxHeight: 440, display: 'flex', flexDirection: 'column' }}>
+      <TableContainer component={Paper} sx={{ display: 'flex', flexDirection: 'column' }}>
         <Table stickyHeader aria-label="custom pagination table">
           <TableHead>
             <TableRow>
@@ -195,7 +195,7 @@ const DiscountTable = ({ discounts, reload }) => {
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Expired Day</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
-              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Amount</TableCell>
+              
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
@@ -207,7 +207,7 @@ const DiscountTable = ({ discounts, reload }) => {
                 <TableCell align="right">{discount.createdBy}</TableCell>
                 <TableCell align="right">{discount.expiredDay}</TableCell>
                 <TableCell align="right">{discount.publishDay}</TableCell>
-                <TableCell align="right">{discount.amount}</TableCell>
+                
                 <TableCell align="right">{discount.cost}</TableCell>
                 <TableCell align="right">
                   <Button onClick={() => handleUpdateDiscount(discount)}
