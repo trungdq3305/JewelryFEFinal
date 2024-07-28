@@ -576,25 +576,29 @@ export const updateProductGem = async (formData) => {
 //     }
 //   }
 // }
-export const removeProductDiscount = async (productId, discountId) => {
+export const removeProductDiscount = async (discountId, productId) => {
   try {
-    const response = await axios.delete(api + '/discountproduct/delete-discountproduct', productId, discountId)
-    return response.data
-  }
-  catch (error) {
+    const response = await axios.delete(api + '/discountproduct/delete-discountproduct', {
+      data: {
+        discountId: discountId,
+        productId: productId
+      }
+    });
+    return response.data;
+  } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
         isSuccess: false,
         message: error.response?.data?.message || error.message,
       };
     } else {
-      return { isSuccess: false, message: 'An unexpected error has occurred' }
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
-}
+};
 export const addDiscountProduct = async (productId, discountId) => {
   try {
-    const response = await axios.post(api + '/discoun tproduct/create-discountproduct', { productId, discountId });
+    const response = await axios.post(api + '/discountproduct/create-discountproduct', { productId, discountId });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
