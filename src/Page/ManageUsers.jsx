@@ -23,6 +23,13 @@ const ManageUsers = () => {
       }
     }
   };
+  const handleUpdateUserStatus = (userId) => {
+    setUsers((prevUsers) => 
+      prevUsers.map((user) => 
+        user.userId === userId ? { ...user, status: !user.status } : user
+      )
+    );
+  };
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -72,6 +79,13 @@ const ManageUsers = () => {
       console.error('Error adding user:', error);
     }
   };
+  const handleUpdateRole = (userId, newRoleId) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.userId === userId ? { ...user, role: newRoleId } : user
+      )
+    );
+  };
 
   useEffect(() => {
     loadAllUsers();
@@ -113,7 +127,8 @@ const ManageUsers = () => {
         initialFormData={initialFormData}
         roleMapping={roleMapping}
       />
-      <UserTable users={users} />
+      <UserTable users={users} onUpdateUserStatus={handleUpdateUserStatus} onUpdateRole={handleUpdateRole}
+ />
     </Box>
   );
 };

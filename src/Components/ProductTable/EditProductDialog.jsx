@@ -572,7 +572,6 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
     if (product && goldData.length) {
       const materialGold = goldData.find(gold => gold.goldName === product.material);
       const materialId = materialGold ? materialGold.goldId : '';
-    
       setFormData({
         productId: product.productId,
         productName: product.productName,
@@ -586,7 +585,7 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
         image: product.image,
         markupRate: product.markupRate
       });
-    
+      console.log(formData)
       const initialGemAmounts = {};
       const initialPropChecks = {};
 
@@ -777,7 +776,7 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
             name="markupRate"
             label="Markup Rate"
             type="number"
-            value={formData.markupRate}
+            value={formData.markupRate || ''}
             onChange={handleChange}
           />
           {gemData.map((gem, index) => (

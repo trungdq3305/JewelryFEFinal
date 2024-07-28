@@ -102,19 +102,26 @@ const initialFormData = {
   cashId: ''
 };
 
-const CashierTable = ({ cashiers }) => {
+const CashierTable = ({ cashiers, users }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDialog, setOpenDialog] = useState(false);
   const [updateData, setUpdateData] = useState(initialFormData);
+  const [cashierList, setCashierList] = useState(cashiers); // Manage cashier list state
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (updatedCashier) => {
     try {
-      const result = await updateCashier(updateData);
+      const result = await updateCashier(updatedCashier);
       console.log(result.data);
+      // Update the local cashier list state with the updated cashier data
+      setCashierList((prev) =>
+        prev.map((cashier) =>
+          cashier.cashId === updatedCashier.cashId ? updatedCashier : cashier
+        )
+      );
       handleCloseDialog();
     } catch (error) {
-      console.error('Error editing product:', error);
+      console.error('Error updating cashier:', error);
     }
   };
 
@@ -127,7 +134,7 @@ const CashierTable = ({ cashiers }) => {
   };
 
   const formatDate = (date) => {
-    return format(new Date(date), 'MMM dd, yyyy HH:mm:ss');
+    return format(new Date(date), 'yyyy-MM-dd HH:mm');
   };
 
   const emptyRows =
@@ -142,10 +149,9 @@ const CashierTable = ({ cashiers }) => {
     setPage(0);
   };
 
-  const cashierList = Array.isArray(cashiers) ? cashiers : [];
 
   useEffect(() => {
-    updateCashier();
+    // Ensure this only runs when required and does not call external suspicious URLs
   }, []);
 
   return (
@@ -155,6 +161,8 @@ const CashierTable = ({ cashiers }) => {
         handleCloseDialog={handleCloseDialog}
         onUpdateCashier={handleUpdate}
         formData={updateData}
+        setFormData={setUpdateData} // Pass the state sett
+        users={users}
       />
       <TableContainer
         component={Paper}
@@ -212,39 +220,36 @@ const CashierTable = ({ cashiers }) => {
                     });
                   }}
                   sx={{
-                    backgroundColor: 'white',
-                    color: '#FFA500',
-                    border: '1px solid #FFA500',
+                    color: 'black',
+                    backgroundColor: 'lightblue',
+                    fontWeight: 'bold',
                     '&:hover': {
-                      backgroundColor: 'white',
-                      borderColor: '#FFA500',
+                      backgroundColor: '#D5E3F7',
                     },
-                  }}>Edit</Button>
+                  }}
+                  >Update</Button>
                 </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={11} />
+                <TableCell colSpan={8} />
               </TableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={11}
+                rowsPerPageOptions={[5, 10, 25]}
+                colSpan={8}
                 count={cashierList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      'aria-label': 'rows per page',
-                    },
-                    native: true,
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
                   },
+                  native: true,
                 }}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
@@ -260,6 +265,7 @@ const CashierTable = ({ cashiers }) => {
 
 CashierTable.propTypes = {
   cashiers: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default CashierTable;

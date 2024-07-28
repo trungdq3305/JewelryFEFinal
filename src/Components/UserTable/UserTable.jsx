@@ -92,7 +92,7 @@ TablePaginationActions.propTypes = {
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
 }
-const UserTable = ({ users }) => {
+const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [openDialog, setOpenDialog] = useState(false)
@@ -111,6 +111,9 @@ const UserTable = ({ users }) => {
     if (selectedUser) {
       try {
         const result = await activeDeactiveUser(selectedUser)
+        if (result.status === 200) { // Assuming the API returns a 200 status for success
+          onUpdateUserStatus(selectedUser);
+        }
       } catch (error) {
         console.error('Error active/deactive user', error)
       } finally {
@@ -165,6 +168,8 @@ const UserTable = ({ users }) => {
         open={openRoleDialog}
         onClose={handleCloseRoleDialog}
         user={selectedUser}
+        onUpdateRole={onUpdateRole}
+
       />
 
       <TableContainer
@@ -282,6 +287,10 @@ const UserTable = ({ users }) => {
 
 UserTable.propTypes = {
   users: PropTypes.array.isRequired,
+  onUpdateUserStatus: PropTypes.func.isRequired,
+  onUpdateRole: PropTypes.func.isRequired
+
+
 }
 
 export default UserTable

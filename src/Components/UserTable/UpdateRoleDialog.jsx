@@ -19,13 +19,13 @@ const roleMapping = [
   { id: 3, label: 'Admin' }
 ];
 
-const UpdateRoleDialog = ({ open, onClose, user }) => {
+const UpdateRoleDialog = ({ open, onClose, user, onUpdateRole }) => {
   const [selectedRole, setSelectedRole] = useState('');
 
   useEffect(() => {
     if (user) {
-      // Find the role id based on the user's current role
-      const currentRole = roleMapping.find(role => role.label === user.role);
+      const currentRole = roleMapping.find(role => role.id === user.role);
+      console.log('Current Role:', currentRole); // Log the current role for debugging
       setSelectedRole(currentRole ? currentRole.id : '');
     }
   }, [user]);
@@ -39,6 +39,7 @@ const UpdateRoleDialog = ({ open, onClose, user }) => {
       try {
         const result = await updateRole(user.userId, selectedRole);
         console.log('Role updated successfully', result);
+        onUpdateRole(user.userId, selectedRole); // Pass the updated role back to the parent
         onClose();
       } catch (error) {
         console.error('Error updating role', error);
@@ -75,7 +76,8 @@ const UpdateRoleDialog = ({ open, onClose, user }) => {
 UpdateRoleDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  user: PropTypes.object
+  user: PropTypes.object,
+  onUpdateRole: PropTypes.func.isRequired
 };
 
 export default UpdateRoleDialog;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
-const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, formData }) => {
+const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, formData, users, setFormData}) => {
   const [updatedFormData, setUpdatedFormData] = useState({ ...formData });
 
   // Format date-time fields for display in input fields
@@ -33,16 +33,21 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
     });
   }, [formData]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUpdatedFormData({
-      ...updatedFormData,
-      [name]: name === 'status' ? parseInt(value, 10) : value // Parse status value to integer
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
+
+  useEffect(() => {
+    setFormData(formData); // Ensure local state is in sync with props
+  }, [formData, setFormData]);
 
   const handleUpdateCashier = () => {
     onUpdateCashier(updatedFormData);
+    console.log(updatedFormData);
     handleCloseDialog();
   };
 
@@ -75,7 +80,7 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
             <InputLabel>Cashier Number</InputLabel>
             <Select
               name="cashNumber"
-              value={formData.cashNumber}
+              value={updatedFormData.cashNumber}
               onChange={handleChange}
               label="Cashier Number"
             >
@@ -86,15 +91,22 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
               ))}
             </Select>
           </FormControl>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="userId"
-            label="User Id"
-            value={updatedFormData.userId}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel>User</InputLabel>
+            <Select
+              name="userId"
+              value={updatedFormData.userId}
+              onChange={handleChange}
+              label="User"
+              MenuProps={{ PaperProps: { style: { maxHeight: 200 } } }}  // Setting the max height of the dropdown
+            >
+              {users.map((user) => (
+                <MenuItem key={user.userId} value={user.userId}>
+                  {user.userId}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl fullWidth margin="normal" required>
             <InputLabel>Status</InputLabel>
             <Select
@@ -103,11 +115,11 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
               onChange={handleChange}
               label="Status"
             >
-              {statusMapping.map(item =>
+              {statusMapping.map(item => (
                 <MenuItem key={item.id} value={item.id}>
                   {item.label}
                 </MenuItem>
-              )}
+              ))}
             </Select>
           </FormControl>
         </Paper>
