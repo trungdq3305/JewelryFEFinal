@@ -31,9 +31,7 @@ const ManageVoucher = () => {
     if (searchCriteria === 'expiredDay') {
       if (dateValue.isValid()) {
         transformedSearchParams = {
-          'expiredDay.Year': dateValue.year(),
-          'expiredDay.Month': dateValue.month() + 1,
-          'expiredDay.Day': dateValue.date(),
+          'expiredDay': dateValue(),
         };
       } else {
         toast.error('Please select a valid date');

@@ -159,11 +159,16 @@ export const deleteVoucher = async (voucherId) => {
   try {
     const response = await axios.delete(
       api + `/voucher/deletevoucher?VoucherId=${voucherId}`
-    )
-    alert('\nDelete voucher succesfully')
-    return response.data
+    );
+    if (response.status === 200) {
+      return response.data; 
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting discount:', error);
+    throw error; 
+
   }
 }
 
