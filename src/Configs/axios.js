@@ -121,31 +121,21 @@ const getAllVouchers = async (params) => {
 export { getAllVouchers }
 export const addVoucher = async (formData) => {
   try {
-    // Transforming formData
-    const transformedData = {
-      expiredDay: new Date(formData.expiredDay.year, formData.expiredDay.month - 1, formData.expiredDay.day).toISOString(),
-      publishedDay: new Date(formData.publishedDay.year, formData.publishedDay.month - 1, formData.publishedDay.day).toISOString(),
-      cost: parseInt(formData.cost, 10),
-      customerCustomerId: formData.customerCustomerId
-    };
-
-    console.log(transformedData);
-    const response = await axios.post(api + '/voucher/createvoucher', transformedData);
-
-    return { isSuccess: true, data: response.data };
+    const response = await axios.post(api + '/voucher/createvoucher', formData)
+    return { isSuccess: true, data: response.data }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('Error message: ', error.message);
+      console.log('Error message: ', error.message)
       return {
         isSuccess: false,
         message: error.response?.data?.message || error.message,
-      };
+      }
     } else {
-      console.log('Unexpected error: ', error);
-      return { isSuccess: false, message: 'An unexpected error has occurred' };
+      console.log('Unexpected error: ', error)
+      return { isSuccess: false, message: 'An unexpected error has occurred' }
     }
   }
-};
+}
 
 
 export const editVoucher = async (formData) => {
@@ -170,11 +160,16 @@ export const deleteVoucher = async (voucherId) => {
   try {
     const response = await axios.delete(
       api + `/voucher/deletevoucher?VoucherId=${voucherId}`
-    )
-    alert('\nDelete voucher succesfully')
-    return response.data
+    );
+    if (response.status === 200) {
+      return response.data; 
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting discount:', error);
+    throw error; 
+
   }
 }
 

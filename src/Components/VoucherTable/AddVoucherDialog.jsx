@@ -1,121 +1,103 @@
-import { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper } from '@mui/material';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddVoucherDialog = ({ openDialog, handleCloseDialog, onAddVoucher, initialFormData }) => {
   const [formData, setFormData] = useState(initialFormData);
 
+  useEffect(() => {
+    setFormData(initialFormData);
+  }, [initialFormData]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    if (name === 'expiredDay' || name === 'publishedDay') {
-      const date = new Date(value);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate(),
-        },
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleAddVoucher = () => {
-    const requiredFields = [
-      'cost', 
-      'customerCustomerId', 
-      'expiredDay.year', 'expiredDay.month', 'expiredDay.day', 
-      'publishedDay.year', 'publishedDay.month', 'publishedDay.day'
-    ];
-    const isFormValid = requiredFields.every(field => {
-      const [mainKey, subKey] = field.split('.');
-      return subKey ? formData[mainKey] && formData[mainKey][subKey] : formData[mainKey];
-    });
+    const requiredFields = ['cost', 'customerCustomerId', 'expiredDay', 'publishedDay'];
+    const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
       toast.warn('Please fill in all required fields');
       return;
     }
 
-    onAddVoucher(formData);
+    const formattedFormData = {
+      ...formData,
+      expiredDay: new Date(formData.expiredDay).toISOString(),
+      publishedDay: new Date(formData.publishedDay).toISOString(),
+    };
+
+    onAddVoucher(formattedFormData);
     setFormData(initialFormData);
   };
 
-  const formatDateString = (date) => {
-    if (!date) return '';
-    const year = date.year || 0;
-    const month = String(date.month || 0).padStart(2, '0');
-    const day = String(date.day || 0).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
   return (
-    <>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add Voucher</DialogTitle>
-        <DialogContent>
-          <Paper variant="outlined" component="form" sx={{ margin: 2, padding: 2 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="customerCustomerId"
-              label="Customer ID"
-              value={formData.customerCustomerId}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="cost"
-              label="Cost ( < 100000 )"
-              value={formData.cost}
-              onChange={handleChange}
-            />
-            
-            <div>Expired Day</div>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="expiredDay"
-              label="Expired Date"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={formatDateString(formData.expiredDay)}
-              onChange={handleChange}
-            />
-            <div>Published Day</div>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="publishedDay"
-              label="Published Date"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={formatDateString(formData.publishedDay)}
-              onChange={handleChange}
-            />
-          </Paper>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleAddVoucher} variant="contained" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <DialogTitle>Add Voucher</DialogTitle>
+      <DialogContent>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="customerCustomerId"
+          label="Customer ID"
+          value={formData.customerCustomerId}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="cost"
+          label="Cost ( > 100000 )"
+          value={formData.cost}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="expiredDay"
+          label="Expired Date"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          value={formData.expiredDay}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="publishedDay"
+          label="Published Date"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          value={formData.publishedDay}
+          onChange={handleChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <Button onClick={handleAddVoucher} variant="contained" autoFocus>
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
+};
+
+AddVoucherDialog.propTypes = {
+  openDialog: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  onAddVoucher: PropTypes.func.isRequired,
+  initialFormData: PropTypes.object.isRequired,
 };
 
 export default AddVoucherDialog;

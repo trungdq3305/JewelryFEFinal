@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogActions,
@@ -10,6 +11,8 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditCustomerDialog = ({
   openDialog,
@@ -18,88 +21,57 @@ const EditCustomerDialog = ({
   formData,
   setFormData,
 }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
+  useEffect(() => {
+    if (formData) {
+      setFormData(formData);
+    }
+  }, [formData, setFormData]);
 
   const handleChange = (event) => {
-    const { name, value } = event.target
-    const [mainKey, subKey] = name.split('.')
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
-    const isNumericField = ['cost'].includes(name)
-
-    if (isNumericField && value !== '' && isNaN(value)) {
-      return
-    }
-
-    const parsedValue = isNumericField ? parseInt(value, 10) : value
-
-    if (subKey) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [mainKey]: {
-          ...prevFormData[mainKey],
-          [subKey]: parsedValue,
-        },
-      }))
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: parsedValue,
-      }))
-    }
-  }
-
-  const handleEditCustomer = () => {
+  const handleEditCustomer = async() => {
     const requiredFields = [
       'fullName',
-      'doB.year',
-      'doB.month',
-      'doB.day',
+      'doB',
       'address',
       'email',
       'phone',
       'point',
       'rate',
     ]
-    const isFormValid = requiredFields.every((field) => {
-      const [mainKey, subKey] = field.split('.')
-      return subKey
-        ? formData[mainKey] && formData[mainKey][subKey]
-        : formData[mainKey]
-    })
+    const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.')
-      setSnackbarOpen(true)
-      return
+      toast.error('Please fill in all required fields.');
+      return;
     }
 
-    // Format the date of birth to ISO 8601 format
-    const year = formData.doB.year
-    const month = formData.doB.month - 1 // Months are 0-indexed in JS Date
-    const day = formData.doB.day
-    const formattedDOB = new Date(Date.UTC(year, month, day)).toISOString()
+    const updatedFormData = {
+      ...formData,
+      doB: new Date(formData.doB).toISOString().split('T')[0],
+    };
 
-    // Create a new form data object with formatted DOB
-    const updatedFormData = { ...formData, doB: formattedDOB }
-    console.log(updatedFormData)
-    onEditCustomer(updatedFormData)
-  }
+    try {
+      await onEditCustomer(updatedFormData);
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      toast.error('Error updating customer.');
+    }
+  };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false)
-  }
 
   return (
     <>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Edit Customer</DialogTitle>
         <DialogContent>
-          <Paper
-            variant="outlined"
-            component="form"
-            sx={{ margin: 2, padding: 2 }}
-          >
             <TextField
               margin="normal"
               required
@@ -110,33 +82,18 @@ const EditCustomerDialog = ({
               onChange={handleChange}
             />
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Date of Birth"
-              type="date"
-              value={`${formData.doB.year}-${(formData.doB.month || '').toString().padStart(2, '0')}-${(formData.doB.day || '').toString().padStart(2, '0')}`}
-              onChange={(e) => {
-                const dateValue = e.target.value; // Format: yyyy-MM-dd
-                const year = dateValue.substring(0, 4);
-                const month = dateValue.substring(5, 7);
-                const day = dateValue.substring(8, 10);
-
-                handleChange({
-                  target: {
-                    name: 'doB',
-                    value: {
-                      year: year,
-                      month: month,
-                      day: day
-                    }
-                  }
-                });
-              }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+            margin="normal"
+            required
+            fullWidth
+            name="doB"
+            label="Date of birth"
+            type="date"
+            value={formData.doB ? formData.doB.slice(0, 10) : ''}
+            onChange={handleChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
 
             <TextField
               margin="normal"
@@ -183,7 +140,6 @@ const EditCustomerDialog = ({
               value={formData.rate}
               onChange={handleChange}
             />
-          </Paper>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
@@ -192,21 +148,15 @@ const EditCustomerDialog = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="warning"
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   )
 }
+EditCustomerDialog.propTypes = {
+  openDialog: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  onEditCustomer: PropTypes.func.isRequired,
+  formData: PropTypes.object.isRequired,
+  setFormData: PropTypes.func.isRequired,
+};
 
 export default EditCustomerDialog

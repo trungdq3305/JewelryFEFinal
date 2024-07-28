@@ -1,53 +1,48 @@
-import { useEffect, useState } from 'react'
-import React from 'react'
-import { useTheme } from '@mui/material/styles'
-import PropTypes from 'prop-types'
-import EditCustomerDialog from './EditCustomerDialog'
-import CustomerBillDialog from './CustomerBillDialog'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableContainer,
   TableHead,
   TableRow,
   Paper,
+  Button,
   Box,
   TablePagination,
-  Button,
-  Snackbar,
-  Alert,
-} from '@mui/material'
-import IconButton from '@mui/material/IconButton'
-import FirstPageIcon from '@mui/icons-material/FirstPage'
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
-import LastPageIcon from '@mui/icons-material/LastPage'
-import { editCustomer, updateCustomerStatus } from '../../Configs/axios'
-import AddCustomerDialog from './AddCustomerDialog'
+} from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { useTheme } from '@mui/material/styles';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import EditCustomerDialog from './EditCustomerDialog';
+import CustomerBillDialog from './CustomerBillDialog';
+import { editCustomer, updateCustomerStatus } from '../../Configs/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function TablePaginationActions(props) {
-  const theme = useTheme()
-  const { count, page, rowsPerPage, onPageChange } = props
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (event) => {
-    onPageChange(event, 0)
-  }
+    onPageChange(event, 0);
+  };
 
   const handleBackButtonClick = (event) => {
-    onPageChange(event, page - 1)
-  }
+    onPageChange(event, page - 1);
+  };
 
   const handleNextButtonClick = (event) => {
-    onPageChange(event, page + 1)
-  }
+    onPageChange(event, page + 1);
+  };
 
   const handleLastPageButtonClick = (event) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
-  }
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
 
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
@@ -88,14 +83,15 @@ function TablePaginationActions(props) {
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </Box>
-  )
+  );
 }
+
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
-}
+};
 
 const initialFormData = {
   fullName: '',
@@ -105,89 +101,80 @@ const initialFormData = {
   phone: '',
   point: '',
   rate: '',
-}
+};
 
 const CustomerTable = ({ customers, reloadCustomers }) => {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [openDialog, setOpenDialog] = useState(false)
-  const [editData, setEditData] = useState(initialFormData)
-  const [openBillDialog, setOpenBillDialog] = useState(false)
-  const [bills, setBills] = useState([])
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editData, setEditData] = useState(initialFormData);
+  const [openBillDialog, setOpenBillDialog] = useState(false);
+  const [bills, setBills] = useState([]);
+  const [customerList, setCustomerList] = useState(customers);
 
-  const handleEdit = (customer) => {
-    handleOpenDialog()
+  useEffect(() => {
+    setCustomerList(customers);
+  }, [customers]);
 
-    const { doB, ...rest } = customer
-    const [year, month, day] = doB.split('-').map((part) => parseInt(part, 10))
-    setEditData({
-      ...initialFormData,
-      ...rest,
-      doB: { year, month, day },
-    })
-  }
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true)
-  }
+  const handleEdit = (discount) => {
+    setEditData(discount);
+    setOpenDialog(true);
+  };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
-  }
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - customers.length) : 0
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
+    setOpenDialog(false);
+  };
 
   const handleEditCustomer = async (formData) => {
     try {
-      const result = await editCustomer(formData)
-      console.log(result)
+      await editCustomer(formData);
       toast.success(`Customer ${formData.customerId} updated successfully`);
-      handleCloseDialog()
-      reloadCustomers() 
+      handleCloseDialog();
+      reloadCustomers();
     } catch (error) {
-      toast.error('Error updating discount.');
-      console.error('Error editing customer:', error)
+      toast.error('Error updating customer.');
+      console.error('Error editing customer:', error);
     }
-  }
+  };
+
+  const handleChangeStatus = async (customerId) => {
+    try {
+      await updateCustomerStatus(customerId);
+      toast.success('Updating status successfully');
+      reloadCustomers();
+    } catch (error) {
+      toast.error('Error updating status.');
+      console.error('Error updating status:', error);
+    }
+  };
+
+  const handleShowBills = (customer) => {
+    setBills(customer.bills);
+    setOpenBillDialog(true);
+  };
+
   const buttonStyle = {
-    width: '100%', 
+    width: '100%',
     margin: '5px',
     backgroundColor: 'white',
     '&:hover': {
       backgroundColor: 'white',
     },
   };
-  const handleChangeStatus = async (customerId) => {
-    try {
-      const result = await updateCustomerStatus(customerId)
-      toast.success('Updating status succesfully');
-      console.log(result)
-      reloadCustomers() 
-    } catch (error) {
-      toast.error('Error updating status.');
-      console.error('Error updating status:', error)
 
-    }
-  }
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  const handleShowBills = (customer) => {
-    // Assuming customer contains bill information; if not, fetch it here.
-    setBills(customer.bills) // Assuming `customer.bills` is the list of bills
-    setOpenBillDialog(true)
-  }
+  const handleChangeRowsPerPage = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setPage(0);
+  };
 
-  const customerList = Array.isArray(customers) ? customers : []
+  const emptyRows = rowsPerPage > 0 ? Math.max(0, (1 + page) * rowsPerPage - customerList.length) : 0;
+
+  const displayRows = rowsPerPage > 0 ? customerList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : customerList;
 
   return (
     <>
@@ -203,10 +190,10 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
         onClose={() => setOpenBillDialog(false)}
         bills={bills}
       />
-      <TableContainer component={Paper} sx={{ maxHeight: 600, display: 'flex', flexDirection: 'column' }}>
+      <TableContainer component={Paper} sx={{ display: 'flex', flexDirection: 'column' }}>
         <Table stickyHeader aria-label="custom pagination table">
-          <TableHead >
-            <TableRow >
+          <TableHead>
+            <TableRow>
               <TableCell style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>ID</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Name</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Birth</TableCell>
@@ -219,43 +206,19 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
-            {(rowsPerPage > 0
-              ? customerList.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
-              : customerList
-            ).map((customer) => (
+          <TableBody>
+            {displayRows.map((customer) => (
               <TableRow key={customer.customerId}>
-                <TableCell component="th" scope="row" style={{ width: 50 }}>
-                  {customer.customerId}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.fullName}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.doB}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.address}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.email}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.phone}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.point}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.rate}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {customer.status ? 'Active' : 'Inactive'}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell>{customer.customerId}</TableCell>
+                <TableCell align="right">{customer.fullName}</TableCell>
+                <TableCell align="right">{customer.doB}</TableCell>
+                <TableCell align="right">{customer.address}</TableCell>
+                <TableCell align="right">{customer.email}</TableCell>
+                <TableCell align="right">{customer.phone}</TableCell>
+                <TableCell align="right">{customer.point}</TableCell>
+                <TableCell align="right">{customer.rate}</TableCell>
+                <TableCell align="right">{customer.status ? 'Active' : 'Inactive'}</TableCell>
+                <TableCell align="right">
                   <Button
                     onClick={() => handleEdit(customer)}
                     sx={{
@@ -276,59 +239,67 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
                     sx={{
                       ...buttonStyle,
                       backgroundColor: 'white',
-                      color: 'black', 
-                      border: '1px solid black',
+                      color: 'green',
+                      border: '1px solid green',
                       '&:hover': {
                         backgroundColor: 'white',
-                        borderColor: 'black',
+                        borderColor: 'green',
                       },
                     }}
                   >
                     Change Status
                   </Button>
-                  <Button onClick={() => handleShowBills(customer)} 
-                  sx={{
-                    ...buttonStyle,
+                  <Button
+                    onClick={() => handleShowBills(customer)}
+                    sx={{
+                      ...buttonStyle,
                       backgroundColor: 'white',
-                      color: '#2596be', 
-                      border: '1px solid #2596be',
+                      color: '#007BFF',
+                      border: '1px solid #007BFF',
                       '&:hover': {
                         backgroundColor: 'white',
-                        borderColor: '#2596be',
+                        borderColor: '#007BFF',
                       },
-                    }}>Bills</Button>
+                    }}
+                  >
+                    Show Bills
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={11} />
+                <TableCell colSpan={10} />
+              </TableRow>
+            )}
+            {customerList.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={10} align="center">
+                  No customers found.
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={11}
-                count={customerList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
-              />
-            </TableRow>
-          </TableFooter>
         </Table>
       </TableContainer>
+      <TablePagination
+        style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+        component="div"
+        count={customerList.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
     </>
-  )
-}
+  );
+};
+
 CustomerTable.propTypes = {
   customers: PropTypes.array.isRequired,
   reloadCustomers: PropTypes.func.isRequired,
-}
+};
 
-export default CustomerTable
+export default CustomerTable;
