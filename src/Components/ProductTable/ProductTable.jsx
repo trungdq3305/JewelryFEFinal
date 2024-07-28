@@ -301,7 +301,7 @@ TablePaginationActions.propTypes = {
 const ProductTable = ({ products, goldData, discountData, onEditProduct , refreshProducts}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [openEditDialog, setopenEditDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDiscountDialog, setOpenDiscountDialog] = useState(false);
   const [selectedDiscounts, setSelectedDiscounts] = useState([]);
@@ -320,11 +320,11 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
   const handleEditClick = (product) => {
     console.log(product)
     setSelectedProduct(product);
-    setopenEditDialog(true);
+    setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
-    setopenEditDialog(false);
+    setOpenEditDialog(false);
   };
   const handleViewDiscountClick = (product) => {
     setSelectedDiscounts(product.discount || []);
@@ -403,7 +403,7 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
           </TableHead>
           <TableBody>
             {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
-              <TableRow key={product.id}>
+              <TableRow key={product.productId}>
                 <TableCell>{product.productId}</TableCell>
                 <TableCell>{product.productName}</TableCell>
                 <TableCell>{product.category}</TableCell>
@@ -452,6 +452,7 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
           product={selectedProduct}
           goldData={goldData}
           // discountData={discountData}
+          onEditProduct={onEditProduct}
         />
       )}
       <DiscountDialog

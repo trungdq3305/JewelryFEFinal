@@ -14,11 +14,8 @@ const ManageGold = () => {
       const goldList = res.data.DataList.Data
       goldList.forEach((element, index) => {
         const rowNumber = element['@row']
-        const dateStr = element[`@d_${rowNumber}`]
-        const [datePart, timePart] = dateStr.split(' ')
-        const [day, month, year] = datePart.split('/')
-        const [hours, minutes] = timePart.split(':')
-        const modifiedDate = new Date(year, month - 1, day, hours, minutes)
+
+        const modifiedDate = new Date()
         let goldJson = {
           goldId: String(index + 1),
           goldName: element[`@n_${rowNumber}`],

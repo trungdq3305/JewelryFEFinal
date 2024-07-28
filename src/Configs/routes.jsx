@@ -28,6 +28,8 @@ import { History } from '@mui/icons-material'
 import HistoryPage from '../Page/HistoryPage.jsx'
 import BillDetailPage from '../Page/BillDetailPage.jsx'
 import ManageBill from '../Page/ManageBill.jsx'
+import AdminProfile from '../Page/AdminProfile.jsx'
+import AdminUsers from '../Page/AdminUsers.jsx'
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -219,6 +221,15 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'AdminProfile/:userId',
+
+        element: (
+          <ProtectedRoutes allowedRoles={[1, 2, 3]}>
+            <AdminProfile />
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: 'BillDetail/:billId',
 
         element: (
@@ -233,6 +244,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoutes allowedRoles={[ 2 ]}>
             <ManageBill />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: 'AdminUsers',
+        element: (
+          <ProtectedRoutes allowedRoles={[3]}>
+            <AdminUsers />
           </ProtectedRoutes>
         ),
       },

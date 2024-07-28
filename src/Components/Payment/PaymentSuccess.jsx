@@ -30,6 +30,13 @@ const PaymentSuccess = ({
 
     return `${formattedDate} at ${formattedTime}`
   }
+  const numberOfProduct = () => {
+    let result = 0
+    products.forEach((element) => {
+      result = result + element.Quantity
+    })
+    return result
+  }
 
   if (!bill) {
     return <div>Loading...</div>
@@ -129,7 +136,7 @@ const PaymentSuccess = ({
               </p>
             </div>
             <div className={styles.summaryContain}>
-              <p>{products.length}</p>
+              <p>{numberOfProduct()}</p>
               <p>{Number(totalCost.toFixed(0)).toLocaleString('vn')}</p>
               <p>{Number(voucherCost.toFixed(0)).toLocaleString('vn')}</p>
               <p>{Number(costWithVoucher.toFixed(0)).toLocaleString('vn')}</p>
