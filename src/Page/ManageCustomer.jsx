@@ -1,4 +1,3 @@
-// ManageCustomer.jsx
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Paper, TextField } from '@mui/material'
 import CustomerTable from '../Components/CustomerTable/CustomerTable'
@@ -10,12 +9,14 @@ import {
 } from '../Configs/axios'
 import AddCustomerDialog from '../Components/CustomerTable/AddCustomerDialog'
 import ManagerSideBar from '../Components/Sidebar/ManagerSideBar'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(false)
   const [openDialog, setOpenDialog] = useState(false)
-  const [searchCriteria, setSearchCriteria] = useState('name') // Default search criteria
+  const [searchCriteria, setSearchCriteria] = useState('name')
   const [searchValue, setSearchValue] = useState('')
   const [error, setError] = useState('')
 
@@ -29,11 +30,7 @@ const ManageCustomer = () => {
 
   const initialFormData = {
     fullName: '',
-    doB: {
-      year: '',
-      month: '',
-      day: '',
-    },
+    doB: '',
     address: '',
     email: '',
     phone: '',
@@ -54,12 +51,19 @@ const ManageCustomer = () => {
 
   const handleAddCustomer = async (formData) => {
     try {
-      await addCustomer(formData)
-      handleCloseDialog()
-      loadCustomers() // Reload the customers after adding a new one
+      const response = await addCustomer(formData)
+      if (response.isSuccess) {
+        toast.success('Customer added successfully');
+        handleCloseDialog();
+        console.log('New customer added successfully:', response.data);
+        await loadCustomers(); 
+      } else {
+        toast.error(response.message || 'Error adding new customer');
+        console.error('Error adding new customer:', response.message);
+      }
     } catch (error) {
-      console.error('Error adding customer:', error)
-      // Handle error state or display error message to user
+      toast.error('Server error occurred');
+      console.error('Error adding new customer:', error);
     }
   }
 
@@ -96,6 +100,7 @@ const ManageCustomer = () => {
 
   return (
     <>
+    <ToastContainer />
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
         <Box
           sx={{

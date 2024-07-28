@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import GoldTable from '../Components/Gold/GoldTable'
 import { getAllGold, updateGold } from '../Configs/axios'
 import axios from 'axios'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageGold = () => {
   const [gold, setGold] = useState([])
@@ -31,7 +33,7 @@ const ManageGold = () => {
         console.log(update)
         loadGolds()
       })
-      alert('Fetch Gold successfully')
+      toast.success('Fetch Gold successfully')
       console.log(res.data.DataList.Data)
     } catch (error) {
       console.error('Error fetching the gold price:', error)

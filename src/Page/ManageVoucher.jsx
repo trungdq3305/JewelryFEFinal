@@ -1,189 +1,155 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Paper, Snackbar } from '@mui/material';
+import { Box, Button, Paper, TextField, CircularProgress, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import VoucherTable from '../Components/VoucherTable/VoucherTable';
 import { getAllVouchers, addVoucher, getVouchers } from '../Configs/axios';
 import AddVoucherDialog from '../Components/VoucherTable/AddVoucherDialog';
 import ManagerSideBar from '../Components/Sidebar/ManagerSideBar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import dayjs from 'dayjs';
 
 const ManageVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState('expiredDay');
-  const [searchParams, setSearchParams] = useState({
-    expiredDay: { Year: '', Month: '', Day: '' },
-    customerId: '',
-    customerName: '',
-    customerPhone: '',
-    customerEmail: '',
-  });
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [dateValue, setDateValue] = useState(dayjs());
 
   const handleOpenDialog = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSearching(true);
 
     let transformedSearchParams = {};
-    switch (searchCriteria) {
-      case 'expiredDay':
-        if (!searchParams.expiredDay.Year || !searchParams.expiredDay.Month || !searchParams.expiredDay.Day) {
-          setSnackbarMessage('Please enter Year, Month, and Day.');
-          setSnackbarOpen(true);
-          setLoading(false);
-          return;
-        }
+    if (searchCriteria === 'expiredDay') {
+      if (dateValue.isValid()) {
         transformedSearchParams = {
-          'expiredDay.Year': searchParams.expiredDay.Year,
-          'expiredDay.Month': searchParams.expiredDay.Month,
-          'expiredDay.Day': searchParams.expiredDay.Day,
+          'expiredDay': dateValue(),
         };
-        break;
-      case 'customerId':
-        transformedSearchParams.customerId = searchParams.customerId;
-        break;
-      case 'customerName':
-        transformedSearchParams.customerName = searchParams.customerName;
-        break;
-      case 'customerPhone':
-        transformedSearchParams.customerPhone = searchParams.customerPhone;
-        break;
-      case 'customerEmail':
-        transformedSearchParams.customerEmail = searchParams.customerEmail;
-        break;
-      default:
-        break;
+      } else {
+        toast.error('Please select a valid date');
+        setSearching(false);
+        return;
+      }
+    } else {
+      transformedSearchParams[searchCriteria] = inputValue;
     }
 
     try {
-      const vouchers = await getVouchers(transformedSearchParams);
-      setVouchers(vouchers);
+      const response = await getVouchers(transformedSearchParams);
+      setVouchers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error(error);
+      console.error('Search error:', error);
+      toast.error('Error searching vouchers');
     } finally {
-      setLoading(false);
+      setSearching(false);
     }
   };
 
   const initialFormData = {
-    expiredDay: { year: '', month: '', day: '' },
-    publishedDay: { year: '', month: '', day: '' },
+    expiredDay: '',
+    publishedDay: '',
     cost: '',
     customerCustomerId: '',
   };
 
   const loadVouchers = async () => {
     setLoading(true);
-    const result = await getAllVouchers();
-    setVouchers(result.data);
-    setLoading(false);
+    try {
+      const result = await getAllVouchers();
+      setVouchers(Array.isArray(result.data) ? result.data : []);
+    } catch (error) {
+      console.error('Error loading vouchers:', error);
+      toast.error('Error loading vouchers');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddVoucher = async (formData) => {
     try {
-      const formattedFormData = {
-        ...formData,
-        expiredDay: new Date(formData.expiredDay.year, formData.expiredDay.month - 1, formData.expiredDay.day).toISOString(),
-        publishedDay: new Date(formData.publishedDay.year, formData.publishedDay.month - 1, formData.publishedDay.day).toISOString(),
-      };
-      
-      await addVoucher(formattedFormData);
-      handleCloseDialog();
-      loadVouchers();
+      const response = await addVoucher(formData);
+      if (response.isSuccess) {
+        toast.success('Voucher added successfully');
+        handleCloseDialog();
+        await loadVouchers(); 
+      } else {
+        toast.error(response.message || 'Error adding new voucher');
+      }
     } catch (error) {
+      toast.error('Server error occurred');
       console.error('Error adding voucher:', error);
     }
   };
 
   useEffect(() => {
-    const fetchVouchers = async () => {
-      setLoading(true);
-      try {
-        const params = {
-          expiredDay: { Year: '', Month: '', Day: '' },
-          customerId: '',
-          customerName: '',
-          customerPhone: '',
-          customerEmail: '',
-        };
-        const vouchers = await getVouchers(params);
-        setVouchers(vouchers);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchVouchers();
+    loadVouchers();
   }, []);
-
-  useEffect(() => {
-    setSearchParams({
-      expiredDay: { Year: '', Month: '', Day: '' },
-      customerId: '',
-      customerName: '',
-      customerPhone: '',
-      customerEmail: '',
-    });
-  }, [searchCriteria]);
-
-  const handleSnackbarClose = () => setSnackbarOpen(false);
-
-  if (loading) return <div>Loading....</div>;
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
-        <ManagerSideBar />
-        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
-          <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '10px' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <Button onClick={handleOpenDialog} sx={{ backgroundColor: 'white', color: '#3baf80', border: '1px solid #3baf80', height: '50px', '&:hover': { backgroundColor: 'white', borderColor: '#3baf80' } }}>Add voucher</Button>
-              <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <select value={searchCriteria} onChange={(e) => setSearchCriteria(e.target.value)} style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc', backgroundColor: '#f9f9f9', fontSize: '16px', color: '#333', outline: 'none', width: '200px', margin: '10px 0' }}>
-                  <option value="expiredDay">Expired Day</option>
-                  <option value="customerId">Customer ID</option>
-                  <option value="customerName">Customer Name</option>
-                  <option value="customerPhone">Customer Phone</option>
-                  <option value="customerEmail">Customer Email</option>
-                </select>
-                {searchCriteria === 'expiredDay' ? (
-                  <div>
-                    <input type="number" placeholder="Year" style={{ width: '80px', padding: '5px', margin: '5px', height: '40px' }} value={searchParams.expiredDay.Year} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, expiredDay: { ...prevParams.expiredDay, Year: e.target.value } }))} />
-                    <input type="number" placeholder="Month" style={{ width: '80px', padding: '5px', margin: '5px', height: '40px' }} value={searchParams.expiredDay.Month} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, expiredDay: { ...prevParams.expiredDay, Month: e.target.value } }))} />
-                    <input type="number" placeholder="Day" style={{ width: '80px', padding: '5px', margin: '5px', height: '40px' }} value={searchParams.expiredDay.Day} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, expiredDay: { ...prevParams.expiredDay, Day: e.target.value } }))} />
-                  </div>
-                ) : searchCriteria === 'customerId' ? (
-                  <div>
-                    <input type="text" placeholder="Customer ID" style={{ padding: '5px', margin: '5px', height: '40px' }} value={searchParams.customerId} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, customerId: e.target.value }))} />
-                  </div>
-                ) : searchCriteria === 'customerName' ? (
-                  <div>
-                    <input type="text" placeholder="Customer Name" style={{ padding: '5px', margin: '5px', height: '40px' }} value={searchParams.customerName} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, customerName: e.target.value }))} />
-                  </div>
-                ) : searchCriteria === 'customerPhone' ? (
-                  <div>
-                    <input type="text" placeholder="Customer Phone" style={{ padding: '5px', margin: '5px', height: '40px' }} value={searchParams.customerPhone} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, customerPhone: e.target.value }))} />
-                  </div>
-                ) : searchCriteria === 'customerEmail' ? (
-                  <div>
-                    <input type="email" placeholder="Customer Email" style={{ padding: '5px', margin: '5px', height: '40px' }} value={searchParams.customerEmail} onChange={(e) => setSearchParams((prevParams) => ({ ...prevParams, customerEmail: e.target.value }))} />
-                  </div>
-                ) : null}
-                <button type="submit" style={{ backgroundColor: 'white', color: '#2596be', border: '1px solid #2596be', padding: '10px 20px', fontSize: '16px', cursor: 'pointer', borderRadius: '4px', transition: 'background-color 0.3s ease' }} onMouseEnter={(e) => { e.target.style.backgroundColor = '#f7faff'; }} onMouseLeave={(e) => { e.target.style.backgroundColor = 'white'; }}>SEARCH</button>
-              </form>
-            </Box>
-            <AddVoucherDialog openDialog={openDialog} handleCloseDialog={handleCloseDialog} onAddVoucher={handleAddVoucher} initialFormData={initialFormData} />
-            <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-              <VoucherTable vouchers={vouchers.data} reloadVouchers={loadVouchers} />
-            </Box>
-          </Paper>
+      <ToastContainer />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
+          <ManagerSideBar />
+          <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
+            <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '10px' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <Button onClick={handleOpenDialog} sx={{ backgroundColor: 'white', color: '#3baf80', border: '1px solid #3baf80', height: '50px', '&:hover': { backgroundColor: 'white', borderColor: '#3baf80' } }}>Add Voucher</Button>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Search By</InputLabel>
+                    <Select
+                      value={searchCriteria}
+                      onChange={(e) => setSearchCriteria(e.target.value)}
+                      label="Search By"
+                      sx={{ height: '50px' }}
+                    >
+                      <MenuItem value="expiredDay">Expired Day</MenuItem>
+                      <MenuItem value="customerId">Customer ID</MenuItem>
+                      <MenuItem value="customerName">Customer Name</MenuItem>
+                      <MenuItem value="customerPhone">Customer Phone</MenuItem>
+                      <MenuItem value="customerEmail">Customer Email</MenuItem>
+                    </Select>
+                  </FormControl>
+                  {searchCriteria === 'expiredDay' ? (
+                    <DatePicker
+                      label="Select Date"
+                      value={dateValue}
+                      onChange={(newValue) => setDateValue(newValue)}
+                      renderInput={(params) => <TextField {...params} sx={{ marginLeft: '10px' }} />}
+                    />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      label="Search"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      variant="outlined"
+                      margin="normal"
+                      sx={{ marginLeft: '10px' }}
+                    />
+                  )}
+                  <Button variant="contained" onClick={handleSearch} sx={{ ml: 2, padding: '5px', background: 'white', color: '#2596be', border: '1px solid #2596be', '&:hover': { backgroundColor: 'white', borderColor: '#2596be' } }}>
+                    {searching ? <CircularProgress size={24} /> : 'Search'}
+                  </Button>
+                </Box>
+              </Box>
+              <AddVoucherDialog openDialog={openDialog} handleCloseDialog={handleCloseDialog} onAddVoucher={handleAddVoucher} initialFormData={initialFormData} />
+              <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+                {loading ? <CircularProgress /> : <VoucherTable vouchers={vouchers} reloadVouchers={loadVouchers} />}
+              </Box>
+            </Paper>
+          </Box>
         </Box>
-      </Box>
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} message={snackbarMessage} key={'topcenter'} />
+      </LocalizationProvider>
     </>
   );
 };

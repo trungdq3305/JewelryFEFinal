@@ -107,65 +107,68 @@ export const editProduct = async (formData) => {
   }
 }
 
-export const getAllVouchers = async () => {
+const getAllVouchers = async (params) => {
   try {
-    const data = await axios.get(api + '/voucher/viewlistvoucher')
-    return data
+    const response = await axios.get(api + '/voucher/viewlistvoucher', {
+      params,
+    })
+    return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      return error.message
-    } else {
-      console.log('Unexpected error: ', error)
-      return 'An unexpected error has occired'
-    }
+    console.error(error)
+    return []
   }
 }
-
+export { getAllVouchers }
 export const addVoucher = async (formData) => {
   try {
-    const data = await axios.post(api + '/voucher/createvoucher', formData)
-    alert('\nAdd voucher succesfully')
+    const response = await axios.post(api + '/voucher/createvoucher', formData)
+    return { isSuccess: true, data: response.data }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      alert(
-        '\nPlease enter exist User ID\nPublished Day < Expired Day \nCost > 100000'
-      )
-      return error.message
+      console.log('Error message: ', error.message)
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      }
     } else {
       console.log('Unexpected error: ', error)
-      alert('An unexpected error has occurred')
-      return 'An unexpected error has occired'
+      return { isSuccess: false, message: 'An unexpected error has occurred' }
     }
   }
 }
 
 export const editVoucher = async (formData) => {
   try {
-    const response = await axios.put(api + '/voucher/updatedvoucher', formData)
-    alert('\nEdit voucher succesfully')
-    return response.data
+    const response = await axios.put(api + '/voucher/updatedvoucher', formData);
+    return { isSuccess: true, data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message)
-      return error.message
+      console.log('error message: ', error.message);
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      };
     } else {
-      console.log('Unxpected error:', error)
-      return 'An unexpected error has occured'
+      console.log('Unexpected error:', error);
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
-}
+};
 
 export const deleteVoucher = async (voucherId) => {
   try {
     const response = await axios.delete(
       api + `/voucher/deletevoucher?VoucherId=${voucherId}`
-    )
-    alert('\nDelete voucher succesfully')
-    return response.data
+    );
+    if (response.status === 200) {
+      return response.data; 
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting discount:', error);
+    throw error; 
+
   }
 }
 
@@ -379,21 +382,22 @@ export const getAllCustomers = async () => {
 
 export const addCustomer = async (formData) => {
   try {
-    const data = await axios.post(api + '/customers/create-customer', formData)
-    alert('\nAdd customer succesfully')
-    console.log(data)
+    const response = await axios.post(api+'/customers/create-customer', formData);
+    return { isSuccess: true, data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      alert('\nEmail or Phone Number Already Exist')
-      return error.message
+      console.error('Error message: ', error.message);
+      return {
+        isSuccess: false,
+        message: 'Email or Phone Number Already Exist'
+      };
     } else {
-      console.log('Unexpected error: ', error)
-
-      return 'An unexpected error has occired'
+      console.error('Unexpected error: ', error);
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
 }
+
 
 export const editCustomer = async (formData) => {
   try {
@@ -401,15 +405,17 @@ export const editCustomer = async (formData) => {
       api + '/customers/customer-update',
       formData
     )
-    alert('\nEdit customer succesfully')
+    if (response.status !== 200) {
+      throw new Error(`Error: ${response.status}`)
+    }
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message)
-      return error.message
+      throw new Error(error.message)
     } else {
       console.log('Unxpected error:', error)
-      return 'An unexpected error has occured'
+      throw new Error('An unexpected error has occurred')
     }
   }
 }
@@ -421,7 +427,6 @@ export const updateCustomerStatus = async (customerId) => {
       // Assuming your API expects a 'status' field for updating
     }
   )
-  alert('\nUpdate status succesfully')
   return response.data // Return response data if needed
 }
 
