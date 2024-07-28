@@ -102,7 +102,7 @@ const UpdateCashierDialog = ({ openDialog, handleCloseDialog, onUpdateCashier, f
             >
               {users.map((user) => (
                 <MenuItem key={user.userId} value={user.userId}>
-                  {user.userId}
+                  {user.username}
                 </MenuItem>
               ))}
             </Select>

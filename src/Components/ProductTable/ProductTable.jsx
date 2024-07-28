@@ -359,6 +359,11 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct, refresh
       alert('Failed to add discount');
     }
   };
+  const refreshDiscounts = () => {
+    // Logic to refresh the discounts for the selected product
+    const updatedProduct = products.find(p => p.productId === selectedProductForDiscount.productId);
+    setSelectedDiscounts(updatedProduct.discount || []);
+  };
 
   // const DiscountDialog = ({ open, onClose, discounts, product }) => (
   //   <Dialog open={open} onClose={onClose}>
@@ -427,14 +432,14 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct, refresh
               <TableCell>Product Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Material</TableCell>
-              <TableCell>Weight</TableCell>
-              <TableCell>Machining Cost</TableCell>
+              <TableCell>Weight(g)</TableCell>
+              <TableCell>Machining Cost(VND)</TableCell>
               <TableCell>Size</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Image</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Price After Discount</TableCell>
+              <TableCell>Price(VND)</TableCell>
+              <TableCell>Price After Discount(VND)</TableCell>
               {/* <TableCell>MarkupRate</TableCell> */}
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -494,6 +499,7 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct, refresh
         onClose={handleCloseDiscountDialog}
         discounts={selectedDiscounts}
         product={selectedProductForDiscount}
+        refreshDiscounts={refreshDiscounts}
       />
       {selectedProductForDiscount && (
         <AddDiscountDialog

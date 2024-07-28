@@ -174,7 +174,7 @@ const CashierTable = ({ cashiers, users }) => {
               <TableCell style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Id</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Start Date</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>End Date</TableCell>
-              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Income</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Income(VND)</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cashier Number</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>User Id</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Status</TableCell>

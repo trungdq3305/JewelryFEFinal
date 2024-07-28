@@ -24,6 +24,11 @@ import { activeDeactiveUser } from '../../Configs/axios'
 import ActiveDeactiveDialog from './ActiveDeactiveDialog'
 import UpdateRoleDialog from './UpdateRoleDialog'
 
+const roleMapping = {
+  1: 'Staff',
+  2: 'Manager',
+  3: 'Admin'
+}
 
 function TablePaginationActions(props) {
   const theme = useTheme()
@@ -144,7 +149,7 @@ const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
   }
   const formatStatus = (status) => (status ? 'Active' : 'Inactive');
   const buttonStyle = {
-    width: '100%', 
+    width: '100%',
     margin: '5px',
     backgroundColor: 'white',
     '&:hover': {
@@ -174,7 +179,7 @@ const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
 
       <TableContainer
         component={Paper}
-        sx={{display: 'flex', flexDirection: 'column' }}
+        sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Table stickyHeader aria-label="UserTable">
           <TableHead>
@@ -206,7 +211,7 @@ const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
                   {user.username}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  {user.role}
+                  {roleMapping[user.role] || 'Unknown'}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
                   {user.fullName}
@@ -239,7 +244,7 @@ const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
                     sx={{
                       ...buttonStyle,
                       backgroundColor: 'white',
-                      color: 'black', 
+                      color: 'black',
                       border: '1px solid black',
                       '&:hover': {
                         backgroundColor: 'white',
@@ -258,7 +263,7 @@ const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
-               style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={userList.length}

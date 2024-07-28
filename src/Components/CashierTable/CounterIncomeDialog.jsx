@@ -103,7 +103,7 @@ const CounterIncomeDialog = ({ openDialog, handleCloseDialog }) => {
             <TableRow>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Date</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Counter Number</TableCell>
-              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Income</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Income(VND)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

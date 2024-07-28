@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle,
   TextField, FormControl, InputLabel, Select, MenuItem,
-  Button, Paper, FormControlLabel, Checkbox
+  Button, Paper, FormControlLabel, Checkbox, InputAdornment
 } from '@mui/material';
 import { getAllGem, editProduct, updateProductGem } from '../../Configs/axios';
 import axios from 'axios';
@@ -198,6 +198,9 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
             type="number"
             value={formData.weight}
             onChange={handleChange}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">grams</InputAdornment>
+            }}
           />
           <TextField
             margin="normal"
@@ -207,6 +210,9 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
             type="number"
             value={formData.machiningCost}
             onChange={handleChange}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">VND</InputAdornment>
+            }}
           />
           <TextField
             margin="normal"

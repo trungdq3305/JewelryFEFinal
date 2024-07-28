@@ -40,6 +40,7 @@ const DiscountDialog = ({ open, onClose, discounts, product }) => {
       if (data.isSuccess) {
         // Handle successful removal
         setOpenConfirmDialog(false);
+        onClose(); // Close the DiscountDialog
         // Optionally refresh the discounts list or handle UI updates here
       } else {
         // Handle error
