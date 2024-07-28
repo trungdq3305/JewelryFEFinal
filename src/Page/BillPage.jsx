@@ -187,15 +187,13 @@ const BillPage = () => {
               </div>
               <div style="text-align: left; font-size: 1em; display: flex; justify-content: space-between; align-items: flex-start; margin: 15px;">
                 <div style="padding: 10px;">
-                  <p><strong>Number of Products: </strong></p>
+                  
                   <p><strong>Cost: </strong></p>
                   <p><strong>Voucher: </strong></p>
                   <p style="font-size: 1.2em; margin-top: 10px; color: black; font-weight: bold;"><strong>Total Cost: </strong></p>
                 </div>
                 <div style="text-align: right; padding: 10px;">
-                  <p style="margin: 5px 0; color: black;"><strong>${
-                    billProduct.length
-                  }</strong></p>
+                  
                   <p style="margin: 5px 0; color: black;"><strong>${Number(
                     totalCost.toFixed(0)
                   ).toLocaleString('vn')}</strong></p>
