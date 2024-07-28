@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Button, Paper, TextField } from '@mui/material'
-import CustomerTable from '../Components/CustomerTable/CustomerTable'
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Paper, TextField, CircularProgress } from '@mui/material';
+import CustomerTable from '../Components/CustomerTable/CustomerTable';
 import {
   getAllCustomers,
   addCustomer,
   getCustomersByName,
   getCustomerByPhone,
-} from '../Configs/axios'
-import AddCustomerDialog from '../Components/CustomerTable/AddCustomerDialog'
-import ManagerSideBar from '../Components/Sidebar/ManagerSideBar'
+} from '../Configs/axios';
+import AddCustomerDialog from '../Components/CustomerTable/AddCustomerDialog';
+import ManagerSideBar from '../Components/Sidebar/ManagerSideBar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ManageCustomer = () => {
-  const [customers, setCustomers] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [openDialog, setOpenDialog] = useState(false)
-  const [searchCriteria, setSearchCriteria] = useState('name')
-  const [searchValue, setSearchValue] = useState('')
-  const [error, setError] = useState('')
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [searchCriteria, setSearchCriteria] = useState('name');
+  const [searchValue, setSearchValue] = useState('');
+  const [error, setError] = useState('');
 
   const handleOpenDialog = () => {
-    setOpenDialog(true)
-  }
+    setOpenDialog(true);
+  };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
-  }
+    setOpenDialog(false);
+  };
 
   const initialFormData = {
     fullName: '',
@@ -35,28 +35,28 @@ const ManageCustomer = () => {
     email: '',
     phone: '',
     status: true,
-  }
+  };
 
   const loadCustomers = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await getAllCustomers()
-      setCustomers(result.data)
+      const result = await getAllCustomers();
+      setCustomers(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
-      console.error('Error fetching customers:', error)
+      console.error('Error fetching customers:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleAddCustomer = async (formData) => {
     try {
-      const response = await addCustomer(formData)
+      const response = await addCustomer(formData);
       if (response.isSuccess) {
         toast.success('Customer added successfully');
         handleCloseDialog();
         console.log('New customer added successfully:', response.data);
-        await loadCustomers(); 
+        await loadCustomers();
       } else {
         toast.error(response.message || 'Error adding new customer');
         console.error('Error adding new customer:', response.message);
@@ -65,42 +65,38 @@ const ManageCustomer = () => {
       toast.error('Server error occurred');
       console.error('Error adding new customer:', error);
     }
-  }
+  };
 
   const handleSearch = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       if (searchCriteria === 'name') {
-        const result = await getCustomersByName(searchValue)
-        setCustomers(result.data)
+        const result = await getCustomersByName(searchValue);
+        setCustomers(result.data);
       } else if (searchCriteria === 'phone') {
-        const result = await getCustomerByPhone(searchValue)
-        setCustomers(result.data) // Ensure that the result returned is an array for use with CustomerTable component
+        const result = await getCustomerByPhone(searchValue);
+        setCustomers(result.data);
       }
-      setError('') // Clear any previous error message
+      setError(''); // Clear any previous error message
     } catch (error) {
-      console.error(`Error fetching customers by ${searchCriteria}:`, error)
-      setError(
-        `Error fetching customers by ${searchCriteria}. Please try again.`
-      )
+      console.error(`Error fetching customers by ${searchCriteria}:`, error);
+      setError(`Error fetching customers by ${searchCriteria}. Please try again.`);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleInputChange = (e) => {
-    setSearchValue(e.target.value)
-  }
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
-    loadCustomers()
-  }, [])
-
-  if (loading) return <div>Loading....</div>
+    loadCustomers();
+  }, []);
 
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
         <Box
           sx={{
@@ -115,7 +111,6 @@ const ManageCustomer = () => {
               flexGrow: 1,
               display: 'flex',
               flexDirection: 'column',
-
               overflow: 'hidden',
               padding: '10px',
             }}
@@ -127,17 +122,21 @@ const ManageCustomer = () => {
                 marginBottom: '10px',
               }}
             >
-              <Button onClick={handleOpenDialog}
-              sx={{
-                backgroundColor: 'white',
-                color: '#3baf80', 
-                border: '1px solid #3baf80',
-                '&:hover': {
+              <Button
+                onClick={handleOpenDialog}
+                sx={{
                   backgroundColor: 'white',
-                  borderColor: '#3baf80',
-                },
-                height:'50px'
-              }}>Add Customer</Button>
+                  color: '#3baf80',
+                  border: '1px solid #3baf80',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    borderColor: '#3baf80',
+                  },
+                  height: '50px',
+                }}
+              >
+                Add Customer
+              </Button>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <select
                   value={searchCriteria}
@@ -151,7 +150,7 @@ const ManageCustomer = () => {
                     color: '#333',
                     outline: 'none',
                     marginRight: '10px',
-                     height: '55px' // Added margin for spacing between elements
+                    height: '55px',
                   }}
                 >
                   <option value="name">Name</option>
@@ -163,18 +162,22 @@ const ManageCustomer = () => {
                   variant="outlined"
                   value={searchValue}
                   onChange={handleInputChange}
-                  style={{ flex: 1, marginRight: '10px', 
-                    }} // Added flex: 1 to take remaining space
+                  style={{ flex: 1, marginRight: '10px' }} // Added flex: 1 to take remaining space
                 />
 
-                <Button onClick={handleSearch} sx={{ ml: 2 ,
+                <Button
+                  onClick={handleSearch}
+                  sx={{
+                    ml: 2,
                     backgroundColor: 'white',
-                color: '#2596be', 
-                border: '1px solid #2596be',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  borderColor: '#2596be',
-                },}}>
+                    color: '#2596be',
+                    border: '1px solid #2596be',
+                    '&:hover': {
+                      backgroundColor: 'white',
+                      borderColor: '#2596be',
+                    },
+                  }}
+                >
                   Search
                 </Button>
               </Box>
@@ -189,16 +192,19 @@ const ManageCustomer = () => {
               initialFormData={initialFormData}
             />
             <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-              <CustomerTable
-                customers={customers}
-                reloadCustomers={loadCustomers}
-              />
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <CustomerTable customers={customers} reloadCustomers={loadCustomers} />
+              )}
             </Box>
           </Paper>
         </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default ManageCustomer
+export default ManageCustomer;
