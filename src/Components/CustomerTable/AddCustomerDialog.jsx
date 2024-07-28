@@ -37,7 +37,7 @@ const AddCustomerDialog = ({
     }
 
     onAddCustomer(formData);
-    setFormData(initialFormData); // Reset the form
+    setFormData(initialFormData); 
   };
 
   return (
