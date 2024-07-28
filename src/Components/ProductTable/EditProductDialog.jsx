@@ -526,7 +526,8 @@ import {
   TextField, FormControl, InputLabel, Select, MenuItem,
   Button, Paper, FormControlLabel, Checkbox
 } from '@mui/material';
-import { getAllGem, editProduct } from '../../Configs/axios';
+import { getAllGem, editProduct,updateProductGem } from '../../Configs/axios';
+import axios from 'axios';
 
 const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProduct, goldData }) => {
   const [formData, setFormData] = useState({
@@ -546,14 +547,12 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
   const [gemData, setGemData] = useState([]);
   const [gemAmounts, setGemAmounts] = useState({});
 
-  // Fetch gem data on component mount
   useEffect(() => {
     const fetchGemData = async () => {
       try {
         const result = await getAllGem();
         if (result.isSuccess) {
           setGemData(result.data);
-
           // Initialize checkboxes based on fetched gems
           const initialPropChecks = result.data.reduce((acc, gem, index) => {
             acc[`gemProp${index + 1}`] = false;
@@ -569,14 +568,13 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
     fetchGemData();
   }, []);
 
-  // Populate form data and gem amounts when product or goldData changes
   useEffect(() => {
     if (product && goldData.length) {
       const materialGold = goldData.find(gold => gold.goldName === product.material);
       const materialId = materialGold ? materialGold.goldId : '';
     
       setFormData({
-        productId: product.productId, // Set productId
+        productId: product.productId,
         productName: product.productName,
         category: product.category,
         material: materialId,
@@ -591,7 +589,7 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
     
       const initialGemAmounts = {};
       const initialPropChecks = {};
-    
+
       if (Array.isArray(product.productGems)) {
         product.productGems.forEach((gem, index) => {
           initialGemAmounts[`gemProp${index + 1}`] = { gemId: gem.gemId || '', amount: gem.amount?.toString() || '' };
@@ -600,138 +598,117 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
       } else {
         console.error('product.productGems is not an array:', product.productGems);
       }
-    
+
       setGemAmounts(initialGemAmounts);
       setPropChecks(initialPropChecks);
     }
   }, [product, goldData]);
 
-  // Handle changes in form fields
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handle checkbox changes for gem selection
-  const handleCheckChange = (event) => {
-    const { name, checked } = event.target;
-    const gemKey = name;
-
-    if (checked) {
-      setPropChecks(prevChecks => ({
-        ...prevChecks,
-        [name]: checked
-      }));
-      setGemAmounts(prevAmounts => ({
-        ...prevAmounts,
-        [gemKey]: { gemId: '', amount: '' }
-      }));
-    } else {
-      const newChecks = { ...propChecks };
-      delete newChecks[name];
-      setPropChecks(newChecks);
-
-      const newAmounts = { ...gemAmounts };
-      delete newAmounts[gemKey];
-      setGemAmounts(newAmounts);
-    }
-  };
-
-  // Handle gem type changes
   const handleGemChange = (event) => {
     const { name, value } = event.target;
-    const gemKey = name.split('.')[0];
-
-    setGemAmounts(prevAmounts => ({
+    const propName = name.split('.')[0];
+    setGemAmounts((prevAmounts) => ({
       ...prevAmounts,
-      [gemKey]: {
-        ...prevAmounts[gemKey],
-        gemId: value // Ensure gemId is a string
-      }
+      [propName]: { ...prevAmounts[propName], gemId: value }
     }));
   };
 
-  // Handle amount changes for gems
   const handleAmountChange = (event) => {
     const { name, value } = event.target;
-    const gemKey = name.split('.')[0];
-
-    const parsedValue = value.trim();
-    if (parsedValue === '' || isNaN(parsedValue) || parsedValue < 0) return;
-
-    setGemAmounts(prevAmounts => ({
+    const propName = name.split('.')[0];
+    setGemAmounts((prevAmounts) => ({
       ...prevAmounts,
-      [gemKey]: {
-        ...prevAmounts[gemKey],
-        amount: parsedValue // Ensure amount is a string
-      }
+      [propName]: { ...prevAmounts[propName], amount: value }
     }));
   };
 
-  // Handle product edit
-  const handleEditProduct = async () => {
-    // Transform gemAmounts to the required format
-    const updatedGemData = {};
-    Object.keys(gemAmounts).forEach(key => {
-      const { gemId, amount } = gemAmounts[key];
-      if (gemId && amount) {
-        // Ensure amount is a string
-        updatedGemData[gemId] = amount.toString();
-      }
-    });
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setPropChecks((prevChecks) => ({ ...prevChecks, [name]: checked }));
+  };
 
-    // Construct updated form data
-    const updatedFormData = {
+  const handleEditProduct = async () => {
+    console.log('handleEditProduct function is called'); // Add this line
+
+    const editedProduct = {
       ...formData,
-      productGems: updatedGemData
+      productGems: [{ gemName: 'string' }] // Ensure this matches the API's requirement
     };
 
-    // Log the final form data
-    console.log('Updated form data:', updatedFormData);
+    try {
+      const response = await editProduct(editedProduct);
 
-    // Send the data to the server
-    const result = await editProduct(updatedFormData);
-    if (result.success) {
-      onEditProduct(result); // Notify parent component
-      handleCloseDialog(); // Close the dialog
-    } else {
-      // Show an error message to the user
-      alert(result.message);
+      if (response.isSuccess) {
+        const formattedGemData = {
+          productId: formData.productId,
+          gem: Object.keys(gemAmounts).reduce((acc, key) => {
+            const gemInfo = gemAmounts[key];
+            if (gemInfo.gemId && gemInfo.amount) {
+              acc[gemInfo.gemId] = gemInfo.amount.toString(); // Ensure amounts are strings
+            }
+            console.log('acc')
+            return acc;
+          }, {})
+        };
+        const gemResponse = await updateProductGem(formattedGemData);
+        if (gemResponse.isSuccess) {
+          console.log('Product and gem data updated successfully');
+          handleCloseDialog();
+
+          // Handle successful update here
+        } else {
+          console.error('Error updating product gem:', gemResponse.message || 'Unknown error');
+        }
+      } else {
+        console.error('Error editing product:', response.message || 'Unknown error');
+      }
+    } catch (error) {
+      // Log complete error details
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error occurred:', error.response?.data || error.message);
+      } else {
+        console.error('Unexpected error occurred:', error);
+      }
     }
   };
+
 
   return (
     <Dialog open={openDialog} onClose={handleCloseDialog}>
       <DialogTitle>Edit Product</DialogTitle>
       <DialogContent>
-        <Paper variant="outlined" component="form" sx={{ margin: 2, padding: 2 }}>
-          {/* Form Fields */}
+        <Paper sx={{ padding: 2 }}>
           <TextField
             margin="normal"
-            required
+            fullWidth
+            name="productId"
+            label="Product Id"
+            value={formData.productId}
+            onChange={handleChange}
+            disabled
+          />
+          <TextField
+            margin="normal"
             fullWidth
             name="productName"
             label="Product Name"
             value={formData.productName}
             onChange={handleChange}
           />
-          <FormControl fullWidth margin="normal" required>
-            <InputLabel>Category</InputLabel>
-            <Select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-            >
-              <MenuItem value="Necklace">Necklace</MenuItem>
-              <MenuItem value="Bracelet">Bracelet</MenuItem>
-              <MenuItem value="Ring">Ring</MenuItem>
-              <MenuItem value="Charm">Charm</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal" required>
+          <TextField
+            margin="normal"
+            fullWidth
+            name="category"
+            label="Category"
+            value={formData.category}
+            onChange={handleChange}
+          />
+          <FormControl fullWidth margin="normal">
             <InputLabel>Material</InputLabel>
             <Select
               name="material"
@@ -745,42 +722,37 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
           </FormControl>
           <TextField
             margin="normal"
-            required
             fullWidth
             name="weight"
             label="Weight"
             type="number"
-            value={formData.weight || ''}
+            value={formData.weight}
             onChange={handleChange}
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="machiningCost"
             label="Machining Cost"
             type="number"
-            value={formData.machiningCost || ''}
+            value={formData.machiningCost}
             onChange={handleChange}
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="size"
             label="Size"
-            type="number"
-            value={formData.size || ''}
+            value={formData.size}
             onChange={handleChange}
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="amount"
             label="Amount"
             type="number"
-            value={formData.amount || ''}
+            value={formData.amount}
             onChange={handleChange}
           />
           <TextField
@@ -788,32 +760,31 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
             fullWidth
             name="desc"
             label="Description"
-            type="text"
-            value={formData.desc || ''}
+            value={formData.desc}
             onChange={handleChange}
           />
           <TextField
             margin="normal"
             fullWidth
             name="image"
-            label="Image URL"
-            type="text"
-            value={formData.image || ''}
+            label="Image"
+            value={formData.image}
             onChange={handleChange}
           />
-
-          {/* Gem Selection */}
+          <TextField
+            margin="normal"
+            fullWidth
+            name="markupRate"
+            label="Markup Rate"
+            type="number"
+            value={formData.markupRate}
+            onChange={handleChange}
+          />
           {gemData.map((gem, index) => (
             <div key={gem.gemId}>
               <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={propChecks[`gemProp${index + 1}`] || false}
-                    onChange={handleCheckChange}
-                    name={`gemProp${index + 1}`}
-                  />
-                }
-                label={`Add Gem ${index + 1}`}
+                control={<Checkbox checked={!!propChecks[`gemProp${index + 1}`]} onChange={handleCheckboxChange} name={`gemProp${index + 1}`} />}
+                label={`Additional Property ${index + 1}`}
               />
               {propChecks[`gemProp${index + 1}`] && (
                 <div>
@@ -842,15 +813,15 @@ const EditProductDialog = ({ openDialog, handleCloseDialog, product, onEditProdu
               )}
             </div>
           ))}
+
         </Paper>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDialog}>Cancel</Button>
-        <Button onClick={handleEditProduct} variant="contained" color="primary">Save</Button>
+        <Button onClick={handleEditProduct} color="primary" variant="contained">Save Changes</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
 export default EditProductDialog;
-

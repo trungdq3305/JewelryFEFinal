@@ -285,7 +285,8 @@ const ManageProducts = () => {
       'size',
       'amount',
       'desc',
-      'image'
+      'image',
+      'markupRate'
     ];
     const isAnyFieldEmpty = requiredFields.some((field) => !formData[field]);
 
