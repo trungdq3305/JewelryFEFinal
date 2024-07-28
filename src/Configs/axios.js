@@ -107,55 +107,53 @@ export const editProduct = async (formData) => {
   }
 }
 
-export const getAllVouchers = async () => {
+const getAllVouchers = async (params) => {
   try {
-    const data = await axios.get(api + '/voucher/viewlistvoucher')
-    return data
+    const response = await axios.get(api + '/voucher/viewlistvoucher', {
+      params,
+    })
+    return response.data
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      return error.message
-    } else {
-      console.log('Unexpected error: ', error)
-      return 'An unexpected error has occired'
-    }
+    console.error(error)
+    return []
   }
 }
-
+export { getAllVouchers }
 export const addVoucher = async (formData) => {
   try {
-    const data = await axios.post(api + '/voucher/createvoucher', formData)
-    alert('\nAdd voucher succesfully')
+    const response = await axios.post(api + '/voucher/createvoucher', formData)
+    return { isSuccess: true, data: response.data }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      alert(
-        '\nPlease enter exist User ID\nPublished Day < Expired Day \nCost > 100000'
-      )
-      return error.message
+      console.log('Error message: ', error.message)
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      }
     } else {
       console.log('Unexpected error: ', error)
-      alert('An unexpected error has occurred')
-      return 'An unexpected error has occired'
+      return { isSuccess: false, message: 'An unexpected error has occurred' }
     }
   }
 }
 
 export const editVoucher = async (formData) => {
   try {
-    const response = await axios.put(api + '/voucher/updatedvoucher', formData)
-    alert('\nEdit voucher succesfully')
-    return response.data
+    const response = await axios.put(api + '/voucher/updatedvoucher', formData);
+    return { isSuccess: true, data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message)
-      return error.message
+      console.log('error message: ', error.message);
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      };
     } else {
-      console.log('Unxpected error:', error)
-      return 'An unexpected error has occured'
+      console.log('Unexpected error:', error);
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
-}
+};
 
 export const deleteVoucher = async (voucherId) => {
   try {

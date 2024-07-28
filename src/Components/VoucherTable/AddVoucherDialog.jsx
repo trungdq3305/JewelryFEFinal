@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper, Snackbar, Alert } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddVoucherDialog = ({ openDialog, handleCloseDialog, onAddVoucher, initialFormData }) => {
   const [formData, setFormData] = useState(initialFormData);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,24 +28,24 @@ const AddVoucherDialog = ({ openDialog, handleCloseDialog, onAddVoucher, initial
   };
 
   const handleAddVoucher = () => {
-    const requiredFields = ['cost','customerCustomerId', 'expiredDay.year', 'expiredDay.month', 'expiredDay.day', 'publishedDay.year', 'publishedDay.month', 'publishedDay.day'];
+    const requiredFields = [
+      'cost', 
+      'customerCustomerId', 
+      'expiredDay.year', 'expiredDay.month', 'expiredDay.day', 
+      'publishedDay.year', 'publishedDay.month', 'publishedDay.day'
+    ];
     const isFormValid = requiredFields.every(field => {
       const [mainKey, subKey] = field.split('.');
       return subKey ? formData[mainKey] && formData[mainKey][subKey] : formData[mainKey];
     });
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
+      toast.warn('Please fill in all required fields');
       return;
     }
 
     onAddVoucher(formData);
-    setFormData(initialFormData); // Reset the form
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+    setFormData(initialFormData);
   };
 
   const formatDateString = (date) => {
@@ -114,15 +114,6 @@ const AddVoucherDialog = ({ openDialog, handleCloseDialog, onAddVoucher, initial
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

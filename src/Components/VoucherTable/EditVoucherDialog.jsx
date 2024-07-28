@@ -1,70 +1,43 @@
-import { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper, Snackbar, Alert, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Paper } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formData, setFormData }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  useEffect(() => {
+    if (formData) {
+      setFormData(formData);
+    }
+  }, [formData, setFormData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    if (name === 'expiredDay' || name === 'publishedDay') {
-      const date = new Date(value);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate(),
-        },
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
-  const handleEditVoucher = () => {
-    const requiredFields = ['createdBy', 'expiredDay.year', 'expiredDay.month', 'expiredDay.day', 'cost', 'customerCustomerId'];
-    const isFormValid = requiredFields.every(field => {
-      const [mainKey, subKey] = field.split('.');
-      return subKey ? formData[mainKey] && formData[mainKey][subKey] : formData[mainKey];
-    });
+  const handleEditVoucher = async () => {
+    const requiredFields = ['createdBy', 'expiredDay', 'cost', 'customerCustomerId'];
+    const isFormValid = requiredFields.every((field) => formData[field] !== '' && formData[field] !== undefined);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.');
-      setSnackbarOpen(true);
+      toast.error('Please fill in all required fields.');
       return;
     }
-
-    // Format date fields to ISO 8601 string
-    const formatToISOString = (dateObj) => {
-      if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) return null;
-      const date = new Date(dateObj.year, dateObj.month - 1, dateObj.day);
-      return date.toISOString();
-    };
-
-    const formattedFormData = {
+    const updatedFormData = {
       ...formData,
-      expiredDay: formatToISOString(formData.expiredDay),
-      publishedDay: formatToISOString(formData.publishedDay),
+      expiredDay: new Date(formData.expiredDay).toISOString().split('T')[0],
     };
-
-    onEditVoucher(formattedFormData);
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const formatDateString = (date) => {
-    if (!date) return '';
-    const year = date.year || 0;
-    const month = String(date.month || 0).padStart(2, '0');
-    const day = String(date.day || 0).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    try {
+       await onEditVoucher(updatedFormData);
+        handleCloseDialog(); 
+    } catch (error) {
+      console.error('Error updating voucher:', error);
+      toast.error('Error updating voucher.');
+    }
   };
 
   return (
@@ -82,7 +55,6 @@ const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formD
               value={formData.createdBy}
               onChange={handleChange}
             />
-            
             <TextField
               margin="normal"
               required
@@ -91,10 +63,9 @@ const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formD
               label="Expired Date"
               type="date"
               InputLabelProps={{ shrink: true }}
-              value={formatDateString(formData.expiredDay)}
+              value={formData.expiredDay ? formData.expiredDay.slice(0, 10) : ''}
               onChange={handleChange}
             />
-            
             <TextField
               margin="normal"
               required
@@ -123,17 +94,16 @@ const EditVoucherDialog = ({ openDialog, handleCloseDialog, onEditVoucher, formD
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
+};
+
+EditVoucherDialog.propTypes = {
+  openDialog: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  onEditVoucher: PropTypes.func.isRequired,
+  formData: PropTypes.object.isRequired,
+  setFormData: PropTypes.func.isRequired,
 };
 
 export default EditVoucherDialog;
