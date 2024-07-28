@@ -93,9 +93,6 @@ const BillDetail = ({ bill, billId }) => {
         <div className={styles.summary}>
           <div className={styles.summaryTitle}>
             <p>
-              <strong>Number of Products: </strong>
-            </p>
-            <p>
               <strong>Cost: </strong>
             </p>
             <p>
@@ -106,7 +103,6 @@ const BillDetail = ({ bill, billId }) => {
             </p>
           </div>
           <div className={styles.summaryContain}>
-            <p>{bill.length}</p>
             {bill[0].voucherVoucher ? (
               <p>
                 {Number(
