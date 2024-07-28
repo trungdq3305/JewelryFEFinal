@@ -7,10 +7,9 @@ import {
   TextField,
   Button,
   Paper,
-  Snackbar,
-  Alert,
 } from '@mui/material'
-import moment from 'moment'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddCustomerDialog = ({
   openDialog,
@@ -19,12 +18,9 @@ const AddCustomerDialog = ({
   initialFormData,
 }) => {
   const [formData, setFormData] = useState(initialFormData)
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -36,23 +32,13 @@ const AddCustomerDialog = ({
     const isFormValid = requiredFields.every(field => formData[field]);
 
     if (!isFormValid) {
-      setSnackbarMessage('Please fill in all required fields.')
-      setSnackbarOpen(true)
-      return
+      toast.warn('Please fill in all required fields.');
+      return;
     }
 
-    const formattedFormData = {
-      ...formData,
-      status: true, // Automatically set status to true
-    }
-
-    onAddCustomer(formattedFormData)
-    setFormData(initialFormData) // Reset the form
-  }
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false)
-  }
+    onAddCustomer(formData);
+    setFormData(initialFormData); // Reset the form
+  };
 
   return (
     <>
@@ -120,19 +106,6 @@ const AddCustomerDialog = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="warning"
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   )
 }

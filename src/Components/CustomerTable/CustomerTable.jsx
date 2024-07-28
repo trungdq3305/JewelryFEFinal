@@ -26,6 +26,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { editCustomer, updateCustomerStatus } from '../../Configs/axios'
 import AddCustomerDialog from './AddCustomerDialog'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TablePaginationActions(props) {
   const theme = useTheme()
@@ -110,8 +112,6 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [openDialog, setOpenDialog] = useState(false)
   const [editData, setEditData] = useState(initialFormData)
-  const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
   const [openBillDialog, setOpenBillDialog] = useState(false)
   const [bills, setBills] = useState([])
 
@@ -147,17 +147,16 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
     setPage(0)
   }
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false)
-  }
 
   const handleEditCustomer = async (formData) => {
     try {
       const result = await editCustomer(formData)
       console.log(result)
+      toast.success(`Customer ${formData.customerId} updated successfully`);
       handleCloseDialog()
-      reloadCustomers() // Call the function to reload customers
+      reloadCustomers() 
     } catch (error) {
+      toast.error('Error updating discount.');
       console.error('Error editing customer:', error)
     }
   }
@@ -172,14 +171,13 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
   const handleChangeStatus = async (customerId) => {
     try {
       const result = await updateCustomerStatus(customerId)
+      toast.success('Updating status succesfully');
       console.log(result)
-      setSnackbarMessage('Status updated successfully!')
-      setOpenSnackbar(true)
-      reloadCustomers() // Reload customers after updating status
+      reloadCustomers() 
     } catch (error) {
+      toast.error('Error updating status.');
       console.error('Error updating status:', error)
-      setSnackbarMessage('Error updating status.')
-      setOpenSnackbar(true)
+
     }
   }
 
@@ -200,15 +198,6 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
         formData={editData}
         setFormData={setEditData}
       />
-      <Snackbar
-        open={openSnackbar}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert severity="info" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
       <CustomerBillDialog
         open={openBillDialog}
         onClose={() => setOpenBillDialog(false)}

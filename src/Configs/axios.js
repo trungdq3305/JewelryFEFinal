@@ -380,21 +380,22 @@ export const getAllCustomers = async () => {
 
 export const addCustomer = async (formData) => {
   try {
-    const data = await axios.post(api + '/customers/create-customer', formData)
-    alert('\nAdd customer succesfully')
-    console.log(data)
+    const response = await axios.post(api+'/customers/create-customer', formData);
+    return { isSuccess: true, data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error massage: ', error.message)
-      alert('\nEmail or Phone Number Already Exist')
-      return error.message
+      console.error('Error message: ', error.message);
+      return {
+        isSuccess: false,
+        message: 'Email or Phone Number Already Exist'
+      };
     } else {
-      console.log('Unexpected error: ', error)
-
-      return 'An unexpected error has occired'
+      console.error('Unexpected error: ', error);
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
     }
   }
 }
+
 
 export const editCustomer = async (formData) => {
   try {
@@ -402,15 +403,17 @@ export const editCustomer = async (formData) => {
       api + '/customers/customer-update',
       formData
     )
-    alert('\nEdit customer succesfully')
+    if (response.status !== 200) {
+      throw new Error(`Error: ${response.status}`)
+    }
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log('error message: ', error.message)
-      return error.message
+      throw new Error(error.message)
     } else {
       console.log('Unxpected error:', error)
-      return 'An unexpected error has occured'
+      throw new Error('An unexpected error has occurred')
     }
   }
 }
@@ -422,7 +425,6 @@ export const updateCustomerStatus = async (customerId) => {
       // Assuming your API expects a 'status' field for updating
     }
   )
-  alert('\nUpdate status succesfully')
   return response.data // Return response data if needed
 }
 
