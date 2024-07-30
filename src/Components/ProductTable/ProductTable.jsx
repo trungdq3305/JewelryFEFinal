@@ -251,7 +251,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useTheme } from '@mui/material/styles';
 import AddDiscountDialog from './AddDiscountDialog';
-import { addDiscountProduct } from '../../Configs/axios';
+import { addDiscountProduct, removeProductDiscount } from '../../Configs/axios';
+import DiscountDialog from './ViewRemoveDiscount';
 
 function TablePaginationActions(props) {
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -298,7 +299,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const ProductTable = ({ products, goldData, discountData, onEditProduct , refreshProducts}) => {
+const ProductTable = ({ products, goldData, discountData, onEditProduct, refreshProducts }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -318,7 +319,6 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
   };
 
   const handleEditClick = (product) => {
-    console.log(product)
     setSelectedProduct(product);
     setOpenEditDialog(true);
   };
@@ -326,7 +326,9 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
+
   const handleViewDiscountClick = (product) => {
+    setSelectedProductForDiscount(product);
     setSelectedDiscounts(product.discount || []);
     setOpenDiscountDialog(true);
   };
@@ -357,30 +359,69 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
       alert('Failed to add discount');
     }
   };
+  const refreshDiscounts = () => {
+    // Logic to refresh the discounts for the selected product
+    const updatedProduct = products.find(p => p.productId === selectedProductForDiscount.productId);
+    setSelectedDiscounts(updatedProduct.discount || []);
+  };
 
-  const DiscountDialog = ({ open, onClose, discounts }) => (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Discounts</DialogTitle>
-      <DialogContent>
-        {discounts.length > 0 ? (
-          discounts.map((discount, index) => (
-            <div key={index} style={{ marginBottom: '16px' }}>
-              <Typography>Discount ID: {discount.discountId}</Typography>
-              <Typography>Created By: {discount.createdBy}</Typography>
-              <Typography>Expired Day: {discount.expiredDay}</Typography>
-              <Typography>Publish Day: {discount.publishDay}</Typography>
-              <Typography>Cost: {discount.cost}</Typography>
-            </div>
-          ))
-        ) : (
-          <DialogContentText>No discounts available.</DialogContentText>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
+  // const DiscountDialog = ({ open, onClose, discounts, product }) => (
+  //   <Dialog open={open} onClose={onClose}>
+  //     <DialogTitle>Discounts</DialogTitle>
+  //     <DialogContent>
+  //       {/* {discounts.length > 0 ? (
+  //         discounts.map((discount, index) => (
+  //           <div key={index} style={{ marginBottom: '16px' }}>
+  //             <Typography>Discount ID: {discount.discountId}</Typography>
+  //             <Typography>Created By: {discount.createdBy}</Typography>
+  //             <Typography>Created By: {discount.expiredDay}</Typography>
+  //             <Typography>Publish Day: {discount.publishDay}</Typography>
+  //             <Typography>Cost: {discount.cost}</Typography>
+  //           </div>
+  //         ))
+  //       ) : (
+  //         <DialogContentText>No discounts available.</DialogContentText>
+  //       )} */}
+  //       <Table stickyHeader aria-label="custom pagination table">
+  //         <TableHead>
+  //           <TableRow>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Discount ID</TableCell>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
+  //             <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Options</TableCell>
+
+  //           </TableRow>
+  //         </TableHead>
+  //         <TableBody>
+  //           {discounts !== null ? (
+  //             discounts.map((discount, index) => (
+  //               <TableRow key={index} style={{ marginBottom: '16px' }}>
+  //                 <TableCell align="right">{discount.discountId}</TableCell>
+  //                 <TableCell align="right">{discount.createdBy}</TableCell>
+  //                 <TableCell align="right">{discount.expiredDay}</TableCell>
+  //                 <TableCell align="right">{discount.publishDay}</TableCell>
+  //                 <TableCell align="right">{discount.cost}</TableCell>
+  //                 <TableCell align="right">
+  //                   <Button onClick={() => handleRemove(discount.discountId)}>Remove</Button>
+  //                 </TableCell>
+
+  //               </TableRow>
+  //             ))
+  //           ) : (
+  //             <TableRow>
+  //               <TableCell colSpan={3} align="center">Please click &quot;View&quot; to display data.</TableCell>
+  //             </TableRow>
+  //           )}
+  //         </TableBody>
+  //       </Table>
+  //     </DialogContent>
+  //     <DialogActions>
+  //       <Button onClick={onClose}>Close</Button>
+  //     </DialogActions>
+  //   </Dialog >
+  // );
   return (
     <>
       <TableContainer component={Paper}>
@@ -391,19 +432,21 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
               <TableCell>Product Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Material</TableCell>
-              <TableCell>Weight</TableCell>
-              <TableCell>Machining Cost</TableCell>
+              <TableCell>Weight(g)</TableCell>
+              <TableCell>Machining Cost(VND)</TableCell>
               <TableCell>Size</TableCell>
               <TableCell>Amount</TableCell>
               <TableCell>Description</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Price After Discount</TableCell>
+              <TableCell>Image</TableCell>
+              <TableCell>Price(VND)</TableCell>
+              <TableCell>Price After Discount(VND)</TableCell>
+              {/* <TableCell>MarkupRate</TableCell> */}
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product) => (
-              <TableRow key={product.productId}>
+              <TableRow key={product.id}>
                 <TableCell>{product.productId}</TableCell>
                 <TableCell>{product.productName}</TableCell>
                 <TableCell>{product.category}</TableCell>
@@ -413,10 +456,13 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
                 <TableCell>{product.size}</TableCell>
                 <TableCell>{product.amount}</TableCell>
                 <TableCell>{product.desc}</TableCell>
+                <TableCell>{product.image}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>{product.priceWithDiscount}</TableCell>
+                {/* <TableCell>{product.markupRate}</TableCell> */}
+
                 <TableCell>
-                  <Button onClick={() => handleEditClick(product)}>Edit</Button>
+                  <Button onClick={() => handleEditClick(product)}>Update Product</Button>
                   <Button onClick={() => handleViewDiscountClick(product)}>View Discounts</Button>
                   <Button onClick={() => handleAddDiscountClick(product)}>Add Discount</Button>
                 </TableCell>
@@ -426,17 +472,11 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
+                rowsPerPageOptions={[5, 10, 25]}
+                colSpan={13}
                 count={products.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
                 onPageChange={handlePageChange}
                 onRowsPerPageChange={handleRowsPerPageChange}
                 ActionsComponent={TablePaginationActions}
@@ -451,7 +491,6 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
           handleCloseDialog={handleCloseEditDialog}
           product={selectedProduct}
           goldData={goldData}
-          // discountData={discountData}
           onEditProduct={onEditProduct}
         />
       )}
@@ -459,6 +498,8 @@ const ProductTable = ({ products, goldData, discountData, onEditProduct , refres
         open={openDiscountDialog}
         onClose={handleCloseDiscountDialog}
         discounts={selectedDiscounts}
+        product={selectedProductForDiscount}
+        refreshDiscounts={refreshDiscounts}
       />
       {selectedProductForDiscount && (
         <AddDiscountDialog

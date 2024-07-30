@@ -5,12 +5,18 @@ import { addCashier, getAllCashier, searchCashier } from '../Configs/axios';
 import CashierTable from '../Components/CashierTable/CashierTable';
 import AddCashierDialog from '../Components/CashierTable/AddCashierDialog';
 import CounterIncomeDialog from '../Components/CashierTable/CounterIncomeDialog';
-
+import { getAllUsers } from '../Configs/axios';
 const ManageCashier = () => {
   const [loading, setLoading] = useState(true);
   const [cashiers, setCashiers] = useState([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openIncomeDialog, setOpenIncomeDialog] = useState(false);
+  const [users, setUsers] = useState([]);
+  const loadUsers = async () => {
+    const result = await getAllUsers();
+    setUsers(result.data.data);
+  };
+
 
   const handleOpenAddDialog = () => {
     setOpenAddDialog(true);
@@ -75,6 +81,8 @@ const ManageCashier = () => {
 
   useEffect(() => {
     loadCashier();
+    loadUsers();
+
   }, []);
   
   if (loading) return <div>Loading....</div>;
@@ -141,12 +149,14 @@ const ManageCashier = () => {
         handleCloseDialog={handleCloseAddDialog}
         onAddCashier={handleAddCashier}
         initialFormData={initialFormData}
+        users={users}
+
       />
       <CounterIncomeDialog
         openDialog={openIncomeDialog}
         handleCloseDialog={handleCloseIncomeDialog}
       />
-      <CashierTable cashiers={cashiers} />
+      <CashierTable cashiers={cashiers} users={users} />
     </Box>
   );
 };

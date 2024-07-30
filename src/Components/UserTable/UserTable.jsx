@@ -24,6 +24,11 @@ import { activeDeactiveUser } from '../../Configs/axios'
 import ActiveDeactiveDialog from './ActiveDeactiveDialog'
 import UpdateRoleDialog from './UpdateRoleDialog'
 
+const roleMapping = {
+  1: 'Staff',
+  2: 'Manager',
+  3: 'Admin'
+}
 
 function TablePaginationActions(props) {
   const theme = useTheme()
@@ -92,7 +97,7 @@ TablePaginationActions.propTypes = {
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
 }
-const UserTable = ({ users }) => {
+const UserTable = ({ users, onUpdateUserStatus, onUpdateRole }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [openDialog, setOpenDialog] = useState(false)
@@ -111,6 +116,9 @@ const UserTable = ({ users }) => {
     if (selectedUser) {
       try {
         const result = await activeDeactiveUser(selectedUser)
+        if (result.status === 200) { // Assuming the API returns a 200 status for success
+          onUpdateUserStatus(selectedUser);
+        }
       } catch (error) {
         console.error('Error active/deactive user', error)
       } finally {
@@ -141,7 +149,7 @@ const UserTable = ({ users }) => {
   }
   const formatStatus = (status) => (status ? 'Active' : 'Inactive');
   const buttonStyle = {
-    width: '100%', 
+    width: '100%',
     margin: '5px',
     backgroundColor: 'white',
     '&:hover': {
@@ -165,11 +173,13 @@ const UserTable = ({ users }) => {
         open={openRoleDialog}
         onClose={handleCloseRoleDialog}
         user={selectedUser}
+        onUpdateRole={onUpdateRole}
+
       />
 
       <TableContainer
         component={Paper}
-        sx={{display: 'flex', flexDirection: 'column' }}
+        sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Table stickyHeader aria-label="UserTable">
           <TableHead>
@@ -201,7 +211,7 @@ const UserTable = ({ users }) => {
                   {user.username}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
-                  {user.role}
+                  {roleMapping[user.role] || 'Unknown'}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
                   {user.fullName}
@@ -234,7 +244,7 @@ const UserTable = ({ users }) => {
                     sx={{
                       ...buttonStyle,
                       backgroundColor: 'white',
-                      color: 'black', 
+                      color: 'black',
                       border: '1px solid black',
                       '&:hover': {
                         backgroundColor: 'white',
@@ -253,7 +263,7 @@ const UserTable = ({ users }) => {
           <TableFooter>
             <TableRow>
               <TablePagination
-               style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
+                style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={11}
                 count={userList.length}
@@ -282,6 +292,10 @@ const UserTable = ({ users }) => {
 
 UserTable.propTypes = {
   users: PropTypes.array.isRequired,
+  onUpdateUserStatus: PropTypes.func.isRequired,
+  onUpdateRole: PropTypes.func.isRequired
+
+
 }
 
 export default UserTable

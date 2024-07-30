@@ -529,16 +529,17 @@ export const deleteDiscount = async (discountid) => {
       api + `/discount/delete-discount?discountid=${discountid}`
     );
     if (response.status === 200) {
-      return response.data; 
+      return response.data;
     } else {
       throw new Error(`Unexpected response status: ${response.status}`);
     }
   } catch (error) {
     console.error('Error deleting discount:', error);
-    throw error; 
+    throw error;
 
   }
 }
+
 export const updateProductGem = async (formData) => {
   try {
     const response = await axios.put(api + '/productgem/update-productgem', formData)
@@ -581,7 +582,26 @@ export const updateProductGem = async (formData) => {
 //     }
 //   }
 // }
-
+export const removeProductDiscount = async (discountId, productId) => {
+  try {
+    const response = await axios.delete(api + '/discountproduct/delete-discountproduct', {
+      data: {
+        discountId: discountId,
+        productId: productId
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        isSuccess: false,
+        message: error.response?.data?.message || error.message,
+      };
+    } else {
+      return { isSuccess: false, message: 'An unexpected error has occurred' };
+    }
+  }
+};
 export const addDiscountProduct = async (productId, discountId) => {
   try {
     const response = await axios.post(api + '/discountproduct/create-discountproduct', { productId, discountId });
