@@ -29,29 +29,29 @@ const ManageVoucher = () => {
 
     let transformedSearchParams = {};
     if (searchCriteria === 'expiredDay') {
-      if (dateValue.isValid()) {
-        transformedSearchParams = {
-          'expiredDay': dateValue(),
-        };
-      } else {
-        toast.error('Please select a valid date');
-        setSearching(false);
-        return;
-      }
+        if (dayjs(dateValue).isValid()) {
+            transformedSearchParams = {
+                expiredDay: dateValue.format('YYYY-MM-DD'),
+            };
+        } else {
+            toast.error('Please select a valid date');
+            setSearching(false);
+            return;
+        }
     } else {
-      transformedSearchParams[searchCriteria] = inputValue;
+        transformedSearchParams[searchCriteria] = inputValue;
     }
 
     try {
-      const response = await getVouchers(transformedSearchParams);
-      setVouchers(Array.isArray(response.data) ? response.data : []);
+        const response = await getVouchers(transformedSearchParams);
+        setVouchers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error('Search error:', error);
-      toast.error('Error searching vouchers');
+        console.error('Search error:', error);
+        toast.error('Error searching vouchers');
     } finally {
-      setSearching(false);
+        setSearching(false);
     }
-  };
+};
 
   const initialFormData = {
     expiredDay: '',
