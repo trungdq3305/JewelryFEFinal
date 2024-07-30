@@ -4,6 +4,7 @@ import { getAllGold, updateGold } from '../Configs/axios'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Box, Button, Paper, TextField, CircularProgress, Typography } from '@mui/material'
 
 const ManageGold = () => {
   const [gold, setGold] = useState([])
@@ -50,7 +51,15 @@ const ManageGold = () => {
   useEffect(() => {
     loadGolds()
   }, [])
-  return <GoldTable goldList={gold} handleFetchGold={fetchGold} />
+  return (
+    <div>
+      <Box sx={{ backgroundColor: '#333', padding: '10px', margin:'10px'}}>
+        <Typography variant="h6" sx={{ color: '#fff' }}>Manage Golds</Typography>
+      </Box>
+      <GoldTable goldList={gold} handleFetchGold={fetchGold} />
+      <ToastContainer />
+    </div>
+  )
 }
 
 export default ManageGold

@@ -22,6 +22,8 @@ import { updateDiscount, deleteDiscount } from '../../Configs/axios';
 import UpdateDiscountDialog from './UpdateDiscountDialog';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -122,7 +124,7 @@ const DiscountTable = ({ discounts, reload }) => {
       console.error('Error deleting discount:', error);
     }
   };
-  
+
 
   const handleUpdateDiscount = (discount) => {
     setEditData(discount);
@@ -156,7 +158,7 @@ const DiscountTable = ({ discounts, reload }) => {
   };
 
   const buttonStyle = {
-    width: '100%', 
+    width: '100%',
     margin: '5px',
     backgroundColor: 'white',
     '&:hover': {
@@ -195,7 +197,7 @@ const DiscountTable = ({ discounts, reload }) => {
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Created By</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Expired Day</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Publish Day</TableCell>
-              
+
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Cost</TableCell>
               <TableCell align="right" style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
@@ -207,32 +209,29 @@ const DiscountTable = ({ discounts, reload }) => {
                 <TableCell align="right">{discount.createdBy}</TableCell>
                 <TableCell align="right">{discount.expiredDay}</TableCell>
                 <TableCell align="right">{discount.publishDay}</TableCell>
-                
+
                 <TableCell align="right">{discount.cost}</TableCell>
                 <TableCell align="right">
-                  <Button onClick={() => handleUpdateDiscount(discount)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: '#FFA500',
-                      border: '1px solid #FFA500',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#FFA500',
-                      },
-                    }}>Edit</Button>
-                  <br></br>
-                  <Button onClick={() => handleDelete(discount.discountId)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: 'red', 
-                      border: '1px solid red',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: 'red',
-                      },
-                    }}>Delete</Button>
+                  <Box display="flex" justifyContent="flex-end" alignItems="center">
+                    <IconButton onClick={() => handleUpdateDiscount(discount)}
+                      sx={{
+                        color: '#FFA500',
+                        '&:hover': {
+                          color: '#FF8C00',
+                        },
+                      }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(discount.discountId)}
+                      sx={{
+                        color: 'red',
+                        '&:hover': {
+                          color: '#B22222',
+                        },
+                      }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}

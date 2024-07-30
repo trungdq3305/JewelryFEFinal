@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Paper, TextField, CircularProgress } from '@mui/material';
+import { Box, Button, Paper, TextField, CircularProgress , Typography} from '@mui/material';
 import CustomerTable from '../Components/CustomerTable/CustomerTable';
 import {
   getAllCustomers,
@@ -11,6 +11,7 @@ import AddCustomerDialog from '../Components/CustomerTable/AddCustomerDialog';
 import ManagerSideBar from '../Components/Sidebar/ManagerSideBar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
@@ -115,6 +116,9 @@ const ManageCustomer = () => {
               padding: '10px',
             }}
           >
+            <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Customers</Typography>
+            </Box>
             <Box
               sx={{
                 display: 'flex',
@@ -122,15 +126,16 @@ const ManageCustomer = () => {
                 marginBottom: '10px',
               }}
             >
+              
               <Button
                 onClick={handleOpenDialog}
                 sx={{
-                  backgroundColor: 'white',
-                  color: '#3baf80',
-                  border: '1px solid #3baf80',
+                  backgroundColor: '#3baf80',
+                  color: 'white',
+                  border: '1px solid white',
                   '&:hover': {
-                    backgroundColor: 'white',
-                    borderColor: '#3baf80',
+                    backgroundColor: '#3baf80',
+                    borderColor: 'white',
                   },
                   height: '50px',
                 }}
@@ -169,13 +174,14 @@ const ManageCustomer = () => {
                   onClick={handleSearch}
                   sx={{
                     ml: 2,
-                    backgroundColor: 'white',
-                    color: '#2596be',
-                    border: '1px solid #2596be',
+                    backgroundColor: '#2596be',
+                    color: 'white',
+                    border: '1px solid white',
                     '&:hover': {
-                      backgroundColor: 'white',
-                      borderColor: '#2596be',
+                      backgroundColor: '#2596be',
+                      borderColor: 'white',
                     },
+                    height:'55px'
                   }}
                 >
                   Search
