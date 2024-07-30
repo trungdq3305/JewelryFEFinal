@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Paper, TextField, CircularProgress, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Button, Paper, TextField, CircularProgress, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -29,29 +29,29 @@ const ManageVoucher = () => {
 
     let transformedSearchParams = {};
     if (searchCriteria === 'expiredDay') {
-        if (dayjs(dateValue).isValid()) {
-            transformedSearchParams = {
-                expiredDay: dateValue.format('YYYY-MM-DD'),
-            };
-        } else {
-            toast.error('Please select a valid date');
-            setSearching(false);
-            return;
-        }
+      if (dayjs(dateValue).isValid()) {
+        transformedSearchParams = {
+          expiredDay: dateValue.format('YYYY-MM-DD'),
+        };
+      } else {
+        toast.error('Please select a valid date');
+        setSearching(false);
+        return;
+      }
     } else {
-        transformedSearchParams[searchCriteria] = inputValue;
+      transformedSearchParams[searchCriteria] = inputValue;
     }
 
     try {
-        const response = await getVouchers(transformedSearchParams);
-        setVouchers(Array.isArray(response.data) ? response.data : []);
+      const response = await getVouchers(transformedSearchParams);
+      setVouchers(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-        console.error('Search error:', error);
-        toast.error('Error searching vouchers');
+      console.error('Search error:', error);
+      toast.error('Error searching vouchers');
     } finally {
-        setSearching(false);
+      setSearching(false);
     }
-};
+  };
 
   const initialFormData = {
     expiredDay: '',
@@ -79,7 +79,7 @@ const ManageVoucher = () => {
       if (response.isSuccess) {
         toast.success('Voucher added successfully');
         handleCloseDialog();
-        await loadVouchers(); 
+        await loadVouchers();
       } else {
         toast.error(response.message || 'Error adding new voucher');
       }
@@ -100,17 +100,20 @@ const ManageVoucher = () => {
         <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
           <ManagerSideBar />
           <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
+            <Box sx={{ backgroundColor: '#333', padding: '10px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Vouchers</Typography>
+            </Box>
             <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '10px' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <Button onClick={handleOpenDialog} sx={{ backgroundColor: 'white', color: '#3baf80', border: '1px solid #3baf80', height: '50px', '&:hover': { backgroundColor: 'white', borderColor: '#3baf80' } }}>Add Voucher</Button>
+                <Button onClick={handleOpenDialog} sx={{ backgroundColor: '#3baf80', color: 'white', border: '1px solid white', height: '50px', '&:hover': { backgroundColor: '#3baf80', borderColor: 'white' } , marginTop: '10px'}}>Add Voucher</Button>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <FormControl fullWidth margin="normal">
+                  <FormControl fullWidth margin="normal" sx={{paddingRight: '10px' }}>
                     <InputLabel>Search By</InputLabel>
                     <Select
                       value={searchCriteria}
                       onChange={(e) => setSearchCriteria(e.target.value)}
                       label="Search By"
-                      sx={{ height: '50px' }}
+                      sx={{ height: '55px' , marginTop:'-8px'}}
                     >
                       <MenuItem value="expiredDay">Expired Day</MenuItem>
                       <MenuItem value="customerId">Customer ID</MenuItem>
@@ -124,7 +127,7 @@ const ManageVoucher = () => {
                       label="Select Date"
                       value={dateValue}
                       onChange={(newValue) => setDateValue(newValue)}
-                      renderInput={(params) => <TextField {...params} sx={{ marginLeft: '10px' }} />}
+                      renderInput={(params) => <TextField {...params} sx={{ marginLeft: '10px' , height: '50px'}} />}
                     />
                   ) : (
                     <TextField
@@ -134,10 +137,10 @@ const ManageVoucher = () => {
                       onChange={(e) => setInputValue(e.target.value)}
                       variant="outlined"
                       margin="normal"
-                      sx={{ marginLeft: '10px' }}
+                      sx={{ marginLeft: '10px' , height: '50px', marginTop:'0px'}}
                     />
                   )}
-                  <Button variant="contained" onClick={handleSearch} sx={{ ml: 2, padding: '5px', background: 'white', color: '#2596be', border: '1px solid #2596be', '&:hover': { backgroundColor: 'white', borderColor: '#2596be' } }}>
+                  <Button variant="contained" onClick={handleSearch} sx={{ ml: 2, padding: '5px', background: '#2596be', color: 'white', border: '1px solid #2596be', '&:hover': { backgroundColor: '#2596be', borderColor: '#2596be' }, height: '50px'}}>
                     {searching ? <CircularProgress size={24} /> : 'Search'}
                   </Button>
                 </Box>

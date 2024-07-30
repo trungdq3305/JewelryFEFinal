@@ -25,6 +25,9 @@ import EditVoucherDialog from './EditVoucherDialog';
 import CustomerInfoDialog from './CustomerInfoDialog';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -179,48 +182,39 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
                 <TableCell align="right">{voucher.cost}</TableCell>
                 <TableCell align="right">{voucher.customerCustomerId}</TableCell>
                 <TableCell align="right">
-                  <Button
+                  <IconButton
                     onClick={() => handleEdit(voucher)}
                     sx={{
-                      backgroundColor: 'white',
                       color: '#FFA500',
-                      border: '1px solid #FFA500',
                       '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#FFA500',
+                        color: '#FFA500',
                       },
                     }}
                   >
-                    Edit
-                  </Button>
-                  <Button
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
                     onClick={() => handleShowCustomerInfo(voucher)}
                     sx={{
-                      backgroundColor: 'white',
                       color: '#2596be',
-                      border: '1px solid #2596be',
                       '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#2596be',
+                        color: '#2596be',
                       },
                     }}
                   >
-                    Customer
-                  </Button>
-                  <Button
+                    <InfoIcon />
+                  </IconButton>
+                  <IconButton
                     onClick={() => handleDelete(voucher.voucherId)}
                     sx={{
-                      backgroundColor: 'white',
                       color: 'red',
-                      border: '1px solid red',
                       '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: 'red',
+                        color: 'red',
                       },
                     }}
                   >
-                    Delete
-                  </Button>
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -240,7 +234,7 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5]}
         component="div"
         count={vouchers.length}
         rowsPerPage={rowsPerPage}
@@ -248,12 +242,13 @@ const VoucherTable = ({ vouchers, reloadVouchers }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         ActionsComponent={TablePaginationActions}
+        style={{ backgroundColor: 'lightgray', fontWeight: 'bold' }}
       />
       <CustomerInfoDialog
         open={openCustomerInfoDialog}
         onClose={handleCloseCustomerInfoDialog}
         customerInfo={customerInfo}
-      /> 
+      />
     </>
   );
 };

@@ -61,6 +61,9 @@ const DashBoardManagePage = () => {
     <Box display="flex">
       <ManagerSideBar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Dashboard</Typography>
+            </Box>
         <Grid container spacing={3}>
           {/* Total Income and Total Bills Cards */}
           <Grid item xs={12} sm={6} md={4}>

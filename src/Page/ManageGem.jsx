@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Paper, TextField, CircularProgress, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Box, Button, Paper, TextField, CircularProgress, Select, MenuItem, FormControl, InputLabel ,Typography} from '@mui/material';
 import GemTable from '../Components/ManageGem/GemTable';
 import { getAllGem, addGem, getGems } from '../Configs/axios';
 import AddGemDialog from '../Components/ManageGem/AddGemDialog';
@@ -94,6 +94,9 @@ const ManageGem = () => {
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh', justifyContent: 'full' }}>
         <ManagerSideBar />
         <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+        <Box sx={{ backgroundColor: '#333', padding: '10px', margin:'20px' ,marginBottom:'0px'}}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Gems</Typography>
+            </Box>
           <Paper sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '10px' }}>
             <AddGemDialog
               openDialog={openDialog}
@@ -108,16 +111,16 @@ const ManageGem = () => {
                 sx={{
                   height: '50px',
                   margin: '20px',
-                  backgroundColor: 'white',
-                  color: '#3baf80',
+                  backgroundColor: '#3baf80',
+                  color: 'white',
                   border: '1px solid #3baf80',
                   '&:hover': {
-                    backgroundColor: 'white',
+                    backgroundColor: '#3baf80',
                     borderColor: '#3baf80',
                   },
                 }}
               >
-                Add New Gem
+                Add Gem
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <FormControl fullWidth margin="normal">
@@ -147,13 +150,14 @@ const ManageGem = () => {
                   sx={{
                     ml: 2,
                     padding: '5px',
-                    background: 'white',
-                    color: '#2596be',
+                    background: '#2596be',
+                    color: 'white',
                     border: '1px solid #2596be',
                     '&:hover': {
-                      backgroundColor: 'white',
+                      backgroundColor: '#2596be',
                       borderColor: '#2596be',
                     },
+                    height:'50px'
                   }}
                 >
                   Search

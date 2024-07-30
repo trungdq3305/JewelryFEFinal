@@ -45,9 +45,9 @@ const ManageBill = () => {
         <ManagerSideBar />
         <Box sx={{ flexGrow: 1, overflow: 'auto', padding: 3 }}>
           <Paper sx={{ padding: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography variant="h5" component="h1" gutterBottom>
-              Manage Bills
-            </Typography>
+          <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Bills</Typography>
+            </Box>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               <TextField
                 label="Start Date"
@@ -84,8 +84,9 @@ const ManageBill = () => {
                   onClick={() => handleSearch(getAllBills, '', '')}
                   sx={{ 
                     borderColor: '#2596be', 
-                    color: '#2596be', 
+                    color: 'white', 
                     borderRadius: 2, 
+                    backgroundColor: '#2596be',
                     '&:hover': { 
                       borderColor: '#1e88e5', 
                       color: '#1e88e5', 
@@ -102,8 +103,9 @@ const ManageBill = () => {
                   onClick={() => handleSearch(getAllBills2, true, true)}
                   sx={{ 
                     borderColor: '#f44336', 
-                    color: '#f44336', 
+                    color: 'white', 
                     borderRadius: 2, 
+                    backgroundColor: '#f44336',
                     '&:hover': { 
                       borderColor: '#c62828', 
                       color: '#c62828', 

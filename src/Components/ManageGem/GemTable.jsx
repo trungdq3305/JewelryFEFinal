@@ -22,7 +22,7 @@ import { updateGem} from '../../Configs/axios';
 import UpdateGemDialog from './UpdateGemDialog';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import EditIcon from '@mui/icons-material/Edit';
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -197,18 +197,19 @@ const GemTable = ({ gems, reload }) => {
                 <TableCell align="right">{gem.desc}</TableCell>
                 <TableCell align="right">{gem.rate}</TableCell>
                 <TableCell align="right">
-                  <Button onClick={() => handleUpdateGem(gem)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: '#FFA500',
-                      border: '1px solid #FFA500',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#FFA500',
-                      },
-                    }}>Edit</Button>
-                </TableCell>
+  <IconButton
+    onClick={() => handleUpdateGem(gem)}
+    size="small"  // Makes the icon button smaller
+    sx={{
+      ...buttonStyle,
+      color: '#FFA500',
+      '&:hover': {
+      },
+    }}
+  >
+    <EditIcon />
+  </IconButton>
+</TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

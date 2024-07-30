@@ -23,6 +23,9 @@ import CustomerBillDialog from './CustomerBillDialog';
 import { editCustomer, updateCustomerStatus } from '../../Configs/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditIcon from '@mui/icons-material/Edit';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -154,8 +157,9 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
   };
 
   const buttonStyle = {
-    width: '100%',
-    margin: '5px',
+    width: '40px',
+    height: '40px',
+    margin: '2px',
     backgroundColor: 'white',
     '&:hover': {
       backgroundColor: 'white',
@@ -219,51 +223,44 @@ const CustomerTable = ({ customers, reloadCustomers }) => {
                 <TableCell align="right">{customer.rate}</TableCell>
                 <TableCell align="right">{customer.status ? 'Active' : 'Inactive'}</TableCell>
                 <TableCell align="right">
-                  <Button
-                    onClick={() => handleEdit(customer)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: '#FFA500',
-                      border: '1px solid #FFA500',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#FFA500',
-                      },
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleChangeStatus(customer.customerId)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: 'green',
-                      border: '1px solid green',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: 'green',
-                      },
-                    }}
-                  >
-                    Change Status
-                  </Button>
-                  <Button
-                    onClick={() => handleShowBills(customer)}
-                    sx={{
-                      ...buttonStyle,
-                      backgroundColor: 'white',
-                      color: '#007BFF',
-                      border: '1px solid #007BFF',
-                      '&:hover': {
-                        backgroundColor: 'white',
-                        borderColor: '#007BFF',
-                      },
-                    }}
-                  >
-                    Show Bills
-                  </Button>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <IconButton
+                      onClick={() => handleEdit(customer)}
+                      sx={{
+                        ...buttonStyle,
+                        color: '#FFA500',
+                        '&:hover': {
+                          color: '#FFA500',
+                        },
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleChangeStatus(customer.customerId)}
+                      sx={{
+                        ...buttonStyle,
+                        color: 'green',
+                        '&:hover': {
+                          color: 'green',
+                        },
+                      }}
+                    >
+                      <ChangeCircleIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleShowBills(customer)}
+                      sx={{
+                        ...buttonStyle,
+                        color: '#007BFF',
+                        '&:hover': {
+                          color: '#007BFF',
+                        },
+                      }}
+                    >
+                      <ReceiptIcon />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
