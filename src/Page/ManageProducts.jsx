@@ -328,7 +328,7 @@ const ManageProducts = () => {
 
   return (
     <>
-    <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+    <Box sx={{ backgroundColor: '#333', padding: '10px', margin:'20px', marginBottom:'0px' }}>
               <Typography variant="h6" sx={{ color: '#fff' }}>Manage Products</Typography>
             </Box>
       <Box
@@ -352,11 +352,11 @@ const ManageProducts = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
             <Button
               onClick={handleOpenDialog} sx={{
-                height: '50px', margin: '20px', backgroundColor: 'white',
-                color: '#3baf80',
+                height: '50px', margin: '20px', backgroundColor: '#3baf80',
+                color: 'white',
                 border: '1px solid #3baf80',
                 '&:hover': {
-                  backgroundColor: 'white',
+                  backgroundColor: '#3baf80',
                   borderColor: '#3baf80'
                 },
               }}

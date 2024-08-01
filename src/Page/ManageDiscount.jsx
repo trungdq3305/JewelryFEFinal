@@ -110,7 +110,7 @@ const ManageDiscount = () => {
                 Add Discount
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'left' }}>
-              <FormControl sx={{ minWidth: 120, marginLeft: '10px' }}>
+              <FormControl sx={{ minWidth: 120, marginRight: '10px', marginTop: '12px' }}>
                 <InputLabel>Status</InputLabel>
                 <Select
                   value={statusFilter}

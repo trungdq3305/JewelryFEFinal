@@ -89,7 +89,7 @@ const ManageCashier = () => {
 
   return (
     <>
-    <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+    <Box sx={{ backgroundColor: '#333', padding: '10px', margin:'20px' }}>
               <Typography variant="h6" sx={{ color: '#fff' }}>Manage Cashiers</Typography>
             </Box>
     <Box
@@ -111,11 +111,11 @@ const ManageCashier = () => {
             sx={{
               height: '50px',
               margin: '20px',
-              backgroundColor: 'white',
-              color: '#3baf80',
+              backgroundColor: '#3baf80',
+              color: 'white',
               border: '1px solid #3baf80',
               '&:hover': {
-                backgroundColor: 'white',
+                backgroundColor: '#3baf80',
                 borderColor: '#3baf80',
               },
             }}
@@ -127,11 +127,11 @@ const ManageCashier = () => {
             sx={{
               height: '50px',
               margin: '20px',
-              backgroundColor: 'white',
-              color: '#3baf80',
+              backgroundColor: '#3baf80',
+              color: 'white',
               border: '1px solid #3baf80',
               '&:hover': {
-                backgroundColor: 'white',
+                backgroundColor: '#3baf80',
                 borderColor: '#3baf80',
               },
             }}
