@@ -663,7 +663,6 @@ export const getAllGold = async () => {
 export const getAllCashier = async () => {
   try {
     const response = await axios.get(api + '/cashier/get-cashiers')
-    console.log(response.data)
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -696,7 +695,6 @@ export const searchCashier = async (searchValue) => {
     const data = await axios.get(
       api + `/cashier/search-by-user-id?id=${searchValue}`
     )
-    console.log(data)
     return data
   } catch (error) {
     if (axios.isAxiosError(error)) {
