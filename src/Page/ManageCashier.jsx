@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField , Typography} from '@mui/material';
 import { addCashier, getAllCashier, searchCashier } from '../Configs/axios';
 import CashierTable from '../Components/CashierTable/CashierTable';
 import AddCashierDialog from '../Components/CashierTable/AddCashierDialog';
@@ -88,6 +88,10 @@ const ManageCashier = () => {
   if (loading) return <div>Loading....</div>;
 
   return (
+    <>
+    <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Cashiers</Typography>
+            </Box>
     <Box
       display="flex"
       flexDirection="column"
@@ -157,7 +161,7 @@ const ManageCashier = () => {
         handleCloseDialog={handleCloseIncomeDialog}
       />
       <CashierTable cashiers={cashiers} users={users} />
-    </Box>
+    </Box></>
   );
 };
 

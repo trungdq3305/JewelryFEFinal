@@ -181,7 +181,7 @@
 
 // export default ManageProducts;
 import { useEffect, useState } from 'react';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography} from '@mui/material';
 import ProductTable from '../Components/ProductTable/ProductTable';
 import { getAllProducts, addProduct, searchProduct, getAllGold, getDiscount } from '../Configs/axios';
 import AddProductDialog from '../Components/ProductTable/AddProductDialog';
@@ -328,6 +328,9 @@ const ManageProducts = () => {
 
   return (
     <>
+    <Box sx={{ backgroundColor: '#333', padding: '10px', marginBottom:'20px' }}>
+              <Typography variant="h6" sx={{ color: '#fff' }}>Manage Products</Typography>
+            </Box>
       <Box
         sx={{
           flexGrow: 1,
